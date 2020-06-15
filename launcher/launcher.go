@@ -20,13 +20,10 @@ func NewLauncher1155(json launcherjson.LauncherjsonX115) *launcher1155 {
 }
 
 func (l launcher1155) Launcher115() {
+	fmt.Println(l.flag)
 	cmd := exec.Command("java", l.flag...)
 	cmd.Dir = l.GameDir
-	b, err := cmd.CombinedOutput()
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println(string(b))
+	cmd.Run()
 }
 
 func (l *launcher1155) cp() string {
@@ -39,7 +36,7 @@ func (l *launcher1155) cp() string {
 			b.WriteString(";")
 		}
 	}
-	b.WriteString(l.Minecraftpath + `/versions/` + l.Version + `/` + l.Version + `.jar`)
+	b.WriteString(l.Minecraftpath + `versions/` + l.json.ID + `/` + l.json.ID + `.jar`)
 	return b.String()
 }
 

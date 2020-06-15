@@ -29,14 +29,14 @@ type Gameinfo struct {
 
 func (g *Gameinfo) Run115() {
 	l := g.modjson()
-	l.flag = append(l.flag, `-Dminecraft.client.jar=`+g.Minecraftpath+`/versions/`+g.Version+`/`+g.Version+`.jar`)
+	l.flag = append(l.flag, `-Dminecraft.client.jar=`+g.Minecraftpath+`versions/`+l.json.ID+`/`+l.json.ID+`.jar`)
 	l.flag = append(l.flag, `-XX:+UseG1GC`)
 	l.flag = append(l.flag, `-Xmx`+g.RAM+`m`)
 	l.flag = append(l.flag, `-XX:-UseAdaptiveSizePolicy`)
 	l.flag = append(l.flag, `-XX:-OmitStackTraceInFastThrow`)
 	l.flag = append(l.flag, `-Dfml.ignoreInvalidMinecraftCertificates=true`)
 	l.flag = append(l.flag, `-Dfml.ignorePatchDiscrepancies=true`)
-	l.flag = append(l.flag, `-Djava.library.path=`+g.Minecraftpath+`/versions/`+g.Version+`/natives`)
+	l.flag = append(l.flag, `-Djava.library.path=`+g.Minecraftpath+`versions/`+g.Version+`/natives`)
 	l.flag = append(l.flag, `-Dminecraft.launcher.brand=`+Launcherbrand)
 	l.flag = append(l.flag, `-Dminecraft.launcher.version=`+Launcherversion)
 	l.flag = append(l.flag, `-cp`)
@@ -78,17 +78,17 @@ func (g *Gameinfo) modjson() *launcher1155 {
 			l := Libraries2LibraryX115(v)
 			j.Patches[0].Libraries = append(j.Patches[0].Libraries, l)
 		}
-		j.ID = mod.ID
+		g.Version = mod.ID
 		j.Patches[0].MainClass = mod.MainClass
 	} else {
 		err = json.Unmarshal(g.Jsonbyte, &j)
+		g.Version = j.ID
 	}
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	l := NewLauncher1155(j)
-	g.Version = j.ID
 	l.Gameinfo = g
 	return l
 }
@@ -100,7 +100,7 @@ func Libraries2LibraryX115(l Librarie) launcherjson.LibraryX115 {
 			Downloads: launcherjson.DownloadsX115{
 				Artifact: launcherjson.ArtifactX115{
 					//<package>/<name>/<version>/<name>-<version>.jar
-					Path: p[0] + "/" + p[1] + "/" + p[2] + "/" + p[1] + "-" + p[2] + ".jar",
+					Path: strings.ReplaceAll(p[0], ".", "/") + "/" + p[1] + "/" + p[2] + "/" + p[1] + "-" + p[2] + ".jar",
 				},
 			},
 		}
