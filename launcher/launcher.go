@@ -30,24 +30,8 @@ func (l Launcher1155) Launcher115() {
 	l.flag = append(l.flag, `-Djava.library.path=D:\mc\.minecraft\versions\1.15.2\natives`)
 	l.flag = append(l.flag, `-Dminecraft.launcher.brand=GML`)
 	l.flag = append(l.flag, `-Dminecraft.launcher.version=beta0.1`)
-	l.cp()
-	cmd := exec.Command("java", l.flag...)
-	cmd.Run()
-}
-
-func (l *Launcher1155) cp() {
-	path := `D:\mc\.minecraft\libraries\`
 	l.flag = append(l.flag, `-cp`)
-	b := bytes.NewBuffer(nil)
-	for _, p := range l.json.Patches[0].Libraries {
-		if paths(p) != "" {
-			b.WriteString(path)
-			b.WriteString(paths(p))
-			b.WriteString(";")
-		}
-	}
-	b.WriteString(`D:\mc\.minecraft\versions\1.15.2\1.15.2.jar`)
-	l.flag = append(l.flag, b.String())
+	l.flag = append(l.flag, l.cp())
 	l.flag = append(l.flag, l.json.Patches[0].MainClass)
 	l.flag = append(l.flag, `--username`)
 	l.flag = append(l.flag, `xmdhs`)
@@ -67,7 +51,22 @@ func (l *Launcher1155) cp() {
 	l.flag = append(l.flag, ` mojang`)
 	l.flag = append(l.flag, `--versionType`)
 	l.flag = append(l.flag, `"GML beta0.1"`)
+	cmd := exec.Command("java", l.flag...)
+	cmd.Run()
+}
 
+func (l *Launcher1155) cp() string {
+	path := `D:\mc\.minecraft\libraries\`
+	b := bytes.NewBuffer(nil)
+	for _, p := range l.json.Patches[0].Libraries {
+		if paths(p) != "" {
+			b.WriteString(path)
+			b.WriteString(paths(p))
+			b.WriteString(";")
+		}
+	}
+	b.WriteString(`D:\mc\.minecraft\versions\1.15.2\1.15.2.jar`)
+	return b.String()
 }
 
 func paths(l launcherjson.LibraryX115) string {
@@ -77,7 +76,7 @@ func paths(l launcherjson.LibraryX115) string {
 			if r.Action == "disallow" && osbool(r.Os.Name) {
 				return ""
 			}
-			if r.Action == "allow" && r.Os.Name == "" {
+			if r.Action == "allow" && (r.Os.Name == "" || osbool(r.Os.Name)) {
 				allow = true
 			}
 		}
