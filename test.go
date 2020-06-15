@@ -19,7 +19,6 @@ func main() {
 		UUID:          `9f51573a5ec545828c2b09f7f08497b1`,
 		AccessToken:   "nil",
 		GameDir:       `D:\mc\.minecraft\`,
-		Version:       "1.15.2",
 	}
 	j.Run115()
 }

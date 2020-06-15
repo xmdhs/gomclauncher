@@ -3,6 +3,7 @@ package launcher
 import (
 	"encoding/json"
 	"gomclauncher/launcher/launcherjson"
+	"log"
 )
 
 type Gameinfo struct {
@@ -26,8 +27,12 @@ type Gameinfo struct {
 
 func (g Gameinfo) Run115() {
 	j := launcherjson.LauncherjsonX115{}
-	json.Unmarshal(g.Jsonbyte, &j)
+	err := json.Unmarshal(g.Jsonbyte, &j)
+	if err != nil {
+		log.Fatal(err)
+	}
 	l := NewLauncher1155(j)
+	g.Version = j.ID
 	l.Gameinfo = g
 	l.flag = append(l.flag, `-Dminecraft.client.jar=`+g.Minecraftpath+`\versions\`+g.Version+`\`+g.Version+`.jar`)
 	l.flag = append(l.flag, `-XX:+UseG1GC`)
