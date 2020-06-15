@@ -13,6 +13,7 @@ type LauncherjsonX115 struct {
 
 type PatchX115 struct {
 	AssetIndex             AssetIndexX115   `json:"assetIndex"`
+	Arguments              ArgumentsX115    `json:"arguments"`
 	Assets                 string           `json:"assets" example:"1.15"`
 	Downloads              DownloadsX115jar `json:"downloads"`
 	ID                     string           `json:"id" example:"game"`
@@ -25,6 +26,11 @@ type PatchX115 struct {
 	Time                   string           `json:"time" example:"2020-01-17T18:03:52+08:00"`
 	Type                   string           `json:"type" example:"release"`
 	Version                string           `json:"version" example:"1.15.2"`
+}
+
+type ArgumentsX115 struct {
+	Game []interface{} `json:"game"`
+	Jvm  []interface{} `json:"jvm"`
 }
 
 type AssetIndexX115 struct {
