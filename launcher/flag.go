@@ -24,6 +24,7 @@ type Gameinfo struct {
 	Version string
 	//1.15.json []byte
 	Jsonbyte []byte
+	flag     map[string]string
 }
 
 func (g *Gameinfo) Run115() {
@@ -42,6 +43,7 @@ func (g *Gameinfo) Run115() {
 }
 
 func (g *Gameinfo) modjson() *launcher1155 {
+	g.flag = make(map[string]string)
 	j := LauncherjsonX115{}
 	mod := Modsjson{}
 	var err error
@@ -53,7 +55,7 @@ func (g *Gameinfo) modjson() *launcher1155 {
 		}
 		err = json.Unmarshal(b, &j)
 		for _, v := range mod.Libraries {
-			l := Libraries2LibraryX115(v)
+			l := g.Libraries2LibraryX115(v)
 			j.Patches[0].Libraries = append(j.Patches[0].Libraries, l)
 		}
 		g.Version = mod.ID
@@ -74,8 +76,9 @@ func (g *Gameinfo) modjson() *launcher1155 {
 	return l
 }
 
-func Libraries2LibraryX115(l Librarie) LibraryX115 {
+func (g *Gameinfo) Libraries2LibraryX115(l Librarie) LibraryX115 {
 	p := Name2path(l.Name)
+	g.flag[p[0]] = p[2]
 	return LibraryX115{
 		Downloads: DownloadsX115{
 			Artifact: ArtifactX115{

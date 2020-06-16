@@ -34,9 +34,19 @@ func (l *launcher1155) cp() string {
 	b := bytes.NewBuffer(nil)
 	for _, p := range l.json.Patches[0].Libraries {
 		if paths(p) != "" {
-			b.WriteString(path)
-			b.WriteString(paths(p))
-			b.WriteString(";")
+			pack := Name2path(p.Name)
+			v, ok := l.Gameinfo.flag[pack[0]]
+			if ok {
+				if v == pack[2] {
+					b.WriteString(path)
+					b.WriteString(p.Downloads.Artifact.Path)
+					b.WriteString(";")
+				}
+			} else {
+				b.WriteString(path)
+				b.WriteString(p.Downloads.Artifact.Path)
+				b.WriteString(";")
+			}
 		}
 	}
 	b.WriteString(l.Minecraftpath + `versions/` + l.json.ID + `/` + l.json.ID + `.jar`)
