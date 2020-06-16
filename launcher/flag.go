@@ -2,7 +2,6 @@ package launcher
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"strings"
@@ -81,10 +80,10 @@ func (g *Gameinfo) modjson() *launcher1155 {
 		g.Version = mod.ID
 		j.Patches[0].MainClass = mod.MainClass
 		if len(mod.Arguments.Game) != 0 {
-			fmt.Println("run")
+			j.Patches[0].Arguments.Game = mod.Arguments.Game
 		}
 		if len(mod.Arguments.Jvm) != 0 {
-
+			j.Patches[0].Arguments.Jvm = mod.Arguments.Jvm
 		}
 
 	} else {
