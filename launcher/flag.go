@@ -28,6 +28,7 @@ type Gameinfo struct {
 
 func (g *Gameinfo) Run115() {
 	l := g.modjson()
+	g.argumentsjvm(l)
 	l.flag = append(l.flag, `-Dminecraft.client.jar=`+g.Minecraftpath+`versions/`+l.json.ID+`/`+l.json.ID+`.jar`)
 	l.flag = append(l.flag, `-XX:+UseG1GC`)
 	l.flag = append(l.flag, `-Xmx`+g.RAM+`m`)
