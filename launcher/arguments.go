@@ -13,15 +13,3 @@ func (g *Gameinfo) argumentsjvm(l *launcher1155) {
 		}
 	}
 }
-
-type jvmRules struct {
-	Rules []Rules  `json:"rules"`
-	Value []string `json:"value"`
-}
-type Os struct {
-	Name string `json:"name"`
-}
-type Rules struct {
-	Action string `json:"action"`
-	Os     Os     `json:"os"`
-}

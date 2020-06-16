@@ -40,8 +40,8 @@ func (l *launcher1155) cp() string {
 }
 
 func paths(l LibraryX115) string {
-	var allow bool
 	if l.Rules != nil {
+		var allow bool
 		for _, r := range l.Rules {
 			if r.Action == "disallow" && osbool(r.Os.Name) {
 				return ""

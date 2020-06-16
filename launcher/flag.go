@@ -8,7 +8,7 @@ import (
 )
 
 type Gameinfo struct {
-	//D:\mc\.minecraft\
+	//D:/mc/.minecraft/
 	Minecraftpath string
 	//4096
 	RAM string
@@ -18,11 +18,11 @@ type Gameinfo struct {
 	UUID string
 	//eyJhbGciOiJIUzI1NiJ9
 	AccessToken string
-	//D:\mc\.minecraft\versions\1.15.2
+	//D:/mc/.minecraft/versions/1.15.2
 	GameDir string
 	//1.15.2
 	Version string
-	//1.15
+	//1.15.json []byte
 	Jsonbyte []byte
 }
 
