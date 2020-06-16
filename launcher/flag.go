@@ -2,6 +2,7 @@ package launcher
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"strings"
@@ -79,6 +80,13 @@ func (g *Gameinfo) modjson() *launcher1155 {
 		}
 		g.Version = mod.ID
 		j.Patches[0].MainClass = mod.MainClass
+		if len(mod.Arguments.Game) != 0 {
+			fmt.Println("run")
+		}
+		if len(mod.Arguments.Jvm) != 0 {
+
+		}
+
 	} else {
 		err = json.Unmarshal(g.Jsonbyte, &j)
 		g.Version = j.ID
@@ -111,10 +119,11 @@ func Name2path(name string) []string {
 
 type Modsjson struct {
 	//1.15.2
-	InheritsFrom string     `json:"inheritsFrom"`
-	MainClass    string     `json:"mainClass"`
-	ID           string     `json:"id"`
-	Libraries    []Librarie `json:"libraries"`
+	InheritsFrom string        `json:"inheritsFrom"`
+	MainClass    string        `json:"mainClass"`
+	ID           string        `json:"id"`
+	Libraries    []Librarie    `json:"libraries"`
+	Arguments    ArgumentsX115 `json:"arguments"`
 }
 
 type Librarie struct {

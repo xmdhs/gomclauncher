@@ -1,12 +1,12 @@
 {
-  "id": "fabric-loader-0.7.8+build.184-1.15.2",
-  "inheritsFrom": "1.15.2",
-  "releaseTime": "2020-02-26T20:51:44+0800",
-  "time": "2020-02-26T20:51:44+0800",
+  "id": "fabric-loader-0.7.8+build.184-1.14.4",
+  "inheritsFrom": "1.14.4",
+  "releaseTime": "2020-02-08T13:58:11+0800",
+  "time": "2020-02-08T13:58:11+0800",
   "type": "release",
   "mainClass": "net.fabricmc.loader.launch.knot.KnotClient",
   "arguments": {
-    "game": []
+    "game": ["test"]
   },
   "libraries": [
     {
@@ -54,7 +54,7 @@
       "url": "https://maven.fabricmc.net/"
     },
     {
-      "name": "net.fabricmc:intermediary:1.15.2",
+      "name": "net.fabricmc:intermediary:1.14.4",
       "url": "https://maven.fabricmc.net/"
     },
     {
