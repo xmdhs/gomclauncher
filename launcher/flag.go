@@ -63,8 +63,17 @@ func (g *Gameinfo) modjson() *launcher1155 {
 		if len(mod.Arguments.Game) != 0 {
 			j.Patches[0].Arguments.Game = append(j.Patches[0].Arguments.Game, mod.Arguments.Game...)
 		}
+		if mod.MinecraftArguments != "" {
+			j.Patches[0].Arguments.Game = append(j.Patches[0].Arguments.Game, MinecraftArguments2jvm(mod.MinecraftArguments)...)
+			j.Patches[0].Arguments.Jvm = append(j.Patches[0].Arguments.Jvm, getjvm()...)
+		}
+
 	} else {
 		err = json.Unmarshal(g.Jsonbyte, &j)
+		if j.Patches[0].MinecraftArguments != "" {
+			j.Patches[0].Arguments.Game = append(j.Patches[0].Arguments.Game, MinecraftArguments2jvm(j.Patches[0].MinecraftArguments)...)
+			j.Patches[0].Arguments.Jvm = append(j.Patches[0].Arguments.Jvm, getjvm()...)
+		}
 		g.Version = j.ID
 	}
 	if err != nil {
@@ -74,6 +83,24 @@ func (g *Gameinfo) modjson() *launcher1155 {
 	l := NewLauncher1155(j)
 	l.Gameinfo = g
 	return l
+}
+
+func getjvm() []interface{} {
+	cp := []string{"-Djava.library.path\u003d${natives_directory}", "-Dminecraft.launcher.brand\u003d${launcher_name}", "-Dminecraft.launcher.version\u003d${launcher_version}", "-cp", "${classpath}"}
+	i := make([]interface{}, 0)
+	for _, v := range cp {
+		i = append(i, v)
+	}
+	return i
+}
+
+func MinecraftArguments2jvm(m string) []interface{} {
+	l := strings.Split(m, " ")
+	i := make([]interface{}, 0)
+	for _, v := range l {
+		i = append(i, v)
+	}
+	return i
 }
 
 func (g *Gameinfo) Libraries2LibraryX115(l Librarie) LibraryX115 {
@@ -96,11 +123,12 @@ func Name2path(name string) []string {
 
 type Modsjson struct {
 	//1.15.2
-	InheritsFrom string        `json:"inheritsFrom"`
-	MainClass    string        `json:"mainClass"`
-	ID           string        `json:"id"`
-	Libraries    []Librarie    `json:"libraries"`
-	Arguments    ArgumentsX115 `json:"arguments"`
+	MinecraftArguments string        `json:"minecraftArguments"`
+	InheritsFrom       string        `json:"inheritsFrom"`
+	MainClass          string        `json:"mainClass"`
+	ID                 string        `json:"id"`
+	Libraries          []Librarie    `json:"libraries"`
+	Arguments          ArgumentsX115 `json:"arguments"`
 }
 
 type Librarie struct {

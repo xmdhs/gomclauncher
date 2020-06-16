@@ -12,6 +12,7 @@ type LauncherjsonX115 struct {
 }
 
 type PatchX115 struct {
+	MinecraftArguments     string           `json:"minecraftArguments"`
 	AssetIndex             AssetIndexX115   `json:"assetIndex"`
 	Arguments              ArgumentsX115    `json:"arguments"`
 	Assets                 string           `json:"assets" example:"1.15"`
