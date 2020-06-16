@@ -3,18 +3,17 @@ package launcher
 import (
 	"bytes"
 	"fmt"
-	"gomclauncher/launcher/launcherjson"
 	"os/exec"
 	"runtime"
 )
 
 type launcher1155 struct {
-	json launcherjson.LauncherjsonX115
+	json LauncherjsonX115
 	flag []string
 	*Gameinfo
 }
 
-func NewLauncher1155(json launcherjson.LauncherjsonX115) *launcher1155 {
+func NewLauncher1155(json LauncherjsonX115) *launcher1155 {
 	flag := make([]string, 0)
 	return &launcher1155{json: json, flag: flag}
 }
@@ -40,7 +39,7 @@ func (l *launcher1155) cp() string {
 	return b.String()
 }
 
-func paths(l launcherjson.LibraryX115) string {
+func paths(l LibraryX115) string {
 	var allow bool
 	if l.Rules != nil {
 		for _, r := range l.Rules {

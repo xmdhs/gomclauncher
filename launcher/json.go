@@ -1,4 +1,4 @@
-package launcherjson
+package launcher
 
 type launcherjson struct {
 	ID string `json:"id"`

@@ -2,7 +2,6 @@ package launcher
 
 import (
 	"encoding/json"
-	"gomclauncher/launcher/launcherjson"
 	"io/ioutil"
 	"testing"
 )
@@ -12,7 +11,7 @@ func TestLauncher115(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	j := launcherjson.LauncherjsonX115{}
+	j := LauncherjsonX115{}
 	json.Unmarshal(b, &j)
 	//Launcher115(j)
 }

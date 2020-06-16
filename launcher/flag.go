@@ -2,7 +2,6 @@ package launcher
 
 import (
 	"encoding/json"
-	"gomclauncher/launcher/launcherjson"
 	"io/ioutil"
 	"log"
 	"strings"
@@ -64,7 +63,7 @@ func (g *Gameinfo) Run115() {
 }
 
 func (g *Gameinfo) modjson() *launcher1155 {
-	j := launcherjson.LauncherjsonX115{}
+	j := LauncherjsonX115{}
 	mod := Modsjson{}
 	var err error
 	err = json.Unmarshal(g.Jsonbyte, &mod)
@@ -93,11 +92,11 @@ func (g *Gameinfo) modjson() *launcher1155 {
 	return l
 }
 
-func Libraries2LibraryX115(l Librarie) launcherjson.LibraryX115 {
+func Libraries2LibraryX115(l Librarie) LibraryX115 {
 	p := Name2path(l.Name)
-	return launcherjson.LibraryX115{
-		Downloads: launcherjson.DownloadsX115{
-			Artifact: launcherjson.ArtifactX115{
+	return LibraryX115{
+		Downloads: DownloadsX115{
+			Artifact: ArtifactX115{
 				//<package>/<name>/<version>/<name>-<version>.jar
 				Path: strings.ReplaceAll(p[0], ".", "/") + "/" + p[1] + "/" + p[2] + "/" + p[1] + "-" + p[2] + ".jar",
 			},
