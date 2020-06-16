@@ -28,7 +28,6 @@ type Gameinfo struct {
 
 func (g *Gameinfo) Run115() {
 	l := g.modjson()
-	g.argumentsjvm(l)
 	l.flag = append(l.flag, `-Dminecraft.client.jar=`+g.Minecraftpath+`versions/`+l.json.ID+`/`+l.json.ID+`.jar`)
 	l.flag = append(l.flag, `-XX:+UseG1GC`)
 	l.flag = append(l.flag, `-Xmx`+g.RAM+`m`)
@@ -37,27 +36,8 @@ func (g *Gameinfo) Run115() {
 	l.flag = append(l.flag, `-Dfml.ignoreInvalidMinecraftCertificates=true`)
 	l.flag = append(l.flag, `-Dfml.ignorePatchDiscrepancies=true`)
 	g.argumentsjvm(l)
-	l.flag = append(l.flag, `-cp`)
-	l.flag = append(l.flag, l.cp())
 	l.flag = append(l.flag, l.json.Patches[0].MainClass)
-	l.flag = append(l.flag, `--username`)
-	l.flag = append(l.flag, g.Name)
-	l.flag = append(l.flag, `--version`)
-	l.flag = append(l.flag, Launcherbrand+" "+Launcherversion)
-	l.flag = append(l.flag, `--gameDir`)
-	l.flag = append(l.flag, g.GameDir)
-	l.flag = append(l.flag, `--assetsDir`)
-	l.flag = append(l.flag, g.Minecraftpath+`assets`)
-	l.flag = append(l.flag, `--assetIndex`)
-	l.flag = append(l.flag, l.json.Patches[0].AssetIndex.ID)
-	l.flag = append(l.flag, `--uuid`)
-	l.flag = append(l.flag, g.UUID)
-	l.flag = append(l.flag, `--accessToken`)
-	l.flag = append(l.flag, g.AccessToken)
-	l.flag = append(l.flag, `--userType`)
-	l.flag = append(l.flag, `mojang`)
-	l.flag = append(l.flag, `--versionType`)
-	l.flag = append(l.flag, Launcherbrand+" "+Launcherversion)
+	g.argumentsGame(l)
 	l.Launcher115()
 }
 
@@ -79,12 +59,8 @@ func (g *Gameinfo) modjson() *launcher1155 {
 		g.Version = mod.ID
 		j.Patches[0].MainClass = mod.MainClass
 		if len(mod.Arguments.Game) != 0 {
-			j.Patches[0].Arguments.Game = mod.Arguments.Game
+			j.Patches[0].Arguments.Game = append(j.Patches[0].Arguments.Game, mod.Arguments.Game...)
 		}
-		if len(mod.Arguments.Jvm) != 0 {
-			j.Patches[0].Arguments.Jvm = mod.Arguments.Jvm
-		}
-
 	} else {
 		err = json.Unmarshal(g.Jsonbyte, &j)
 		g.Version = j.ID

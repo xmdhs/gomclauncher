@@ -22,7 +22,11 @@ func (l launcher1155) Launcher115() {
 	fmt.Println(l.flag)
 	cmd := exec.Command("java", l.flag...)
 	cmd.Dir = l.GameDir
-	cmd.Run()
+	b, err := cmd.CombinedOutput()
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Print(string(b))
 }
 
 func (l *launcher1155) cp() string {

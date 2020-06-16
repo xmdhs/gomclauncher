@@ -11,16 +11,19 @@ func (g *Gameinfo) argumentsjvm(l *launcher1155) {
 			flags := Jvmarguments(Jvm)
 			if flags != nil {
 				for _, v := range flags {
-					if v != "" {
-						l.flag = append(l.flag, g.Jvmflagrelace(v, l))
-					}
+					g.jvmflagadd(v, l)
 				}
 			}
 		case string:
-			if v != "" {
-				l.flag = append(l.flag, g.Jvmflagrelace(v, l))
-			}
+			g.jvmflagadd(v, l)
 		}
+	}
+}
+
+func (g *Gameinfo) jvmflagadd(v string, l *launcher1155) {
+	flag := g.Jvmflagrelace(v, l)
+	if v != "" {
+		l.flag = append(l.flag, flag)
 	}
 }
 
@@ -28,14 +31,17 @@ func (g *Gameinfo) Jvmflagrelace(s string, l *launcher1155) string {
 	s = strings.ReplaceAll(s, "${natives_directory}", g.Minecraftpath+`versions/`+g.Version+`/natives`)
 	s = strings.ReplaceAll(s, "${launcher_name}", Launcherbrand)
 	s = strings.ReplaceAll(s, "${launcher_version}", Launcherversion)
-	s = strings.ReplaceAll(s, "${classpath}", "")
-	s = strings.ReplaceAll(s, "-cp", "")
+	s = strings.ReplaceAll(s, "${classpath}", l.cp())
 	return s
 }
 
 func Rule(v map[string]interface{}) Jvm {
 	jvm := Jvm{}
-	value := v["rules"].([]string)
+	values := v["value"].([]interface{})
+	value := make([]string, 0)
+	for _, v := range values {
+		value = append(value, v.(string))
+	}
 	jvm.Value = value
 	rules := v["rules"]
 	r := rules.([]interface{})
@@ -45,7 +51,8 @@ func Rule(v map[string]interface{}) Jvm {
 		r := rr.(map[string]interface{})
 		action := r["action"].(string)
 		jvmrule.Action = action
-		jvmrule.Os = r["os"].(map[string]string)["name"]
+		name := r["os"].(map[string]interface{})["name"]
+		jvmrule.Os = name.(string)
 		rule = append(rule, jvmrule)
 	}
 	jvm.Rules = rule
@@ -76,4 +83,30 @@ type Jvm struct {
 type JvmRule struct {
 	Action string
 	Os     string
+}
+
+func (g *Gameinfo) argumentsGame(l *launcher1155) {
+	j := l.json.Patches[0].Arguments.Game
+	for _, v := range j {
+		argument, ok := v.(string)
+		if ok {
+			flag := g.argumentsrelace(argument, l)
+			if flag != "" {
+				l.flag = append(l.flag, flag)
+			}
+		}
+	}
+}
+
+func (g *Gameinfo) argumentsrelace(s string, l *launcher1155) string {
+	s = strings.ReplaceAll(s, "${auth_player_name}", g.Name)
+	s = strings.ReplaceAll(s, "${version_name}", Launcherbrand+" "+Launcherversion)
+	s = strings.ReplaceAll(s, "${game_directory}", g.GameDir)
+	s = strings.ReplaceAll(s, "${assets_root}", g.Minecraftpath+`assets`)
+	s = strings.ReplaceAll(s, "${assets_index_name}", l.json.Patches[0].AssetIndex.ID)
+	s = strings.ReplaceAll(s, "${auth_uuid}", g.UUID)
+	s = strings.ReplaceAll(s, "${auth_access_token}", g.AccessToken)
+	s = strings.ReplaceAll(s, "${user_type}", "mojang")
+	s = strings.ReplaceAll(s, "${version_type}", Launcherbrand+" "+Launcherversion)
+	return s
 }
