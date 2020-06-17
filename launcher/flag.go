@@ -25,6 +25,7 @@ type Gameinfo struct {
 	//1.15.json []byte
 	Jsonbyte []byte
 	flag     map[string]string
+	Flag     []string
 }
 
 func (g *Gameinfo) Run115() {
@@ -36,6 +37,9 @@ func (g *Gameinfo) Run115() {
 	l.flag = append(l.flag, `-XX:-OmitStackTraceInFastThrow`)
 	l.flag = append(l.flag, `-Dfml.ignoreInvalidMinecraftCertificates=true`)
 	l.flag = append(l.flag, `-Dfml.ignorePatchDiscrepancies=true`)
+	if g.Flag != nil {
+		l.flag = append(l.flag, g.Flag...)
+	}
 	g.argumentsjvm(l)
 	l.flag = append(l.flag, l.json.Patches[0].MainClass)
 	g.argumentsGame(l)
