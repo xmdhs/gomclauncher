@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"net/http"
@@ -34,18 +35,36 @@ func Authenticate(username, password, clientToken string) (Auth, error) {
 	if err = json.Unmarshal(b, auth); err != nil {
 		return Auth, err
 	}
+	w := bytes.NewBuffer(nil)
+	for _, v := range auth.User.Properties {
+		var preferredLanguage, registrationCountry string
+		if v.Name == "preferredLanguage" {
+			preferredLanguage = v.Value
+		}
+		if v.Name == "registrationCountry" {
+			registrationCountry = v.Value
+		}
+		w.WriteString(`"{\"preferredLanguage\":[\"`)
+		w.WriteString(preferredLanguage)
+		w.WriteString(`\"],\"registrationCountry\":[\"`)
+		w.WriteString(registrationCountry)
+		w.WriteString(`\"]}"`)
+	}
+
 	Auth.AccessToken = auth.AccessToken
 	Auth.ID = auth.SelectedProfile.UserID
 	Auth.ClientToken = auth.ClientToken
 	Auth.Username = auth.SelectedProfile.Name
+	Auth.Userproperties = w.String()
 	return Auth, nil
 }
 
 type Auth struct {
-	Username    string
-	ClientToken string
-	ID          string
-	AccessToken string
+	Username       string
+	ClientToken    string
+	ID             string
+	AccessToken    string
+	Userproperties string
 }
 
 type AuthenticatePayload struct {
