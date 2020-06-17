@@ -138,8 +138,9 @@ type Modsjson struct {
 }
 
 type Librarie struct {
-	Name      string `json:"name"`
-	Url       string `json:"url"`
-	Clientreq bool   `json:"clientreq"`
-	Serverreq bool   `json:"serverreq"`
+	Name      string        `json:"name"`
+	Url       string        `json:"url"`
+	Clientreq bool          `json:"clientreq"`
+	Serverreq bool          `json:"serverreq"`
+	Downloads DownloadsX115 `json:"downloads"`
 }
