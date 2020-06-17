@@ -26,8 +26,6 @@ type Gameinfo struct {
 	Jsonbyte []byte
 	flag     map[string]string
 	Flag     []string
-	//"{\"preferredLanguage\":[\"zh-cn\"],\"registrationCountry\":[\"CN\"]}"
-	PreferredLanguage string
 }
 
 func (g *Gameinfo) Run115() {

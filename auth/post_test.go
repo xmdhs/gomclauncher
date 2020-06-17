@@ -19,7 +19,7 @@ func TestPost(t *testing.T) {
 		"requestUser": true                   
 	}`
 
-	b, err, i := post("authenticate", j, "")
+	b, err, i := post("", []byte(j))
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -108,9 +108,6 @@ func (g *Gameinfo) argumentsrelace(s string, l *launcher1155) string {
 	s = strings.ReplaceAll(s, "${auth_access_token}", g.AccessToken)
 	s = strings.ReplaceAll(s, "${user_type}", "mojang")
 	s = strings.ReplaceAll(s, "${version_type}", Launcherbrand+" "+Launcherversion)
-	if g.PreferredLanguage == "" {
-		g.PreferredLanguage = "{}"
-	}
-	s = strings.ReplaceAll(s, "${user_properties}", g.PreferredLanguage)
+	s = strings.ReplaceAll(s, "${user_properties}", `"{\"preferredLanguage\":[\"zh-cn\"],\"registrationCountry\":[\"CN\"]}"`)
 	return s
 }

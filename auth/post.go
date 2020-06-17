@@ -1,17 +1,19 @@
 package auth
 
 import (
+	"bytes"
 	"io/ioutil"
 	"net/http"
 	"net/url"
-	"strings"
 	"time"
 )
 
-func post(endpoint, Payload, proxyaddr string) ([]byte, error, int) {
+var Proxyaddr string
+
+func post(endpoint string, Payload []byte) ([]byte, error, int) {
 	var c http.Client
-	if proxyaddr != "" {
-		proxy, err := url.Parse(proxyaddr)
+	if Proxyaddr != "" {
+		proxy, err := url.Parse(Proxyaddr)
 		if err != nil {
 			return nil, err, 0
 		}
@@ -26,7 +28,7 @@ func post(endpoint, Payload, proxyaddr string) ([]byte, error, int) {
 			Timeout: 10 * time.Second,
 		}
 	}
-	h, err := http.NewRequest("POST", "https://authserver.mojang.com/"+endpoint, strings.NewReader(Payload))
+	h, err := http.NewRequest("POST", "https://authserver.mojang.com/"+endpoint, bytes.NewReader(Payload))
 	if err != nil {
 		return nil, err, 0
 	}
