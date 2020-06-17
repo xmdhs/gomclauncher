@@ -18,7 +18,7 @@ type Gameinfo struct {
 	UUID string
 	//eyJhbGciOiJIUzI1NiJ9
 	AccessToken string
-	//D:/mc/.minecraft/versions/1.15.2
+	//D:/mc/.minecraft/versions/1.15.2/
 	GameDir string
 	//1.15.2
 	Version string
@@ -30,7 +30,7 @@ type Gameinfo struct {
 
 func (g *Gameinfo) Run115() {
 	l := g.modjson()
-	l.flag = append(l.flag, `-Dminecraft.client.jar=`+g.Minecraftpath+`versions/`+l.json.ID+`/`+l.json.ID+`.jar`)
+	l.flag = append(l.flag, `-Dminecraft.client.jar=`+g.Minecraftpath+`/versions/`+l.json.ID+`/`+l.json.ID+`.jar`)
 	l.flag = append(l.flag, `-XX:+UseG1GC`)
 	l.flag = append(l.flag, `-Xmx`+g.RAM+`m`)
 	l.flag = append(l.flag, `-XX:-UseAdaptiveSizePolicy`)
@@ -53,7 +53,7 @@ func (g *Gameinfo) modjson() *launcher1155 {
 	var err error
 	err = json.Unmarshal(g.Jsonbyte, &mod)
 	if mod.InheritsFrom != "" {
-		b, err := ioutil.ReadFile(g.Minecraftpath + `versions/` + mod.InheritsFrom + "/" + mod.InheritsFrom + ".json")
+		b, err := ioutil.ReadFile(g.Minecraftpath + `/versions/` + mod.InheritsFrom + "/" + mod.InheritsFrom + ".json")
 		if err != nil {
 			log.Fatal(err)
 		}

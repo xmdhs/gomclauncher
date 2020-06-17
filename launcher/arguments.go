@@ -28,7 +28,7 @@ func (g *Gameinfo) jvmflagadd(v string, l *launcher1155) {
 }
 
 func (g *Gameinfo) Jvmflagrelace(s string, l *launcher1155) string {
-	s = strings.ReplaceAll(s, "${natives_directory}", g.Minecraftpath+`versions/`+g.Version+`/natives`)
+	s = strings.ReplaceAll(s, "${natives_directory}", g.Minecraftpath+`/versions/`+g.Version+`/natives`)
 	s = strings.ReplaceAll(s, "${launcher_name}", Launcherbrand)
 	s = strings.ReplaceAll(s, "${launcher_version}", Launcherversion)
 	s = strings.ReplaceAll(s, "${classpath}", l.cp())
@@ -102,7 +102,7 @@ func (g *Gameinfo) argumentsrelace(s string, l *launcher1155) string {
 	s = strings.ReplaceAll(s, "${auth_player_name}", g.Name)
 	s = strings.ReplaceAll(s, "${version_name}", Launcherbrand+" "+Launcherversion)
 	s = strings.ReplaceAll(s, "${game_directory}", g.GameDir)
-	s = strings.ReplaceAll(s, "${assets_root}", g.Minecraftpath+`assets`)
+	s = strings.ReplaceAll(s, "${assets_root}", g.Minecraftpath+`/assets`)
 	s = strings.ReplaceAll(s, "${assets_index_name}", l.json.Patches[0].AssetIndex.ID)
 	s = strings.ReplaceAll(s, "${auth_uuid}", g.UUID)
 	s = strings.ReplaceAll(s, "${auth_access_token}", g.AccessToken)

@@ -30,7 +30,7 @@ func (l launcher1155) Launcher115() {
 }
 
 func (l *launcher1155) cp() string {
-	path := l.Minecraftpath + `libraries/`
+	path := l.Minecraftpath + `/libraries/`
 	b := bytes.NewBuffer(nil)
 	for _, p := range l.json.Patches[0].Libraries {
 		if paths(p) != "" {
@@ -49,7 +49,7 @@ func (l *launcher1155) cp() string {
 			}
 		}
 	}
-	b.WriteString(l.Minecraftpath + `versions/` + l.json.ID + `/` + l.json.ID + `.jar`)
+	b.WriteString(l.Minecraftpath + `/versions/` + l.json.ID + `/` + l.json.ID + `.jar`)
 	return b.String()
 }
 
