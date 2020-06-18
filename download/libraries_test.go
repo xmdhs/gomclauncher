@@ -1,12 +1,6 @@
 package download
 
-import (
-	"encoding/json"
-	"io/ioutil"
-	"testing"
-)
-
-func TestNewlibraries(t *testing.T) {
+/*func TestNewlibraries(t *testing.T) {
 	b, err := ioutil.ReadFile("1.15.32.json")
 	if err != nil {
 		t.Fatal(err)
@@ -26,3 +20,4 @@ func TestAssets(t *testing.T) {
 		t.Log(v)
 	}
 }
+*/

@@ -5,7 +5,6 @@ import (
 	"gomclauncher/auth"
 	"gomclauncher/launcher"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"net/url"
 	"os"
@@ -18,18 +17,18 @@ type libraries struct {
 	assetIndex assets
 }
 
-func Newlibraries(b []byte) libraries {
+func Newlibraries(b []byte) (libraries, error) {
 	mod := launcher.Modsjson{}
 	var url, id string
 	l := launcher.LauncherjsonX115{}
 	err := json.Unmarshal(b, &mod)
 	if err != nil {
-		log.Fatalln(err)
+		return libraries{}, err
 	}
 	if mod.InheritsFrom != "" {
 		b, err := ioutil.ReadFile(`.minecraft/versions/` + mod.InheritsFrom + "/" + mod.InheritsFrom + ".json")
 		if err != nil {
-			log.Fatal(err)
+			return libraries{}, err
 		}
 		json.Unmarshal(b, &l)
 		modlibraries2(mod.Libraries, l)
@@ -56,7 +55,7 @@ func Newlibraries(b []byte) libraries {
 	return libraries{
 		librarie:   l,
 		assetIndex: a,
-	}
+	}, nil
 }
 
 type assets struct {
@@ -102,15 +101,11 @@ func get(u, path string) error {
 	}
 	_, err = os.Stat(path)
 	if err != nil {
-		if os.IsExist(err) {
-			s := strings.Split(path, "/")
-			ss := strings.ReplaceAll(path, s[len(s)-1], "")
-			os.MkdirAll(ss, 777)
-		} else {
-			panic(err)
-		}
+		s := strings.Split(path, "/")
+		ss := strings.ReplaceAll(path, s[len(s)-1], "")
+		os.MkdirAll(ss, 777)
 	}
-	f, err := os.OpenFile(path, os.O_CREATE|os.O_WRONLY, 777)
+	f, err := os.Create(path)
 	defer f.Close()
 	if err != nil {
 		return err

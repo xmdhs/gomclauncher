@@ -13,7 +13,7 @@ import (
 func (l libraries) Downassets(typee string) error {
 	for _, v := range l.assetIndex.Objects {
 		v := v
-		ok := ver(`.minecraft/assets/objects/`+v.Hash[:2]+`/`+v.Hash, v.Hash)
+		ok := ver(`./.minecraft/assets/objects/`+v.Hash[:2]+`/`+v.Hash, v.Hash)
 		if ok {
 			continue
 		}
@@ -21,7 +21,7 @@ func (l libraries) Downassets(typee string) error {
 			if i == 3 {
 				return errors.New("file download fail")
 			}
-			err := get(source(`http://resources.download.minecraft.net`+v.Hash[:2]+`/`+v.Hash, typee), `.minecraft/assets/objects/`+v.Hash[:2]+`/`+v.Hash)
+			err := get(source(`http://resources.download.minecraft.net`+v.Hash[:2]+`/`+v.Hash, typee), `./.minecraft/assets/objects/`+v.Hash[:2]+`/`+v.Hash)
 			if err != nil {
 				_, ok := err.(*url.Error)
 				if ok {
@@ -60,7 +60,7 @@ func (l libraries) Downlibrarie(typee string) error {
 	for _, v := range l.librarie.Patches[0].Libraries {
 		v := v
 		var ok bool
-		path := `.minecraft/libraries/` + v.Downloads.Artifact.Path
+		path := `./.minecraft/libraries/` + v.Downloads.Artifact.Path
 		librariesvar(v, path, &ok)
 		if !ok {
 			for i := 0; i < 4; i++ {
@@ -79,7 +79,7 @@ func (l libraries) Downlibrarie(typee string) error {
 				if !ok {
 					continue
 				}
-				return errors.New("file download fail")
+				break
 			}
 		}
 	}
