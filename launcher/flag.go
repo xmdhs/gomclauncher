@@ -2,8 +2,9 @@ package launcher
 
 import (
 	"encoding/json"
+	"errors"
 	"io/ioutil"
-	"log"
+	"os"
 	"strings"
 )
 
@@ -30,8 +31,11 @@ type Gameinfo struct {
 	Userproperties string
 }
 
-func (g *Gameinfo) Run115() {
-	l := g.modjson()
+func (g *Gameinfo) Run115() error {
+	l, err := g.modjson()
+	if err != nil {
+		return err
+	}
 	l.flag = append(l.flag, `-Dminecraft.client.jar=`+g.Minecraftpath+`/versions/`+l.json.ID+`/`+l.json.ID+`.jar`)
 	l.flag = append(l.flag, `-XX:+UseG1GC`)
 	l.flag = append(l.flag, `-Xmx`+g.RAM+`m`)
@@ -42,24 +46,37 @@ func (g *Gameinfo) Run115() {
 	if g.Flag != nil {
 		l.flag = append(l.flag, g.Flag...)
 	}
-	g.argumentsjvm(l)
+	err = g.argumentsjvm(l)
+	if err != nil {
+		return err
+	}
 	l.flag = append(l.flag, l.json.Patches[0].MainClass)
 	g.argumentsGame(l)
 	l.Launcher115()
+	return nil
 }
 
-func (g *Gameinfo) modjson() *launcher1155 {
+func (g *Gameinfo) modjson() (*launcher1155, error) {
 	g.flag = make(map[string]string)
 	j := LauncherjsonX115{}
 	mod := Modsjson{}
 	var err error
 	err = json.Unmarshal(g.Jsonbyte, &mod)
+	if err != nil {
+		return nil, errors.New("json err")
+	}
 	if mod.InheritsFrom != "" {
 		b, err := ioutil.ReadFile(g.Minecraftpath + `/versions/` + mod.InheritsFrom + "/" + mod.InheritsFrom + ".json")
 		if err != nil {
-			log.Fatal(err)
+			if os.IsNotExist(err) {
+				return nil, errors.New("json not exist")
+			}
+			panic(err)
 		}
 		err = json.Unmarshal(b, &j)
+		if err != nil {
+			return nil, errors.New("json err")
+		}
 		for _, v := range mod.Libraries {
 			l := g.Libraries2LibraryX115(v)
 			j.Patches[0].Libraries = append(j.Patches[0].Libraries, l)
@@ -76,19 +93,18 @@ func (g *Gameinfo) modjson() *launcher1155 {
 
 	} else {
 		err = json.Unmarshal(g.Jsonbyte, &j)
+		if err != nil {
+			return nil, errors.New("json err")
+		}
 		if j.Patches[0].MinecraftArguments != "" {
 			j.Patches[0].Arguments.Game = append(j.Patches[0].Arguments.Game, MinecraftArguments2jvm(j.Patches[0].MinecraftArguments)...)
 			j.Patches[0].Arguments.Jvm = append(j.Patches[0].Arguments.Jvm, getjvm()...)
 		}
 		g.Version = j.ID
 	}
-	if err != nil {
-		log.Fatal(err)
-	}
-
 	l := NewLauncher1155(j)
 	l.Gameinfo = g
-	return l
+	return l, nil
 }
 
 func getjvm() []interface{} {

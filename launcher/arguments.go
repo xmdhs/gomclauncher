@@ -1,8 +1,11 @@
 package launcher
 
-import "strings"
+import (
+	"errors"
+	"strings"
+)
 
-func (g *Gameinfo) argumentsjvm(l *launcher1155) {
+func (g *Gameinfo) argumentsjvm(l *launcher1155) error {
 	j := l.json.Patches[0].Arguments.Jvm
 	for _, v := range j {
 		switch v := v.(type) {
@@ -16,8 +19,11 @@ func (g *Gameinfo) argumentsjvm(l *launcher1155) {
 			}
 		case string:
 			g.jvmflagadd(v, l)
+		default:
+			return errors.New("json not true")
 		}
 	}
+	return nil
 }
 
 func (g *Gameinfo) jvmflagadd(v string, l *launcher1155) {
