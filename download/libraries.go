@@ -100,6 +100,16 @@ func get(u, path string) error {
 	if err != nil {
 		return err
 	}
+	_, err = os.Stat(path)
+	if err != nil {
+		if os.IsExist(err) {
+			s := strings.Split(path, "/")
+			ss := strings.ReplaceAll(path, s[len(s)-1], "")
+			os.MkdirAll(ss, 777)
+		} else {
+			panic(err)
+		}
+	}
 	f, err := os.OpenFile(path, os.O_CREATE|os.O_WRONLY, 777)
 	defer f.Close()
 	if err != nil {
@@ -125,5 +135,12 @@ func modlibraries2(l []launcher.Librarie, Launcherjson launcher.LauncherjsonX115
 			Librarie.Downloads.Artifact.URL = v.Url + path
 			Launcherjson.Patches[0].Libraries = append(Launcherjson.Patches[0].Libraries, Librarie)
 		}
+	}
+}
+
+func source(url, types string) string {
+	switch types {
+	default:
+		return url
 	}
 }
