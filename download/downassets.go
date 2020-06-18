@@ -9,7 +9,7 @@ import (
 	"os"
 )
 
-func Downassets(l libraries, typee string) error {
+func (l libraries) Downassets(typee string) error {
 	for _, v := range l.assetIndex.Objects {
 		ok := ver(`.minecraft/assets/objects/`+v.Hash[:2]+`/`+v.Hash, v.Hash)
 		if ok {
