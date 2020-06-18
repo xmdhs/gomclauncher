@@ -1,4 +1,4 @@
-package auth
+package download
 
 import (
 	"encoding/json"
@@ -44,12 +44,12 @@ func Newlibraries(b []byte) libraries {
 		if os.IsNotExist(err) {
 			get(url, path)
 		} else {
-			log.Fatalln(err)
+			panic(err)
 		}
 	}
 	bb, err := ioutil.ReadFile(path)
 	if err != nil {
-		log.Fatalln(err)
+		panic(err)
 	}
 	a := assets{}
 	json.Unmarshal(bb, &a)

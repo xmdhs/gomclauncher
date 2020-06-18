@@ -22,7 +22,7 @@ func Authenticate(username, password, clientToken string) (Auth, error) {
 	b, err := json.Marshal(a)
 	Auth := Auth{}
 	if err != nil {
-		return Auth, err
+		panic(err)
 	}
 	b, err, i := post("authenticate", b)
 	if err != nil {
@@ -33,7 +33,7 @@ func Authenticate(username, password, clientToken string) (Auth, error) {
 	}
 	auth := &AuthenticateResponse{}
 	if err = json.Unmarshal(b, auth); err != nil {
-		return Auth, err
+		panic(err)
 	}
 	w := bytes.NewBuffer(nil)
 	for _, v := range auth.User.Properties {

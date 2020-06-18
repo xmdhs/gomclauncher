@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"gomclauncher/auth"
+	"gomclauncher/download"
 	"gomclauncher/launcher"
 	"io/ioutil"
 )
@@ -21,4 +23,6 @@ func main() {
 		GameDir:       `D:/mc/.minecraft`,
 	}
 	j.Run115()
+	auth.Authenticate("a", "a", "a")
+	download.Newlibraries(nil)
 }
