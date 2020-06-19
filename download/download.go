@@ -9,7 +9,7 @@ import (
 	"os"
 )
 
-func (l libraries) Downassets(typee string, i int) error {
+func (l libraries) Downassets(typee string, i int, c chan int) error {
 	ch := make(chan bool, i)
 	e := make(chan error, len(l.assetIndex.Objects))
 	done := make(chan bool, len(l.assetIndex.Objects))
@@ -52,7 +52,9 @@ func (l libraries) Downassets(typee string, i int) error {
 		select {
 		case <-done:
 			n++
+			c <- len(l.assetIndex.Objects) - n
 			if n == len(l.assetIndex.Objects) {
+				close(c)
 				return nil
 			}
 		case err := <-e:
@@ -78,7 +80,7 @@ func ver(path, hash string) bool {
 	return false
 }
 
-func (l libraries) Downlibrarie(typee string, i int) error {
+func (l libraries) Downlibrarie(typee string, i int, c chan int) error {
 	ch := make(chan bool, i)
 	e := make(chan error, len(l.librarie.Patches[0].Libraries))
 	done := make(chan bool, len(l.librarie.Patches[0].Libraries))
@@ -120,7 +122,9 @@ func (l libraries) Downlibrarie(typee string, i int) error {
 		select {
 		case <-done:
 			n++
+			c <- len(l.librarie.Patches[0].Libraries) - n
 			if n == len(l.librarie.Patches[0].Libraries) {
+				close(c)
 				return nil
 			}
 		case err := <-e:
