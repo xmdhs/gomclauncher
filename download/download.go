@@ -23,17 +23,18 @@ func (l libraries) Downassets(typee string, i int) error {
 			ch <- true
 			go func() {
 				defer w.Done()
+				defer func() {
+					<-ch
+				}()
 				for i := 0; i < 6; i++ {
 					if i == 5 {
 						e <- errors.New("file download fail")
-						<-ch
 						break
 					}
 					err := get(source(`http://resources.download.minecraft.net/`+v.Hash[:2]+`/`+v.Hash, typee), `./.minecraft/assets/objects/`+v.Hash[:2]+`/`+v.Hash)
 					if err != nil {
 						if err.Error() == "proxy err" {
 							e <- errors.New("proxy err")
-							<-ch
 							break
 						}
 						continue
@@ -42,7 +43,6 @@ func (l libraries) Downassets(typee string, i int) error {
 					if !ok {
 						continue
 					}
-					<-ch
 					break
 				}
 			}()
@@ -87,17 +87,18 @@ func (l libraries) Downlibrarie(typee string, i int) error {
 			ch <- true
 			go func() {
 				defer w.Done()
+				defer func() {
+					<-ch
+				}()
 				for i := 0; i < 4; i++ {
 					if i == 3 {
 						e <- errors.New("file download fail")
-						<-ch
 						break
 					}
 					err := get(source(v.Downloads.Artifact.URL, typee), path)
 					if err != nil {
 						if err.Error() == "proxy err" {
 							e <- errors.New("proxy err")
-							<-ch
 							break
 						}
 						continue
@@ -105,7 +106,6 @@ func (l libraries) Downlibrarie(typee string, i int) error {
 					if !librariesvar(v, path) {
 						continue
 					}
-					<-ch
 					break
 				}
 			}()
