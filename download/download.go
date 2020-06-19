@@ -59,10 +59,8 @@ func ver(path, hash string) bool {
 func (l libraries) Downlibrarie(typee string) error {
 	for _, v := range l.librarie.Patches[0].Libraries {
 		v := v
-		var ok bool
 		path := `./.minecraft/libraries/` + v.Downloads.Artifact.Path
-		librariesvar(v, path, &ok)
-		if !ok {
+		if !librariesvar(v, path) {
 			for i := 0; i < 4; i++ {
 				if i == 3 {
 					return errors.New("file download fail")
@@ -75,8 +73,7 @@ func (l libraries) Downlibrarie(typee string) error {
 					}
 					continue
 				}
-				librariesvar(v, path, &ok)
-				if !ok {
+				if !librariesvar(v, path) {
 					continue
 				}
 				break
@@ -86,15 +83,14 @@ func (l libraries) Downlibrarie(typee string) error {
 	return nil
 }
 
-func librariesvar(v launcher.LibraryX115, path string, ok *bool) {
+func librariesvar(v launcher.LibraryX115, path string) bool {
 	if v.Downloads.Artifact.Sha1 != "" {
-		*ok = ver(path, v.Downloads.Artifact.Sha1)
-	} else {
-		_, err := os.Stat(path)
-		if err != nil {
-			*ok = false
-		} else {
-			*ok = true
-		}
+		return ver(path, v.Downloads.Artifact.Sha1)
 	}
+	_, err := os.Stat(path)
+	if err != nil {
+		return false
+	}
+	return true
+
 }
