@@ -22,11 +22,11 @@ func (l libraries) Downassets(typee string, i int) error {
 			w.Add(1)
 			ch <- true
 			go func() {
+				defer w.Done()
 				for i := 0; i < 6; i++ {
 					if i == 5 {
 						e <- errors.New("file download fail")
 						<-ch
-						w.Done()
 						break
 					}
 					err := get(source(`http://resources.download.minecraft.net/`+v.Hash[:2]+`/`+v.Hash, typee), `./.minecraft/assets/objects/`+v.Hash[:2]+`/`+v.Hash)
@@ -34,7 +34,6 @@ func (l libraries) Downassets(typee string, i int) error {
 						if err.Error() == "proxy err" {
 							e <- errors.New("proxy err")
 							<-ch
-							w.Done()
 							break
 						}
 						continue
@@ -44,7 +43,6 @@ func (l libraries) Downassets(typee string, i int) error {
 						continue
 					}
 					<-ch
-					w.Done()
 					break
 				}
 			}()
@@ -79,19 +77,20 @@ func ver(path, hash string) bool {
 func (l libraries) Downlibrarie(typee string, i int) error {
 	ch := make(chan bool, i)
 	e := make(chan error, len(l.librarie.Patches[0].Libraries))
-	done := make(chan bool, len(l.librarie.Patches[0].Libraries))
 	defer close(ch)
+	w := sync.WaitGroup{}
 	for _, v := range l.librarie.Patches[0].Libraries {
 		v := v
 		path := `./.minecraft/libraries/` + v.Downloads.Artifact.Path
 		if !librariesvar(v, path) {
+			w.Add(1)
 			ch <- true
 			go func() {
+				defer w.Done()
 				for i := 0; i < 4; i++ {
 					if i == 3 {
 						e <- errors.New("file download fail")
 						<-ch
-						done <- true
 						break
 					}
 					err := get(source(v.Downloads.Artifact.URL, typee), path)
@@ -99,7 +98,6 @@ func (l libraries) Downlibrarie(typee string, i int) error {
 						if err.Error() == "proxy err" {
 							e <- errors.New("proxy err")
 							<-ch
-							done <- true
 							break
 						}
 						continue
@@ -108,24 +106,18 @@ func (l libraries) Downlibrarie(typee string, i int) error {
 						continue
 					}
 					<-ch
-					done <- true
 					break
 				}
 			}()
-		} else {
-			done <- true
 		}
 	}
-	n := 0
+	w.Wait()
 	for {
 		select {
-		case <-done:
-			n++
-			if n == len(l.librarie.Patches[0].Libraries) {
-				return nil
-			}
 		case err := <-e:
 			return err
+		default:
+			return nil
 		}
 	}
 }
