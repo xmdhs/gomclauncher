@@ -31,7 +31,7 @@ func Newlibraries(b []byte) (libraries, error) {
 			return libraries{}, err
 		}
 		json.Unmarshal(b, &l)
-		modlibraries2(mod.Libraries, l)
+		modlibraries2(mod.Libraries, &l)
 	} else {
 		json.Unmarshal(b, &l)
 	}
@@ -114,7 +114,7 @@ func get(u, path string) error {
 	return nil
 }
 
-func modlibraries2(l []launcher.Librarie, Launcherjson launcher.LauncherjsonX115) {
+func modlibraries2(l []launcher.Librarie, Launcherjson *launcher.LauncherjsonX115) {
 	for _, v := range l {
 		if v.Downloads.Artifact.URL != "" {
 			Librarie := launcher.LibraryX115{}
