@@ -7,24 +7,21 @@ import (
 	"gomclauncher/launcher"
 	"io"
 	"os"
-	"sync"
 )
 
 func (l libraries) Downassets(typee string, i int) error {
 	ch := make(chan bool, i)
 	e := make(chan error, len(l.assetIndex.Objects))
-	defer close(ch)
-	w := sync.WaitGroup{}
+	done := make(chan bool, len(l.assetIndex.Objects))
 	for _, v := range l.assetIndex.Objects {
 		v := v
 		ok := ver(`./.minecraft/assets/objects/`+v.Hash[:2]+`/`+v.Hash, v.Hash)
 		if !ok {
-			w.Add(1)
 			ch <- true
 			go func() {
-				defer w.Done()
 				defer func() {
 					<-ch
+					done <- true
 				}()
 				for i := 0; i < 6; i++ {
 					if i == 5 {
@@ -46,14 +43,21 @@ func (l libraries) Downassets(typee string, i int) error {
 					break
 				}
 			}()
+		} else {
+			done <- true
 		}
 	}
-	w.Wait()
-	select {
-	case err := <-e:
-		return err
-	default:
-		return nil
+	n := 0
+	for {
+		select {
+		case <-done:
+			n++
+			if n == len(l.assetIndex.Objects) {
+				return nil
+			}
+		case err := <-e:
+			return err
+		}
 	}
 }
 
@@ -77,18 +81,16 @@ func ver(path, hash string) bool {
 func (l libraries) Downlibrarie(typee string, i int) error {
 	ch := make(chan bool, i)
 	e := make(chan error, len(l.librarie.Patches[0].Libraries))
-	defer close(ch)
-	w := sync.WaitGroup{}
+	done := make(chan bool, len(l.librarie.Patches[0].Libraries))
 	for _, v := range l.librarie.Patches[0].Libraries {
 		v := v
 		path := `./.minecraft/libraries/` + v.Downloads.Artifact.Path
 		if !librariesvar(v, path) {
-			w.Add(1)
 			ch <- true
 			go func() {
-				defer w.Done()
 				defer func() {
 					<-ch
+					done <- true
 				}()
 				for i := 0; i < 4; i++ {
 					if i == 3 {
@@ -109,15 +111,20 @@ func (l libraries) Downlibrarie(typee string, i int) error {
 					break
 				}
 			}()
+		} else {
+			done <- true
 		}
 	}
-	w.Wait()
+	n := 0
 	for {
 		select {
+		case <-done:
+			n++
+			if n == len(l.librarie.Patches[0].Libraries) {
+				return nil
+			}
 		case err := <-e:
 			return err
-		default:
-			return nil
 		}
 	}
 }

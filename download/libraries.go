@@ -42,7 +42,10 @@ func Newlibraries(b []byte) (libraries, error) {
 	_, err = os.Stat(path)
 	if err != nil {
 		if os.IsNotExist(err) {
-			get(url, path)
+			err := get(url, path)
+			if err != nil {
+				return libraries{}, err
+			}
 		} else {
 			panic(err)
 		}
