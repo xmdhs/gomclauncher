@@ -8,14 +8,14 @@ import (
 func TestNewlibraries(t *testing.T) {
 	b, err := ioutil.ReadFile("1.15.2.json")
 	if err != nil {
-		panic(err)
+		t.Fatal(err)
 	}
 	l, err := Newlibraries(b)
 	if err != nil {
-		panic(err)
+		t.Fatal(err)
 	}
-	err = l.Downlibrarie("")
+	err = l.Downlibrarie("", 4)
 	if err != nil {
-		panic(err)
+		t.Fatal(err)
 	}
 }
