@@ -2,6 +2,7 @@ package download
 
 import (
 	"encoding/json"
+	"errors"
 	"gomclauncher/auth"
 	"gomclauncher/launcher"
 	"io/ioutil"
@@ -71,7 +72,7 @@ func get(u, path string) error {
 	if auth.Proxyaddr != "" {
 		proxy, err := url.Parse(auth.Proxyaddr)
 		if err != nil {
-			return err
+			return errors.New("proxy err")
 		}
 		c = http.Client{
 			Transport: &http.Transport{
