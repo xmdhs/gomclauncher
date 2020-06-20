@@ -77,11 +77,11 @@ func get(u, path string) error {
 		if err != nil {
 			return errors.New("proxy err")
 		}
+		transport := http.DefaultTransport.(*http.Transport)
+		transport.Proxy = http.ProxyURL(proxy)
 		c = http.Client{
-			Transport: &http.Transport{
-				Proxy: http.ProxyURL(proxy),
-			},
-			Timeout: 10 * time.Second,
+			Transport: transport,
+			Timeout:   10 * time.Second,
 		}
 	} else {
 		c = http.Client{
