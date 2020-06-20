@@ -77,7 +77,7 @@ func get(u, path string) error {
 		if err != nil {
 			return errors.New("proxy err")
 		}
-		transport := http.DefaultTransport.(*http.Transport)
+		transport := http.DefaultTransport.(*http.Transport).Clone()
 		transport.Proxy = http.ProxyURL(proxy)
 		c = http.Client{
 			Transport: transport,

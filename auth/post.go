@@ -18,7 +18,7 @@ func post(endpoint string, Payload []byte) ([]byte, error, int) {
 		if err != nil {
 			return nil, errors.New("proxy err"), 0
 		}
-		transport := http.DefaultTransport.(*http.Transport)
+		transport := http.DefaultTransport.(*http.Transport).Clone()
 		transport.Proxy = http.ProxyURL(proxy)
 		c = http.Client{
 			Transport: transport,
