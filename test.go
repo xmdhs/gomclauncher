@@ -21,7 +21,7 @@ func main() {
 		Name:          `Name`,
 		UUID:          `9f51573a5ec545828c2b09f7f08497b1`,
 		AccessToken:   "nil",
-		gamedir:       `D:/mc/.minecraft`,
+		Gamedir:       `D:/mc/.minecraft`,
 	}
 	j.Run115()
 	auth.Authenticate("a", "a", "a")

@@ -24,12 +24,18 @@ func Refresh(a *Auth) error {
 	}
 	json.Unmarshal(b, &r)
 	a.AccessToken = r.AccessToken
+	a.Username = r.SelectedProfile.Name
 	return nil
 }
 
 type Refreshs struct {
-	AccessToken string `json:"accessToken"`
-	ClientToken string `json:"clientToken"`
+	AccessToken     string          `json:"accessToken"`
+	ClientToken     string          `json:"clientToken"`
+	SelectedProfile SElectedProfile `json:"selectedProfile"`
+}
+
+type SElectedProfile struct {
+	Name string `json:"name"`
 }
 
 func Validate(a Auth) error {

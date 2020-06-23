@@ -22,7 +22,7 @@ func NewLauncher1155(json LauncherjsonX115) *launcher1155 {
 func (l launcher1155) Launcher115() {
 	fmt.Println(l.flag)
 	cmd := exec.Command("java", l.flag...)
-	cmd.Dir = l.gamedir
+	cmd.Dir = l.Gamedir
 	err := cmd.Run()
 	if err != nil {
 		log.Fatalln(err)
