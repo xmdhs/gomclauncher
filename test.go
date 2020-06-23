@@ -1,5 +1,6 @@
-/*package main
+package main
 
+/*
 import (
 	"fmt"
 	"gomclauncher/auth"
@@ -20,7 +21,7 @@ func main() {
 		Name:          `Name`,
 		UUID:          `9f51573a5ec545828c2b09f7f08497b1`,
 		AccessToken:   "nil",
-		GameDir:       `D:/mc/.minecraft`,
+		gamedir:       `D:/mc/.minecraft`,
 	}
 	j.Run115()
 	auth.Authenticate("a", "a", "a")

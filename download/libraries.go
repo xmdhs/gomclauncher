@@ -13,23 +13,23 @@ import (
 	"time"
 )
 
-type libraries struct {
+type Libraries struct {
 	librarie   launcher.LauncherjsonX115
 	assetIndex assets
 }
 
-func Newlibraries(b []byte) (libraries, error) {
+func Newlibraries(b []byte) (Libraries, error) {
 	mod := launcher.Modsjson{}
 	var url, id string
 	l := launcher.LauncherjsonX115{}
 	err := json.Unmarshal(b, &mod)
 	if err != nil {
-		return libraries{}, err
+		return Libraries{}, err
 	}
 	if mod.InheritsFrom != "" {
 		b, err := ioutil.ReadFile(`.minecraft/versions/` + mod.InheritsFrom + "/" + mod.InheritsFrom + ".json")
 		if err != nil {
-			return libraries{}, err
+			return Libraries{}, err
 		}
 		json.Unmarshal(b, &l)
 		modlibraries2(mod.Libraries, &l)
@@ -44,7 +44,7 @@ func Newlibraries(b []byte) (libraries, error) {
 		if os.IsNotExist(err) {
 			err := get(url, path)
 			if err != nil {
-				return libraries{}, err
+				return Libraries{}, err
 			}
 		} else {
 			panic(err)
@@ -56,7 +56,7 @@ func Newlibraries(b []byte) (libraries, error) {
 	}
 	a := assets{}
 	json.Unmarshal(bb, &a)
-	return libraries{
+	return Libraries{
 		librarie:   l,
 		assetIndex: a,
 	}, nil

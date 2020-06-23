@@ -17,12 +17,14 @@ func Getversionlist(atype string) (*Version, error) {
 	}
 	v := Version{}
 	json.Unmarshal(b, &v)
+	v.atype = atype
 	return &v, nil
 }
 
 type Version struct {
 	Latest   VersionLatest    `json:"latest"`
 	Versions []VersionVersion `json:"versions"`
+	atype    string
 }
 
 type VersionLatest struct {
@@ -39,9 +41,9 @@ type VersionVersion struct {
 }
 
 func (v Version) Downjson(ver string) error {
-	for _, v := range v.Versions {
-		if v.ID == ver {
-			err := get(v.URL, `.minecraft/versions/`+v.ID+`/`+v.ID+`.json`)
+	for _, vv := range v.Versions {
+		if vv.ID == ver {
+			err := get(source(vv.URL, v.atype), `.minecraft/versions/`+vv.ID+`/`+vv.ID+`.json`)
 			if err != nil {
 				return err
 			}

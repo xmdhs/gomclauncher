@@ -20,7 +20,7 @@ type Gameinfo struct {
 	//eyJhbGciOiJIUzI1NiJ9
 	AccessToken string
 	//D:/mc/.minecraft/versions/1.15.2/
-	GameDir string
+	gamedir string
 	//1.15.2
 	Version string
 	//1.15.json []byte
@@ -33,7 +33,7 @@ type Gameinfo struct {
 
 func (g *Gameinfo) Run115() error {
 	creatlauncherprofiles(g)
-	g.GameDir = g.Minecraftpath + "/versions/" + g.Version + "/"
+	g.gamedir = g.Minecraftpath + "/versions/" + g.Version + "/"
 	l, err := g.modjson()
 	if err != nil {
 		return err

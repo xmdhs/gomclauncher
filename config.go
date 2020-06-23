@@ -6,6 +6,7 @@ import (
 	"gomclauncher/auth"
 	"io/ioutil"
 	"os"
+	"strings"
 
 	"github.com/google/uuid"
 )
@@ -16,7 +17,6 @@ type config struct {
 	ClientToken      string
 	Userproperties   string
 	AccessToken      string
-	Nameuuid         map[string]string
 	EmailAccessToken map[string]string
 }
 
@@ -34,7 +34,6 @@ func (c config) setonline(email, pass string) error {
 	}
 	aconfig.Name = a.Username
 	aconfig.UUID = a.ID
-	aconfig.Nameuuid[a.Username] = a.ID
 	aconfig.AccessToken = a.AccessToken
 	aconfig.EmailAccessToken[email] = a.AccessToken
 	aconfig.Userproperties = a.Userproperties
@@ -52,7 +51,6 @@ func init() {
 			if err != nil {
 				panic(err)
 			}
-			aconfig.Nameuuid = make(map[string]string)
 			aconfig.EmailAccessToken = make(map[string]string)
 		} else {
 			panic(err)
@@ -90,4 +88,15 @@ func aerr(err error) {
 	if err != nil {
 		panic(err)
 	}
+}
+
+func uuidgen(name string) string {
+	b := []byte(name)
+	if len(b) <= 16 {
+		b = append(b, make([]byte, 16)...)
+	}
+	u, err := uuid.FromBytes(b[0:16])
+	aerr(err)
+	UUID := strings.ReplaceAll(u.String(), "-", "")
+	return UUID
 }
