@@ -28,7 +28,7 @@ func main() {
 	}
 	f.Gameinfo.RAM = f.RAM
 	if f.Run != "" {
-		f.Run115()
+		f.Arun()
 	}
 }
 
@@ -53,5 +53,6 @@ func init() {
 	flag.StringVar(&f.Aflag, "flag", "", "自定的启动参数，比如 -XX:+AggressiveOpts -XX:+UseCompressedOops")
 	flag.StringVar(&f.Proxy, `proxy`, "", `设置下载用的代理(http)`)
 	flag.StringVar(&f.Atype, "type", "", `设置下载源。目前只能使用官方下载源`)
+	flag.BoolVar(&f.Independent, "independent", false, "是否开启版本隔离")
 	flag.Parse()
 }

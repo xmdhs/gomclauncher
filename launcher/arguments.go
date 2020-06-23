@@ -6,7 +6,7 @@ import (
 )
 
 func (g *Gameinfo) argumentsjvm(l *launcher1155) error {
-	j := l.json.Patches[0].Arguments.Jvm
+	j := l.json.Arguments.Jvm
 	for _, v := range j {
 		switch v := v.(type) {
 		case map[string]interface{}:
@@ -92,7 +92,7 @@ type JvmRule struct {
 }
 
 func (g *Gameinfo) argumentsGame(l *launcher1155) {
-	j := l.json.Patches[0].Arguments.Game
+	j := l.json.Arguments.Game
 	for _, v := range j {
 		argument, ok := v.(string)
 		if ok {
@@ -109,7 +109,7 @@ func (g *Gameinfo) argumentsrelace(s string, l *launcher1155) string {
 	s = strings.ReplaceAll(s, "${version_name}", Launcherbrand+" "+Launcherversion)
 	s = strings.ReplaceAll(s, "${game_directory}", g.Gamedir)
 	s = strings.ReplaceAll(s, "${assets_root}", g.Minecraftpath+`/assets`)
-	s = strings.ReplaceAll(s, "${assets_index_name}", l.json.Patches[0].AssetIndex.ID)
+	s = strings.ReplaceAll(s, "${assets_index_name}", l.json.AssetIndex.ID)
 	s = strings.ReplaceAll(s, "${auth_uuid}", g.UUID)
 	s = strings.ReplaceAll(s, "${auth_access_token}", g.AccessToken)
 	s = strings.ReplaceAll(s, "${user_type}", "mojang")

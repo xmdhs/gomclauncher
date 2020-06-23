@@ -36,8 +36,8 @@ func Newlibraries(b []byte) (Libraries, error) {
 	} else {
 		json.Unmarshal(b, &l)
 	}
-	url = l.Patches[0].AssetIndex.URL
-	id = l.Patches[0].AssetIndex.ID
+	url = l.AssetIndex.URL
+	id = l.AssetIndex.ID
 	path := ".minecraft/assets/indexes/" + id + ".json"
 	_, err = os.Stat(path)
 	if err != nil {
@@ -102,14 +102,14 @@ func modlibraries2(l []launcher.Librarie, Launcherjson *launcher.LauncherjsonX11
 			Librarie.Downloads.Artifact.Path = v.Downloads.Artifact.Path
 			Librarie.Downloads.Artifact.URL = v.Downloads.Artifact.URL
 			Librarie.Downloads.Artifact.Sha1 = v.Downloads.Artifact.Sha1
-			Launcherjson.Patches[0].Libraries = append(Launcherjson.Patches[0].Libraries, Librarie)
+			Launcherjson.Libraries = append(Launcherjson.Libraries, Librarie)
 		} else {
 			Librarie := launcher.LibraryX115{}
 			s := launcher.Name2path(v.Name)
 			path := strings.ReplaceAll(s[0], ".", "/") + "/" + s[1] + "/" + s[2] + "/" + s[1] + "-" + s[2] + ".jar"
 			Librarie.Downloads.Artifact.Path = path
 			Librarie.Downloads.Artifact.URL = v.Url + path
-			Launcherjson.Patches[0].Libraries = append(Launcherjson.Patches[0].Libraries, Librarie)
+			Launcherjson.Libraries = append(Launcherjson.Libraries, Librarie)
 		}
 	}
 }

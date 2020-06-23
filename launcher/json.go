@@ -5,10 +5,10 @@ type launcherjson struct {
 }
 
 type LauncherjsonX115 struct {
-	Hidden  bool        `json:"hidden" example:"false"`
-	ID      string      `json:"id" example:"1.15.2"`
-	Patches []PatchX115 `json:"patches"`
-	Root    bool        `json:"root" example:"true"`
+	Hidden bool   `json:"hidden" example:"false"`
+	ID     string `json:"id" example:"1.15.2"`
+	PatchX115
+	Root bool `json:"root" example:"true"`
 }
 
 type PatchX115 struct {

@@ -13,40 +13,42 @@ func (l Libraries) Downassets(typee string, i int, c chan int) error {
 	ch := make(chan bool, i)
 	e := make(chan error, len(l.assetIndex.Objects))
 	done := make(chan bool, len(l.assetIndex.Objects))
-	for _, v := range l.assetIndex.Objects {
-		v := v
-		ok := ver(`.minecraft/assets/objects/`+v.Hash[:2]+`/`+v.Hash, v.Hash)
-		if !ok {
-			ch <- true
-			go func() {
-				defer func() {
-					<-ch
-					done <- true
-				}()
-				for i := 0; i < 6; i++ {
-					if i == 5 {
-						e <- errors.New("file download fail")
-						break
-					}
-					err := get(source(`http://resources.download.minecraft.net/`+v.Hash[:2]+`/`+v.Hash, typee), `.minecraft/assets/objects/`+v.Hash[:2]+`/`+v.Hash)
-					if err != nil {
-						if err.Error() == "proxy err" {
-							e <- errors.New("proxy err")
+	go func() {
+		for _, v := range l.assetIndex.Objects {
+			v := v
+			ok := ver(`.minecraft/assets/objects/`+v.Hash[:2]+`/`+v.Hash, v.Hash)
+			if !ok {
+				ch <- true
+				go func() {
+					defer func() {
+						<-ch
+						done <- true
+					}()
+					for i := 0; i < 6; i++ {
+						if i == 5 {
+							e <- errors.New("file download fail")
 							break
 						}
-						continue
+						err := get(source(`http://resources.download.minecraft.net/`+v.Hash[:2]+`/`+v.Hash, typee), `.minecraft/assets/objects/`+v.Hash[:2]+`/`+v.Hash)
+						if err != nil {
+							if err.Error() == "proxy err" {
+								e <- errors.New("proxy err")
+								break
+							}
+							continue
+						}
+						ok := ver(`.minecraft/assets/objects/`+v.Hash[:2]+`/`+v.Hash, v.Hash)
+						if !ok {
+							continue
+						}
+						break
 					}
-					ok := ver(`.minecraft/assets/objects/`+v.Hash[:2]+`/`+v.Hash, v.Hash)
-					if !ok {
-						continue
-					}
-					break
-				}
-			}()
-		} else {
-			done <- true
+				}()
+			} else {
+				done <- true
+			}
 		}
-	}
+	}()
 	n := 0
 	for {
 		select {
@@ -82,48 +84,50 @@ func ver(path, hash string) bool {
 
 func (l Libraries) Downlibrarie(typee string, i int, c chan int) error {
 	ch := make(chan bool, i)
-	e := make(chan error, len(l.librarie.Patches[0].Libraries))
-	done := make(chan bool, len(l.librarie.Patches[0].Libraries))
-	for _, v := range l.librarie.Patches[0].Libraries {
-		v := v
-		path := `.minecraft/libraries/` + v.Downloads.Artifact.Path
-		if !librariesvar(v, path) {
-			ch <- true
-			go func() {
-				defer func() {
-					<-ch
-					done <- true
-				}()
-				for i := 0; i < 4; i++ {
-					if i == 3 {
-						e <- errors.New("file download fail")
-						break
-					}
-					err := get(source(v.Downloads.Artifact.URL, typee), path)
-					if err != nil {
-						if err.Error() == "proxy err" {
-							e <- errors.New("proxy err")
+	e := make(chan error, len(l.librarie.Libraries))
+	done := make(chan bool, len(l.librarie.Libraries))
+	go func() {
+		for _, v := range l.librarie.Libraries {
+			v := v
+			path := `.minecraft/libraries/` + v.Downloads.Artifact.Path
+			if !librariesvar(v, path) {
+				ch <- true
+				go func() {
+					defer func() {
+						<-ch
+						done <- true
+					}()
+					for i := 0; i < 4; i++ {
+						if i == 3 {
+							e <- errors.New("file download fail")
 							break
 						}
-						continue
+						err := get(source(v.Downloads.Artifact.URL, typee), path)
+						if err != nil {
+							if err.Error() == "proxy err" {
+								e <- errors.New("proxy err")
+								break
+							}
+							continue
+						}
+						if !librariesvar(v, path) {
+							continue
+						}
+						break
 					}
-					if !librariesvar(v, path) {
-						continue
-					}
-					break
-				}
-			}()
-		} else {
-			done <- true
+				}()
+			} else {
+				done <- true
+			}
 		}
-	}
+	}()
 	n := 0
 	for {
 		select {
 		case <-done:
 			n++
-			c <- len(l.librarie.Patches[0].Libraries) - n
-			if n == len(l.librarie.Patches[0].Libraries) {
+			c <- len(l.librarie.Libraries) - n
+			if n == len(l.librarie.Libraries) {
 				close(c)
 				return nil
 			}
@@ -146,11 +150,11 @@ func librariesvar(v launcher.LibraryX115, path string) bool {
 }
 
 func (l Libraries) Downjar(typee string) error {
-	path := `.minecraft/versions` + l.librarie.ID + "/" + l.librarie.ID + ".jar"
-	if ver(path, l.librarie.Patches[0].Downloads.Client.Sha1) {
+	path := `.minecraft/versions/` + l.librarie.ID + "/" + l.librarie.ID + ".jar"
+	if ver(path, l.librarie.Downloads.Client.Sha1) {
 		return nil
 	}
-	err := get(l.librarie.Patches[0].Downloads.Client.URL, path)
+	err := get(l.librarie.Downloads.Client.URL, path)
 	if err != nil {
 		return err
 	}
@@ -158,14 +162,14 @@ func (l Libraries) Downjar(typee string) error {
 		if i == 3 {
 			return errors.New("file download fail")
 		}
-		err := get(source(l.librarie.Patches[0].Downloads.Client.URL, typee), path)
+		err := get(source(l.librarie.Downloads.Client.URL, typee), path)
 		if err != nil {
 			if err.Error() == "proxy err" {
 				return errors.New("proxy err")
 			}
 			continue
 		}
-		if !ver(path, l.librarie.Patches[0].Downloads.Client.Sha1) {
+		if !ver(path, l.librarie.Downloads.Client.Sha1) {
 			continue
 		}
 		break

@@ -51,7 +51,7 @@ func (g *Gameinfo) Run115() error {
 	if err != nil {
 		return err
 	}
-	l.flag = append(l.flag, l.json.Patches[0].MainClass)
+	l.flag = append(l.flag, l.json.MainClass)
 	g.argumentsGame(l)
 	l.Launcher115()
 	return nil
@@ -95,16 +95,16 @@ func (g *Gameinfo) modjson() (*launcher1155, error) {
 		}
 		for _, v := range mod.Libraries {
 			l := g.Libraries2LibraryX115(v)
-			j.Patches[0].Libraries = append(j.Patches[0].Libraries, l)
+			j.Libraries = append(j.Libraries, l)
 		}
 		g.Version = mod.ID
-		j.Patches[0].MainClass = mod.MainClass
+		j.MainClass = mod.MainClass
 		if len(mod.Arguments.Game) != 0 {
-			j.Patches[0].Arguments.Game = append(j.Patches[0].Arguments.Game, mod.Arguments.Game...)
+			j.Arguments.Game = append(j.Arguments.Game, mod.Arguments.Game...)
 		}
 		if mod.MinecraftArguments != "" {
-			j.Patches[0].Arguments.Game = append(j.Patches[0].Arguments.Game, MinecraftArguments2jvm(mod.MinecraftArguments)...)
-			j.Patches[0].Arguments.Jvm = append(j.Patches[0].Arguments.Jvm, getjvm()...)
+			j.Arguments.Game = append(j.Arguments.Game, MinecraftArguments2jvm(mod.MinecraftArguments)...)
+			j.Arguments.Jvm = append(j.Arguments.Jvm, getjvm()...)
 		}
 
 	} else {
@@ -112,9 +112,9 @@ func (g *Gameinfo) modjson() (*launcher1155, error) {
 		if err != nil {
 			return nil, errors.New("json err")
 		}
-		if j.Patches[0].MinecraftArguments != "" {
-			j.Patches[0].Arguments.Game = append(j.Patches[0].Arguments.Game, MinecraftArguments2jvm(j.Patches[0].MinecraftArguments)...)
-			j.Patches[0].Arguments.Jvm = append(j.Patches[0].Arguments.Jvm, getjvm()...)
+		if j.MinecraftArguments != "" {
+			j.Arguments.Game = append(j.Arguments.Game, MinecraftArguments2jvm(j.MinecraftArguments)...)
+			j.Arguments.Jvm = append(j.Arguments.Jvm, getjvm()...)
 		}
 		g.Version = j.ID
 	}

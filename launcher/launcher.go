@@ -32,7 +32,7 @@ func (l launcher1155) Launcher115() {
 func (l *launcher1155) cp() string {
 	path := l.Minecraftpath + `/libraries/`
 	b := bytes.NewBuffer(nil)
-	for _, p := range l.json.Patches[0].Libraries {
+	for _, p := range l.json.Libraries {
 		if paths(p) != "" {
 			pack := Name2path(p.Name)
 			v, ok := l.Gameinfo.flag[pack[0]]

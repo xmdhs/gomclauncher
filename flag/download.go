@@ -6,24 +6,26 @@ import (
 	"gomclauncher/launcher"
 	"io/ioutil"
 	"log"
+	"os"
 )
 
 type Flag struct {
 	launcher.Gameinfo
-	Atype     string
-	Downint   int
-	Online    bool
-	Username  string
-	Passworld string
-	Email     string
-	Download  string
-	Verlist   bool
-	Run       string
-	Runlist   bool
-	Runram    string
-	Runflag   string
-	Proxy     string
-	Aflag     string
+	Atype       string
+	Downint     int
+	Online      bool
+	Username    string
+	Passworld   string
+	Email       string
+	Download    string
+	Verlist     bool
+	Run         string
+	Runlist     bool
+	Runram      string
+	Runflag     string
+	Proxy       string
+	Aflag       string
+	Independent bool
 }
 
 func (f Flag) D() {
@@ -46,6 +48,14 @@ func (f Flag) D() {
 	fmt.Println("完成")
 	fmt.Println("正在下载资源文件")
 	f.dd(dl, true)
+	fmt.Println("完成")
+	fmt.Println("正在下载解压 natives 库")
+	err = dl.Unzip(f.Atype, f.Downint)
+	if err != nil {
+		fmt.Println(err)
+		fmt.Println("下载失败")
+		os.Exit(0)
+	}
 	fmt.Println("完成")
 }
 
