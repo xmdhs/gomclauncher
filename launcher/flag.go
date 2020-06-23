@@ -9,7 +9,7 @@ import (
 )
 
 type Gameinfo struct {
-	//D:/mc/.minecraft/
+	//D:/mc/.minecraft
 	Minecraftpath string
 	//4096
 	RAM string
@@ -32,6 +32,8 @@ type Gameinfo struct {
 }
 
 func (g *Gameinfo) Run115() error {
+	creatlauncherprofiles(g)
+	g.GameDir = g.Minecraftpath + "/versions/" + g.Version + "/"
 	l, err := g.modjson()
 	if err != nil {
 		return err
@@ -54,6 +56,21 @@ func (g *Gameinfo) Run115() error {
 	g.argumentsGame(l)
 	l.Launcher115()
 	return nil
+}
+
+func creatlauncherprofiles(g *Gameinfo) {
+	path := g.Minecraftpath + "/launcher_profiles.json"
+	_, err := os.Stat(path)
+	if err != nil && os.IsNotExist(err) {
+		f, err := os.Create(path)
+		defer f.Close()
+		if err != nil {
+			panic(err)
+		}
+		f.WriteString(`{"selectedProfile": "(Default)","profiles": {"(Default)": {"name": "(Default)"}},"clientToken": "88888888-8888-8888-8888-888888888888"}`)
+	} else {
+		panic(err)
+	}
 }
 
 func (g *Gameinfo) modjson() (*launcher1155, error) {

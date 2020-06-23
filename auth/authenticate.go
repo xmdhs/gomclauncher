@@ -52,7 +52,7 @@ func Authenticate(username, password, clientToken string) (Auth, error) {
 	}
 
 	Auth.AccessToken = auth.AccessToken
-	Auth.ID = auth.SelectedProfile.UserID
+	Auth.ID = auth.SelectedProfile.ID
 	Auth.ClientToken = auth.ClientToken
 	Auth.Username = auth.SelectedProfile.Name
 	Auth.Userproperties = w.String()
