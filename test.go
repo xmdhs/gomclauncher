@@ -1,4 +1,4 @@
-package main
+/*package main
 
 import (
 	"fmt"
@@ -26,3 +26,4 @@ func main() {
 	auth.Authenticate("a", "a", "a")
 	download.Newlibraries(nil)
 }
+*/

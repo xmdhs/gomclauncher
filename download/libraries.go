@@ -71,30 +71,7 @@ type asset struct {
 }
 
 func get(u, path string) error {
-	var c http.Client
-	if auth.Proxyaddr != "" {
-		proxy, err := url.Parse(auth.Proxyaddr)
-		if err != nil {
-			return errors.New("proxy err")
-		}
-		transport := http.DefaultTransport.(*http.Transport).Clone()
-		transport.Proxy = http.ProxyURL(proxy)
-		c = http.Client{
-			Transport: transport,
-			Timeout:   10 * time.Second,
-		}
-	} else {
-		c = http.Client{
-			Timeout: 10 * time.Second,
-		}
-	}
-	rep, err := http.NewRequest("GET", u, nil)
-	if err != nil {
-		return err
-	}
-	rep.Header.Set("Accept", "*/*")
-	rep.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36")
-	reps, err := c.Do(rep)
+	reps, err := aget(u)
 	if err != nil {
 		return err
 	}
@@ -142,4 +119,35 @@ func source(url, types string) string {
 	default:
 		return url
 	}
+}
+
+func aget(aurl string) (*http.Response, error) {
+	var c http.Client
+	if auth.Proxyaddr != "" {
+		proxy, err := url.Parse(auth.Proxyaddr)
+		if err != nil {
+			return nil, errors.New("proxy err")
+		}
+		transport := http.DefaultTransport.(*http.Transport).Clone()
+		transport.Proxy = http.ProxyURL(proxy)
+		c = http.Client{
+			Transport: transport,
+			Timeout:   10 * time.Second,
+		}
+	} else {
+		c = http.Client{
+			Timeout: 10 * time.Second,
+		}
+	}
+	rep, err := http.NewRequest("GET", aurl, nil)
+	if err != nil {
+		return nil, err
+	}
+	rep.Header.Set("Accept", "*/*")
+	rep.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36")
+	reps, err := c.Do(rep)
+	if err != nil {
+		return nil, err
+	}
+	return reps, nil
 }
