@@ -72,11 +72,13 @@ type asset struct {
 
 func get(u, path string) error {
 	reps, err := aget(u)
+	if reps != nil {
+		defer reps.Body.Close()
+	}
 	if err != nil {
 		return err
 	}
 	b, err := ioutil.ReadAll(reps.Body)
-	defer reps.Body.Close()
 	if err != nil {
 		return err
 	}
@@ -147,7 +149,7 @@ func aget(aurl string) (*http.Response, error) {
 	rep.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36")
 	reps, err := c.Do(rep)
 	if err != nil {
-		return nil, err
+		return reps, err
 	}
 	return reps, nil
 }
