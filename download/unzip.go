@@ -9,6 +9,7 @@ import (
 	"os"
 	"runtime"
 	"strings"
+	"sync"
 )
 
 func (l Libraries) Unzip(typee string, i int) error {
@@ -16,11 +17,19 @@ func (l Libraries) Unzip(typee string, i int) error {
 	e := make(chan error, len(l.librarie.Libraries))
 	done := make(chan bool, len(l.librarie.Libraries))
 	natives := make([]string, 0)
+	m := sync.Mutex{}
 	go func() {
 		for _, v := range l.librarie.Libraries {
 			v := v
 			path, sha1, url := swichnatives(v)
 			path = `.minecraft/libraries/` + path
+			if url == "" {
+				done <- true
+				continue
+			}
+			m.Lock()
+			natives = append(natives, path)
+			m.Unlock()
 			if ifallow(v) && !ver(path, sha1) {
 				if path != "" {
 					ch <- true
@@ -47,7 +56,6 @@ func (l Libraries) Unzip(typee string, i int) error {
 								fmt.Println("文件效验失败，重新下载", url)
 								continue
 							}
-							natives = append(natives, path)
 							break
 						}
 					}()
@@ -64,6 +72,8 @@ func (l Libraries) Unzip(typee string, i int) error {
 		case <-done:
 			n++
 			if n == len(l.librarie.Libraries) {
+				m.Lock()
+				defer m.Unlock()
 				return l.unzipnative(natives)
 			}
 		case err := <-e:
@@ -75,11 +85,16 @@ func (l Libraries) Unzip(typee string, i int) error {
 func (l Libraries) unzipnative(n []string) error {
 	e := make(chan error, len(n))
 	done := make(chan bool, len(n))
+	p := `.minecraft/versions/` + l.librarie.ID + `/natives/`
+	err := os.MkdirAll(p, 777)
+	if err != nil {
+		return err
+	}
 	go func() {
 		for _, v := range n {
 			v := v
 			go func() {
-				err := DeCompress(v, `.minecraft/versions/`+l.librarie.ID+`/natives`)
+				err := DeCompress(v, p)
 				if err != nil {
 					e <- err
 				}
@@ -161,7 +176,7 @@ func DeCompress(zipFile, dest string) error {
 	}
 	defer reader.Close()
 	for _, file := range reader.File {
-		if strings.Contains(strings.ToTitle(file.Name), strings.ToTitle("META-INF")) && (strings.HasSuffix(strings.ToTitle(file.Name), strings.ToTitle("dll")) || strings.HasSuffix(strings.ToTitle(file.Name), strings.ToTitle("dylib")) || strings.HasSuffix(strings.ToTitle(file.Name), strings.ToTitle("so"))) {
+		if !strings.Contains(strings.ToTitle(file.Name), strings.ToTitle("META-INF")) && (strings.HasSuffix(strings.ToTitle(file.Name), strings.ToTitle("dll")) || strings.HasSuffix(strings.ToTitle(file.Name), strings.ToTitle("dylib")) || strings.HasSuffix(strings.ToTitle(file.Name), strings.ToTitle("so"))) {
 			rc, err := file.Open()
 			if err != nil {
 				return err

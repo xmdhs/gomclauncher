@@ -93,6 +93,10 @@ func (l Libraries) Downlibrarie(typee string, i int, c chan int) error {
 		for _, v := range l.librarie.Libraries {
 			v := v
 			path := `.minecraft/libraries/` + v.Downloads.Artifact.Path
+			if v.Downloads.Artifact.URL == "" {
+				done <- true
+				continue
+			}
 			if !librariesvar(v, path) {
 				ch <- true
 				go func() {
