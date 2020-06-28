@@ -13,23 +13,20 @@ func Test(path string) bool {
 	}
 	t := t{}
 	json.Unmarshal(b, &t)
-	if t.Libraries == nil {
-		return false
-	}
-	if t.AssetIndex == nil {
+	if len(t.Libraries) == 0 {
 		return false
 	}
 	p := strings.Split(path, "/")
-	if t.ID != p[len(p)-1] {
+	if t.ID != p[len(p)-2] {
 		return false
 	}
 	return true
 }
 
 type t struct {
-	Libraries  []interface{} `json:"Libraries"`
-	AssetIndex []interface{} `json:"assetIndex"`
-	ID         string        `json:"id"`
+	Libraries []interface{} `json:"Libraries"`
+
+	ID string `json:"id"`
 }
 
 func Find(path string) []string {
