@@ -3,6 +3,7 @@ package download
 import (
 	"archive/zip"
 	"errors"
+	"fmt"
 	"gomclauncher/launcher"
 	"io"
 	"os"
@@ -18,9 +19,10 @@ func (l Libraries) Unzip(typee string, i int) error {
 	go func() {
 		for _, v := range l.librarie.Libraries {
 			v := v
-			h := swichnatives(v)
-			if ifallow(v) && !ver(h[0], h[1]) {
-				if h[0] != "" {
+			path, sha1, url := swichnatives(v)
+			path = `.minecraft/libraries/` + path
+			if ifallow(v) && !ver(path, sha1) {
+				if path != "" {
 					ch <- true
 					go func() {
 						defer func() {
@@ -32,18 +34,20 @@ func (l Libraries) Unzip(typee string, i int) error {
 								e <- errors.New("file download fail")
 								break
 							}
-							err := get(source(h[2], typee), h[0])
+							err := get(source(url, typee), path)
 							if err != nil {
 								if err.Error() == "proxy err" {
 									e <- errors.New("proxy err")
 									break
 								}
+								fmt.Println("似乎是网络问题，重试", err)
 								continue
 							}
-							if !ver(h[0], h[1]) {
+							if !ver(path, sha1) {
+								fmt.Println("文件效验失败，重新下载", url)
 								continue
 							}
-							natives = append(natives, h[0])
+							natives = append(natives, path)
 							break
 						}
 					}()
@@ -75,7 +79,7 @@ func (l Libraries) unzipnative(n []string) error {
 		for _, v := range n {
 			v := v
 			go func() {
-				err := DeCompress(v, `.minecraft/versions/`+l.librarie.ID+`natives`)
+				err := DeCompress(v, `.minecraft/versions/`+l.librarie.ID+`/natives`)
 				if err != nil {
 					e <- err
 				}
@@ -123,30 +127,31 @@ func osbool(os string) bool {
 	return os == GOOS
 }
 
-func swichnatives(l launcher.LibraryX115) [3]string {
-	os := runtime.GOOS
-	h := [3]string{}
-	switch os {
+func swichnatives(l launcher.LibraryX115) (path, sha1, url string) {
+	Os := runtime.GOOS
+	switch Os {
 	case "windows":
-		h[0] = l.Downloads.Classifiers.NativesWindows.Path
-		h[1] = l.Downloads.Classifiers.NativesLinux.Sha1
-		h[2] = l.Downloads.Classifiers.NativesLinux.URL
+		path = l.Downloads.Classifiers.NativesWindows.Path
+		sha1 = l.Downloads.Classifiers.NativesLinux.Sha1
+		url = l.Downloads.Classifiers.NativesLinux.URL
 	case "darwin":
 		if l.Downloads.Classifiers.NativesOsx.Path != "" {
-			h[0] = l.Downloads.Classifiers.NativesOsx.Path
-			h[1] = l.Downloads.Classifiers.NativesOsx.Sha1
-			h[2] = l.Downloads.Classifiers.NativesOsx.URL
+			path = l.Downloads.Classifiers.NativesOsx.Path
+			sha1 = l.Downloads.Classifiers.NativesOsx.Sha1
+			url = l.Downloads.Classifiers.NativesOsx.URL
 		} else {
-			h[0] = l.Downloads.Classifiers.NativesMacos.Path
-			h[1] = l.Downloads.Classifiers.NativesMacos.Sha1
-			h[2] = l.Downloads.Classifiers.NativesMacos.URL
+			path = l.Downloads.Classifiers.NativesMacos.Path
+			sha1 = l.Downloads.Classifiers.NativesMacos.Sha1
+			url = l.Downloads.Classifiers.NativesMacos.URL
 		}
 	case "linux":
-		h[0] = l.Downloads.Classifiers.NativesLinux.Path
-		h[1] = l.Downloads.Classifiers.NativesLinux.Sha1
-		h[2] = l.Downloads.Classifiers.NativesLinux.URL
+		path = l.Downloads.Classifiers.NativesLinux.Path
+		sha1 = l.Downloads.Classifiers.NativesLinux.Sha1
+		url = l.Downloads.Classifiers.NativesLinux.URL
+	default:
+		panic("???")
 	}
-	return h
+	return
 }
 
 func DeCompress(zipFile, dest string) error {

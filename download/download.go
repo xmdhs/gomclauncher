@@ -4,6 +4,7 @@ import (
 	"crypto/sha1"
 	"encoding/hex"
 	"errors"
+	"fmt"
 	"gomclauncher/launcher"
 	"io"
 	"os"
@@ -35,10 +36,12 @@ func (l Libraries) Downassets(typee string, i int, c chan int) error {
 								e <- errors.New("proxy err")
 								break
 							}
+							fmt.Println("似乎是网络问题，重试", err)
 							continue
 						}
 						ok := ver(`.minecraft/assets/objects/`+v.Hash[:2]+`/`+v.Hash, v.Hash)
 						if !ok {
+							fmt.Println("文件效验失败，重新下载", v.Hash)
 							continue
 						}
 						break
@@ -108,9 +111,11 @@ func (l Libraries) Downlibrarie(typee string, i int, c chan int) error {
 								e <- errors.New("proxy err")
 								break
 							}
+							fmt.Println("似乎是网络问题，重试", err)
 							continue
 						}
 						if !librariesvar(v, path) {
+							fmt.Println("文件效验失败，重新下载", path)
 							continue
 						}
 						break
