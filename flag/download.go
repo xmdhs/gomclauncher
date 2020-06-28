@@ -91,8 +91,10 @@ b:
 func errr(err error) {
 	if err != nil {
 		if err.Error() == "proxy err" {
+			fmt.Println(err)
 			log.Fatalln("设置的代理有误")
 		} else {
+			fmt.Println(err)
 			log.Fatalln("可能是网络问题，可再次尝试")
 		}
 		log.Fatal(err)
