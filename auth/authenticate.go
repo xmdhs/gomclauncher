@@ -1,7 +1,6 @@
 package auth
 
 import (
-	"bytes"
 	"encoding/json"
 	"errors"
 	"net/http"
@@ -35,26 +34,10 @@ func Authenticate(username, password, clientToken string) (Auth, error) {
 	if err = json.Unmarshal(b, auth); err != nil {
 		panic(err)
 	}
-	w := bytes.NewBuffer(nil)
-	var preferredLanguage, registrationCountry string
-	for _, v := range auth.User.Properties {
-		if v.Name == "preferredLanguage" {
-			preferredLanguage = v.Value
-		}
-		if v.Name == "registrationCountry" {
-			registrationCountry = v.Value
-		}
-	}
-	w.WriteString(`"{\"preferredLanguage\":[\"`)
-	w.WriteString(preferredLanguage)
-	w.WriteString(`\"],\"registrationCountry\":[\"`)
-	w.WriteString(registrationCountry)
-	w.WriteString(`\"]}"`)
 	Auth.AccessToken = auth.AccessToken
 	Auth.ID = auth.SelectedProfile.ID
 	Auth.ClientToken = auth.ClientToken
 	Auth.Username = auth.SelectedProfile.Name
-	Auth.Userproperties = w.String()
 	return Auth, nil
 }
 
