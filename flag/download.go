@@ -81,7 +81,7 @@ b:
 			if !ok {
 				break b
 			}
-			if f.Outmsg {
+			if !f.Outmsg {
 				fmt.Println(i)
 			}
 		case err := <-e:

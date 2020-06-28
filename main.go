@@ -28,9 +28,6 @@ func main() {
 	}
 	f.Gameinfo.RAM = f.RAM
 	if f.Run != "" {
-		if f.Outmsg {
-			f.D()
-		}
 		f.Arun()
 	}
 }

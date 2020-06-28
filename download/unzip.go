@@ -27,11 +27,13 @@ func (l Libraries) Unzip(typee string, i int) error {
 				done <- true
 				continue
 			}
+			if ifallow(v) {
+				m.Lock()
+				natives = append(natives, path)
+				m.Unlock()
+			}
 			if ifallow(v) && !ver(path, sha1) {
 				if path != "" {
-					m.Lock()
-					natives = append(natives, path)
-					m.Unlock()
 					ch <- true
 					go func() {
 						defer func() {
