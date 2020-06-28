@@ -9,10 +9,10 @@ import (
 	"os"
 )
 
-var aconfig Config
+var gmlconfig Gmlconfig
 
 func init() {
-	aconfig.EmailAccessToken = make(map[string]string)
+	gmlconfig = make(Gmlconfig)
 	_, err := os.Stat("gml.json")
 	if err != nil {
 		return
@@ -23,7 +23,7 @@ func init() {
 		panic(err)
 	}
 	b, err := ioutil.ReadAll(f)
-	err = json.Unmarshal(b, &aconfig)
+	err = json.Unmarshal(b, &gmlconfig)
 	if err != nil {
 		log.Fatalln("json 损坏，可尝试删除 gml.json")
 	}
@@ -43,17 +43,16 @@ func saveconfig() {
 	f, err := os.Create("gml.json")
 	defer f.Close()
 	aerr(err)
-	b, err = json.Marshal(aconfig)
+	b, err = json.Marshal(gmlconfig)
 	aerr(err)
 	_, err = f.Write(b)
 	aerr(err)
 }
 
 func (c Config) setonline(email, pass string) error {
-	if _, ok := aconfig.EmailAccessToken[email]; ok {
+	if _, ok := gmlconfig[email]; ok && pass == "" {
 		return errors.New("have")
 	}
-	defer saveconfig()
 	if c.ClientToken == "" {
 		c.ClientToken = UUIDgen(email)
 	}
@@ -61,20 +60,23 @@ func (c Config) setonline(email, pass string) error {
 	if err != nil {
 		return err
 	}
+	var aconfig Config
 	aconfig.ClientToken = c.ClientToken
 	aconfig.Name = a.Username
 	aconfig.UUID = a.ID
 	aconfig.AccessToken = a.AccessToken
-	aconfig.EmailAccessToken[email] = a.AccessToken
 	aconfig.Userproperties = a.Userproperties
+	gmlconfig[email] = aconfig
+	saveconfig()
 	return nil
 }
 
+type Gmlconfig map[string]Config
+
 type Config struct {
-	Name             string
-	UUID             string
-	ClientToken      string
-	Userproperties   string
-	AccessToken      string
-	EmailAccessToken map[string]string
+	Name           string
+	UUID           string
+	ClientToken    string
+	Userproperties string
+	AccessToken    string
 }

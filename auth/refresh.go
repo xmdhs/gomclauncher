@@ -25,6 +25,7 @@ func Refresh(a *Auth) error {
 	json.Unmarshal(b, &r)
 	a.AccessToken = r.AccessToken
 	a.Username = r.SelectedProfile.Name
+	a.ID = r.SelectedProfile.ID
 	return nil
 }
 
@@ -36,6 +37,7 @@ type Refreshs struct {
 
 type SElectedProfile struct {
 	Name string `json:"name"`
+	ID   string `json:"id"`
 }
 
 func Validate(a Auth) error {
