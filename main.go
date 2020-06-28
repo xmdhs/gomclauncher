@@ -28,8 +28,13 @@ func main() {
 	if f.Online {
 		f.Aonline()
 	} else {
+		if f.Name == "" {
+			fmt.Println("需要设置 username")
+			os.Exit(0)
+		}
 		f.Username = f.Name
 		f.UUID = aflag.UUIDgen(f.Username)
+		f.AccessToken = f.UUID
 	}
 	if f.Runflag != "" {
 		s := strings.Split(f.Runflag, " ")
