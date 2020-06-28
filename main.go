@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"gomclauncher/auth"
 	aflag "gomclauncher/flag"
 	"os"
@@ -12,6 +13,14 @@ func main() {
 	auth.Proxyaddr = f.Proxy
 	if f.Verlist {
 		f.Arunlist()
+	}
+	if f.Runlist {
+		s := aflag.Find(`.minecraft/versions`)
+		for _, v := range s {
+			if aflag.Test(`.minecraft/versions/` + v + `/` + v + ".json") {
+				fmt.Println(v)
+			}
+		}
 	}
 	if f.Download != "" {
 		f.D()

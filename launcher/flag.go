@@ -33,7 +33,7 @@ type Gameinfo struct {
 
 func (g *Gameinfo) Run115() error {
 	creatlauncherprofiles(g)
-	l, err := g.modjson()
+	l, err := g.Modjson()
 	if err != nil {
 		return err
 	}
@@ -70,7 +70,7 @@ func creatlauncherprofiles(g *Gameinfo) {
 	}
 }
 
-func (g *Gameinfo) modjson() (*launcher1155, error) {
+func (g *Gameinfo) Modjson() (*launcher1155, error) {
 	g.flag = make(map[string]string)
 	j := LauncherjsonX115{}
 	mod := Modsjson{}
