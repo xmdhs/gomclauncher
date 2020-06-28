@@ -31,11 +31,12 @@ func (f *Flag) Aonline() {
 							log.Fatalln("可能是网络问题，可再次尝试")
 						}
 					}
-					var aconfig Config
+					aconfig := gmlconfig[f.Email]
 					aconfig.Name = a.Username
 					aconfig.UUID = a.ID
 					aconfig.AccessToken = a.AccessToken
 					aconfig.Time = time.Now().Unix()
+					aconfig.ClientToken = a.ClientToken
 					gmlconfig[f.Email] = aconfig
 					saveconfig()
 				}
