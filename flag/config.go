@@ -31,12 +31,15 @@ func init() {
 
 func saveconfig() {
 	b, err := ioutil.ReadFile("gml.json")
-	aerr(err)
-	ff, err := os.Create("gml.json.bak")
-	defer ff.Close()
-	aerr(err)
-	_, err = ff.Write(b)
-	aerr(err)
+	if err != nil && !os.IsNotExist(err) {
+		panic(err)
+	} else {
+		ff, err := os.Create("gml.json.bak")
+		defer ff.Close()
+		aerr(err)
+		_, err = ff.Write(b)
+		aerr(err)
+	}
 	f, err := os.Create("gml.json")
 	defer f.Close()
 	aerr(err)
@@ -58,6 +61,7 @@ func (c Config) setonline(email, pass string) error {
 	if err != nil {
 		return err
 	}
+	aconfig.ClientToken = c.ClientToken
 	aconfig.Name = a.Username
 	aconfig.UUID = a.ID
 	aconfig.AccessToken = a.AccessToken

@@ -38,7 +38,7 @@ func main() {
 	}
 	f.Gameinfo.RAM = f.RAM
 	if f.Run != "" {
-		if f.Name == "" {
+		if f.Name == "" && !f.Online {
 			fmt.Println("需要设置 username")
 			os.Exit(0)
 		}
