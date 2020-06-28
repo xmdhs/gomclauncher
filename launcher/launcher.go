@@ -23,7 +23,8 @@ func (l launcher1155) Launcher115() {
 	fmt.Println(l.flag)
 	cmd := exec.Command("java", l.flag...)
 	cmd.Dir = l.Gamedir
-	err := cmd.Run()
+	b, err := cmd.CombinedOutput()
+	fmt.Println(string(b))
 	if err != nil {
 		log.Fatalln(err)
 	}

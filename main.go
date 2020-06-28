@@ -19,7 +19,7 @@ func main() {
 	if f.Online {
 		f.Aonline()
 	} else {
-		f.Name = f.Username
+		f.Username = f.Name
 		f.UUID = aflag.UUIDgen(f.Username)
 	}
 	if f.Runflag != "" {
@@ -28,6 +28,9 @@ func main() {
 	}
 	f.Gameinfo.RAM = f.RAM
 	if f.Run != "" {
+		if f.Outmsg {
+			f.D()
+		}
 		f.Arun()
 	}
 }
@@ -36,10 +39,11 @@ var f aflag.Flag
 
 func init() {
 	str, err := os.Getwd()
+	str = strings.ReplaceAll(str, `\`, `/`)
 	if err != nil {
 		panic(err)
 	}
-	f.Minecraftpath = str
+	f.Minecraftpath = str + `/.minecraft`
 	flag.BoolVar(&f.Online, "online", false, `是否启用正版登录，默认关闭`)
 	flag.StringVar(&f.Name, "username", "", `用户名`)
 	flag.StringVar(&f.Email, "email", "", `正版帐号邮箱`)
@@ -54,5 +58,6 @@ func init() {
 	flag.StringVar(&f.Proxy, `proxy`, "", `设置下载用的代理(http)`)
 	flag.StringVar(&f.Atype, "type", "", `设置下载源。目前只能使用官方下载源`)
 	flag.BoolVar(&f.Independent, "independent", false, "是否开启版本隔离")
+	flag.BoolVar(&f.Outmsg, "test", true, "启动游戏前是否效验文件的完整和正确性")
 	flag.Parse()
 }

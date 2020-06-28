@@ -67,8 +67,6 @@ func creatlauncherprofiles(g *Gameinfo) {
 			panic(err)
 		}
 		f.WriteString(`{"selectedProfile": "(Default)","profiles": {"(Default)": {"name": "(Default)"}},"clientToken": "88888888-8888-8888-8888-888888888888"}`)
-	} else {
-		panic(err)
 	}
 }
 

@@ -145,8 +145,8 @@ func swichnatives(l launcher.LibraryX115) (path, sha1, url string) {
 	switch Os {
 	case "windows":
 		path = l.Downloads.Classifiers.NativesWindows.Path
-		sha1 = l.Downloads.Classifiers.NativesLinux.Sha1
-		url = l.Downloads.Classifiers.NativesLinux.URL
+		sha1 = l.Downloads.Classifiers.NativesWindows.Sha1
+		url = l.Downloads.Classifiers.NativesWindows.URL
 	case "darwin":
 		if l.Downloads.Classifiers.NativesOsx.Path != "" {
 			path = l.Downloads.Classifiers.NativesOsx.Path

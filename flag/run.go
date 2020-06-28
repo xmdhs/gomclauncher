@@ -1,6 +1,7 @@
 package flag
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -18,6 +19,17 @@ func (f Flag) Arun() {
 		fmt.Println("没有这个版本或者其他问题")
 		log.Fatalln(err)
 	}
+	if f.Outmsg {
+		t := test{}
+		json.Unmarshal(b, &t)
+		if t.InheritsFrom != "" {
+			f.Download = t.InheritsFrom
+			f.D()
+		} else {
+			f.Download = t.ID
+			f.D()
+		}
+	}
 	f.Jsonbyte = b
 	err = f.Run115()
 	if err != nil {
@@ -28,4 +40,9 @@ func (f Flag) Arun() {
 			log.Fatalln("json 错误，可尝试到 .minecraft/versions 中删除对应的 json 文件")
 		}
 	}
+}
+
+type test struct {
+	ID           string `json:"id"`
+	InheritsFrom string `json:"inheritsFrom"`
 }

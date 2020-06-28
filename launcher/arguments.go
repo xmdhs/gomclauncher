@@ -43,7 +43,12 @@ func (g *Gameinfo) Jvmflagrelace(s string, l *launcher1155) string {
 
 func Rule(v map[string]interface{}) Jvm {
 	jvm := Jvm{}
-	values := v["value"].([]interface{})
+	var values []interface{}
+	switch vv := v["value"].(type) {
+	case []interface{}:
+	case string:
+		values = append(values, vv)
+	}
 	value := make([]string, 0)
 	for _, v := range values {
 		value = append(value, v.(string))
@@ -57,8 +62,10 @@ func Rule(v map[string]interface{}) Jvm {
 		r := rr.(map[string]interface{})
 		action := r["action"].(string)
 		jvmrule.Action = action
-		name := r["os"].(map[string]interface{})["name"]
-		jvmrule.Os = name.(string)
+		name, ok := r["os"].(map[string]interface{})["name"]
+		if ok {
+			jvmrule.Os = name.(string)
+		}
 		rule = append(rule, jvmrule)
 	}
 	jvm.Rules = rule
@@ -106,14 +113,15 @@ func (g *Gameinfo) argumentsGame(l *launcher1155) {
 
 func (g *Gameinfo) argumentsrelace(s string, l *launcher1155) string {
 	s = strings.ReplaceAll(s, "${auth_player_name}", g.Name)
-	s = strings.ReplaceAll(s, "${version_name}", Launcherbrand+" "+Launcherversion)
+	s = strings.ReplaceAll(s, "${version_name}", `"`+Launcherbrand+" "+Launcherversion+`"`)
 	s = strings.ReplaceAll(s, "${game_directory}", g.Gamedir)
 	s = strings.ReplaceAll(s, "${assets_root}", g.Minecraftpath+`/assets`)
+	s = strings.ReplaceAll(s, "${game_assets}", g.Minecraftpath+`/assets`)
 	s = strings.ReplaceAll(s, "${assets_index_name}", l.json.AssetIndex.ID)
 	s = strings.ReplaceAll(s, "${auth_uuid}", g.UUID)
 	s = strings.ReplaceAll(s, "${auth_access_token}", g.AccessToken)
 	s = strings.ReplaceAll(s, "${user_type}", "mojang")
-	s = strings.ReplaceAll(s, "${version_type}", Launcherbrand+" "+Launcherversion)
+	s = strings.ReplaceAll(s, "${version_type}", `"`+Launcherbrand+" "+Launcherversion+`"`)
 	if g.Userproperties == "" {
 		g.Userproperties = "{}"
 	}

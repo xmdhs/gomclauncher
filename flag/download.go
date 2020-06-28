@@ -26,6 +26,7 @@ type Flag struct {
 	Proxy       string
 	Aflag       string
 	Independent bool
+	Outmsg      bool
 }
 
 func (f Flag) D() {
@@ -80,7 +81,9 @@ b:
 			if !ok {
 				break b
 			}
-			fmt.Println(i)
+			if f.Outmsg {
+				fmt.Println(i)
+			}
 		case err := <-e:
 			log.Fatal(err)
 			break b
