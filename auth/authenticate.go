@@ -36,21 +36,20 @@ func Authenticate(username, password, clientToken string) (Auth, error) {
 		panic(err)
 	}
 	w := bytes.NewBuffer(nil)
+	var preferredLanguage, registrationCountry string
 	for _, v := range auth.User.Properties {
-		var preferredLanguage, registrationCountry string
 		if v.Name == "preferredLanguage" {
 			preferredLanguage = v.Value
 		}
 		if v.Name == "registrationCountry" {
 			registrationCountry = v.Value
 		}
-		w.WriteString(`"{\"preferredLanguage\":[\"`)
-		w.WriteString(preferredLanguage)
-		w.WriteString(`\"],\"registrationCountry\":[\"`)
-		w.WriteString(registrationCountry)
-		w.WriteString(`\"]}"`)
 	}
-
+	w.WriteString(`"{\"preferredLanguage\":[\"`)
+	w.WriteString(preferredLanguage)
+	w.WriteString(`\"],\"registrationCountry\":[\"`)
+	w.WriteString(registrationCountry)
+	w.WriteString(`\"]}"`)
 	Auth.AccessToken = auth.AccessToken
 	Auth.ID = auth.SelectedProfile.ID
 	Auth.ClientToken = auth.ClientToken
