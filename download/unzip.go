@@ -27,11 +27,11 @@ func (l Libraries) Unzip(typee string, i int) error {
 				done <- true
 				continue
 			}
-			m.Lock()
-			natives = append(natives, path)
-			m.Unlock()
 			if ifallow(v) && !ver(path, sha1) {
 				if path != "" {
+					m.Lock()
+					natives = append(natives, path)
+					m.Unlock()
 					ch <- true
 					go func() {
 						defer func() {
@@ -129,9 +129,7 @@ func ifallow(l launcher.LibraryX115) bool {
 		}
 		return allow
 	}
-
 	return true
-
 }
 
 func osbool(os string) bool {
