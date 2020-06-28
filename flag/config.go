@@ -79,4 +79,5 @@ type Config struct {
 	ClientToken    string
 	Userproperties string
 	AccessToken    string
+	Time           int64
 }
