@@ -2,7 +2,7 @@ package launcher
 
 const (
 	Launcherbrand   string = "GML"
-	Launcherversion string = "beta0.1"
+	Launcherversion string = "1.0.2"
 )
 
 var Minecraft string = "minecraft"
