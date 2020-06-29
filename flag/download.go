@@ -55,9 +55,9 @@ func (f Flag) D() {
 	f.dd(dl, false)
 	fmt.Println("完成")
 	if f.Outmsg {
-		fmt.Println("正在验证库文件")
-	} else {
 		fmt.Println("正在验证资源文件")
+	} else {
+		fmt.Println("正在下载资源文件")
 	}
 	f.dd(dl, true)
 	fmt.Println("完成")
