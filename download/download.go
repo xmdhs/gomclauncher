@@ -30,7 +30,7 @@ func (l Libraries) Downassets(typee string, i int, c chan int) error {
 							e <- errors.New("file download fail")
 							break
 						}
-						err := get(source(`http://resources.download.minecraft.net/`+v.Hash[:2]+`/`+v.Hash, typee), launcher.Minecraft+`/assets/objects/`+v.Hash[:2]+`/`+v.Hash)
+						err := get(source(`https://resources.download.minecraft.net/`+v.Hash[:2]+`/`+v.Hash, typee), launcher.Minecraft+`/assets/objects/`+v.Hash[:2]+`/`+v.Hash)
 						if err != nil {
 							if err.Error() == "proxy err" {
 								e <- errors.New("proxy err")
