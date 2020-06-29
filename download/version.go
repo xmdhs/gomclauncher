@@ -2,8 +2,10 @@ package download
 
 import (
 	"encoding/json"
-	"gomclauncher/launcher"
+	"errors"
 	"io/ioutil"
+
+	"github.com/xmdhs/gomclauncher/launcher"
 )
 
 func Getversionlist(atype string) (*Version, error) {
@@ -48,7 +50,8 @@ func (v Version) Downjson(ver string) error {
 			if err != nil {
 				return err
 			}
+			return nil
 		}
 	}
-	return nil
+	return errors.New("no such")
 }

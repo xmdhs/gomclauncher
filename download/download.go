@@ -5,9 +5,10 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
-	"gomclauncher/launcher"
 	"io"
 	"os"
+
+	"github.com/xmdhs/gomclauncher/launcher"
 )
 
 func (l Libraries) Downassets(typee string, i int, c chan int) error {

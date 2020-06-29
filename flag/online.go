@@ -2,9 +2,10 @@ package flag
 
 import (
 	"fmt"
-	"gomclauncher/auth"
 	"os"
 	"time"
+
+	"github.com/xmdhs/gomclauncher/auth"
 )
 
 func (f *Flag) Aonline() {

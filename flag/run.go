@@ -3,9 +3,10 @@ package flag
 import (
 	"encoding/json"
 	"fmt"
-	"gomclauncher/launcher"
 	"io/ioutil"
 	"os"
+
+	"github.com/xmdhs/gomclauncher/launcher"
 )
 
 func (f Flag) Arun() {

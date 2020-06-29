@@ -4,12 +4,13 @@ import (
 	"archive/zip"
 	"errors"
 	"fmt"
-	"gomclauncher/launcher"
 	"io"
 	"os"
 	"runtime"
 	"strings"
 	"sync"
+
+	"github.com/xmdhs/gomclauncher/launcher"
 )
 
 func (l Libraries) Unzip(typee string, i int) error {

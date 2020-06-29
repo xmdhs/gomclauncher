@@ -2,10 +2,11 @@ package flag
 
 import (
 	"fmt"
-	"gomclauncher/download"
-	"gomclauncher/launcher"
 	"io/ioutil"
 	"os"
+
+	"github.com/xmdhs/gomclauncher/download"
+	"github.com/xmdhs/gomclauncher/launcher"
 )
 
 type Flag struct {
@@ -83,23 +84,24 @@ b:
 				fmt.Println(i)
 			}
 		case err := <-e:
-			panic(err)
+			errr(err)
 		}
 	}
 }
 
 func errr(err error) {
 	if err != nil {
-		if err.Error() == "proxy err" {
+		switch err.Error() {
+		case "proxy err":
 			fmt.Println(err)
 			fmt.Println("设置的代理有误")
-			os.Exit(0)
-		} else {
+		case "no such":
+			fmt.Println("没有这个版本")
+		case "file download fail":
+			fmt.Println("失败次数过多，尝试切换下载源或者重新尝试")
+		default:
 			fmt.Println(err)
-			fmt.Println("可能是网络问题，可再次尝试")
-			os.Exit(0)
 		}
-		fmt.Println(err)
 		os.Exit(0)
 	}
 }

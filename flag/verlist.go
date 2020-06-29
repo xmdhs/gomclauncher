@@ -3,8 +3,9 @@ package flag
 import (
 	"bufio"
 	"fmt"
-	"gomclauncher/download"
 	"os"
+
+	"github.com/xmdhs/gomclauncher/download"
 )
 
 func (f Flag) Arunlist() {

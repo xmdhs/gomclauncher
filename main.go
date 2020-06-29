@@ -3,12 +3,13 @@ package main
 import (
 	"flag"
 	"fmt"
-	"gomclauncher/auth"
-	aflag "gomclauncher/flag"
-	"gomclauncher/launcher"
 	"os"
 	"runtime"
 	"strings"
+
+	"github.com/xmdhs/gomclauncher/auth"
+	aflag "github.com/xmdhs/gomclauncher/flag"
+	"github.com/xmdhs/gomclauncher/launcher"
 )
 
 func main() {

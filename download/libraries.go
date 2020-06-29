@@ -3,14 +3,15 @@ package download
 import (
 	"encoding/json"
 	"errors"
-	"gomclauncher/auth"
-	"gomclauncher/launcher"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 	"os"
 	"strings"
 	"time"
+
+	"github.com/xmdhs/gomclauncher/auth"
+	"github.com/xmdhs/gomclauncher/launcher"
 )
 
 type Libraries struct {

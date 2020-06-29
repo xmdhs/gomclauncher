@@ -4,9 +4,10 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"gomclauncher/auth"
 	"io/ioutil"
 	"os"
+
+	"github.com/xmdhs/gomclauncher/auth"
 )
 
 var gmlconfig Gmlconfig
