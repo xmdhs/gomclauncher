@@ -118,9 +118,22 @@ func modlibraries2(l []launcher.Librarie, Launcherjson *launcher.LauncherjsonX11
 
 func source(url, types string) string {
 	switch types {
+	case "bmclapi":
+		url = strings.ReplaceAll(url, `launchermeta.mojang.com`, `bmclapi2.bangbang93.com`)
+		url = strings.ReplaceAll(url, `launcher.mojang.com`, `bmclapi2.bangbang93.com`)
+		url = strings.ReplaceAll(url, `resources.download.minecraft.net`, `bmclapi2.bangbang93.com/assets`)
+		url = strings.ReplaceAll(url, `libraries.minecraft.net`, `bmclapi2.bangbang93.com/maven`)
+		url = strings.ReplaceAll(url, `files.minecraftforge.net/maven`, `bmclapi2.bangbang93.com/maven`)
+	case "mcbbs":
+		url = strings.ReplaceAll(url, `launchermeta.mojang.com`, `download.mcbbs.net`)
+		url = strings.ReplaceAll(url, `launcher.mojang.com`, `download.mcbbs.net`)
+		url = strings.ReplaceAll(url, `resources.download.minecraft.net`, `download.mcbbs.net/assets`)
+		url = strings.ReplaceAll(url, `libraries.minecraft.net`, `download.mcbbs.net/maven`)
+		url = strings.ReplaceAll(url, `files.minecraftforge.net/maven`, `download.mcbbs.net/maven`)
+
 	default:
-		return url
 	}
+	return url
 }
 
 func aget(aurl string) (*http.Response, error) {

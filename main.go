@@ -11,6 +11,9 @@ import (
 
 func main() {
 	auth.Proxyaddr = f.Proxy
+	if credit {
+		credits()
+	}
 	if f.Verlist {
 		f.Arunlist()
 	}
@@ -48,6 +51,8 @@ func main() {
 
 var f aflag.Flag
 
+var credit bool
+
 func init() {
 	str, err := os.Getwd()
 	str = strings.ReplaceAll(str, `\`, `/`)
@@ -70,5 +75,39 @@ func init() {
 	flag.StringVar(&f.Atype, "type", "", `设置下载源。目前只能使用官方下载源`)
 	flag.BoolVar(&f.Independent, "independent", false, "是否开启版本隔离")
 	flag.BoolVar(&f.Outmsg, "test", true, "启动游戏前是否效验文件的完整和正确性")
+	flag.BoolVar(&credit, "credits", false, "")
 	flag.Parse()
+}
+
+func credits() {
+	fmt.Println(`使用了 bmclapi 作为下载源，地址 https://bmclapidoc.bangbang93.com/`)
+	fmt.Println(`使用了 github.com/google/uuid 用于生成 uuid ，开源协议`)
+	fmt.Println(`Copyright (c) 2009,2014 Google Inc. All rights reserved.
+
+	Redistribution and use in source and binary forms, with or without
+	modification, are permitted provided that the following conditions are
+	met:
+	
+	   * Redistributions of source code must retain the above copyright
+	notice, this list of conditions and the following disclaimer.
+	   * Redistributions in binary form must reproduce the above
+	copyright notice, this list of conditions and the following disclaimer
+	in the documentation and/or other materials provided with the
+	distribution.
+	   * Neither the name of Google Inc. nor the names of its
+	contributors may be used to endorse or promote products derived from
+	this software without specific prior written permission.
+	
+	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+	"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+	LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+	A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+	OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+	SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+	LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+	DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+	THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+	(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+	`)
 }
