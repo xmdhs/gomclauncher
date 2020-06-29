@@ -31,7 +31,7 @@ func main() {
 		f.Outmsg = false
 		f.D()
 	}
-	if f.Online {
+	if f.Email != "" {
 		f.Aonline()
 	} else {
 		f.Username = f.Name
@@ -44,7 +44,7 @@ func main() {
 	}
 	f.Gameinfo.RAM = f.RAM
 	if f.Run != "" {
-		if f.Name == "" && !f.Online {
+		if f.Name == "" && f.Email == "" {
 			fmt.Println("需要设置 username")
 			os.Exit(0)
 		}
@@ -66,9 +66,8 @@ func init() {
 		panic(err)
 	}
 	f.Minecraftpath = str + "/" + launcher.Minecraft
-	flag.BoolVar(&f.Online, "online", false, `是否启用正版登录，默认关闭`)
 	flag.StringVar(&f.Name, "username", "", `用户名`)
-	flag.StringVar(&f.Email, "email", "", `正版帐号邮箱`)
+	flag.StringVar(&f.Email, "email", "", `正版帐号邮箱，需要正版登录时设置此项，然后无需设置 username`)
 	flag.StringVar(&f.Passworld, "passworld", "", `正版帐号密码，只需第一次设置，第二次无需使用此参数。`)
 	flag.StringVar(&f.Download, "downver", "", "尝试下载的版本")
 	flag.BoolVar(&f.Verlist, "verlist", false, "显示所有可下载的版本")

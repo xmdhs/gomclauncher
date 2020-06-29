@@ -12,7 +12,6 @@ type Flag struct {
 	launcher.Gameinfo
 	Atype       string
 	Downint     int
-	Online      bool
 	Username    string
 	Passworld   string
 	Email       string
