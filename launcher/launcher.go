@@ -40,12 +40,20 @@ func (l *launcher1155) cp() string {
 				if v == pack[2] {
 					b.WriteString(path)
 					b.WriteString(p.Downloads.Artifact.Path)
-					b.WriteString(";")
+					if runtime.GOOS == "windows" {
+						b.WriteString(";")
+					} else {
+						b.WriteString(":")
+					}
 				}
 			} else {
 				b.WriteString(path)
 				b.WriteString(p.Downloads.Artifact.Path)
-				b.WriteString(";")
+				if runtime.GOOS == "windows" {
+					b.WriteString(";")
+				} else {
+					b.WriteString(":")
+				}
 			}
 		}
 	}
