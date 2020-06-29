@@ -52,7 +52,7 @@ func (l Libraries) Unzip(typee string, i int) error {
 									e <- errors.New("proxy err")
 									break
 								}
-								fmt.Println("似乎是网络问题，重试", err)
+								fmt.Println("似乎是网络问题，重试", url, err)
 								continue
 							}
 							if !ver(path, sha1) {
