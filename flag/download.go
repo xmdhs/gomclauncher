@@ -5,7 +5,6 @@ import (
 	"gomclauncher/download"
 	"gomclauncher/launcher"
 	"io/ioutil"
-	"log"
 	"os"
 )
 
@@ -85,7 +84,7 @@ b:
 				fmt.Println(i)
 			}
 		case err := <-e:
-			log.Fatal(err)
+			panic(err)
 			break b
 		}
 	}
@@ -95,11 +94,14 @@ func errr(err error) {
 	if err != nil {
 		if err.Error() == "proxy err" {
 			fmt.Println(err)
-			log.Fatalln("设置的代理有误")
+			fmt.Println("设置的代理有误")
+			os.Exit(0)
 		} else {
 			fmt.Println(err)
-			log.Fatalln("可能是网络问题，可再次尝试")
+			fmt.Println("可能是网络问题，可再次尝试")
+			os.Exit(0)
 		}
-		log.Fatal(err)
+		fmt.Println(err)
+		os.Exit(0)
 	}
 }

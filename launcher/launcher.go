@@ -3,7 +3,6 @@ package launcher
 import (
 	"bytes"
 	"fmt"
-	"log"
 	"os/exec"
 	"runtime"
 )
@@ -26,7 +25,7 @@ func (l launcher1155) Launcher115() {
 	b, err := cmd.CombinedOutput()
 	fmt.Println(string(b))
 	if err != nil {
-		log.Fatalln(err)
+		panic(err)
 	}
 }
 

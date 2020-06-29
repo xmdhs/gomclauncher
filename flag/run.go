@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
+	"os"
 )
 
 func (f Flag) Arun() {
@@ -17,7 +17,8 @@ func (f Flag) Arun() {
 	b, err := ioutil.ReadFile(f.Minecraftpath + "/versions/" + f.Version + "/" + f.Version + ".json")
 	if err != nil {
 		fmt.Println("没有这个版本或者其他问题")
-		log.Fatalln(err)
+		fmt.Println(err)
+		os.Exit(0)
 	}
 	if f.Outmsg {
 		t := test{}
@@ -34,10 +35,12 @@ func (f Flag) Arun() {
 	err = f.Run115()
 	if err != nil {
 		if err.Error() == "json not exist" {
-			log.Fatalln("请先安装对应的原版")
+			fmt.Println("请先安装对应的原版")
+			os.Exit(0)
 		}
 		if err.Error() == "json err" {
-			log.Fatalln("json 错误，可尝试到 .minecraft/versions 中删除对应的 json 文件")
+			fmt.Println("json 错误，可尝试到 .minecraft/versions 中删除对应的 json 文件")
+			os.Exit(0)
 		}
 	}
 }

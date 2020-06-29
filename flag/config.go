@@ -3,9 +3,9 @@ package flag
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"gomclauncher/auth"
 	"io/ioutil"
-	"log"
 	"os"
 )
 
@@ -25,7 +25,8 @@ func init() {
 	b, err := ioutil.ReadAll(f)
 	err = json.Unmarshal(b, &gmlconfig)
 	if err != nil {
-		log.Fatalln("json 损坏，可尝试删除 gml.json")
+		fmt.Println("json 损坏，可尝试删除 gml.json")
+		os.Exit(0)
 	}
 }
 

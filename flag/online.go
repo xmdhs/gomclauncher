@@ -1,15 +1,17 @@
 package flag
 
 import (
+	"fmt"
 	"gomclauncher/auth"
-	"log"
+	"os"
 	"time"
 )
 
 func (f *Flag) Aonline() {
 	if f.Email == "" {
-		log.Println("请设置邮箱")
-		log.Fatal("比如 -email xxx@xxx.xx")
+		fmt.Println("请设置邮箱")
+		fmt.Println("比如 -email xxx@xxx.xx")
+		os.Exit(0)
 	}
 	err := gmlconfig[f.Email].setonline(f.Email, f.Passworld)
 	if err != nil {
@@ -24,11 +26,14 @@ func (f *Flag) Aonline() {
 					err = auth.Refresh(&a)
 					if err != nil {
 						if err.Error() == "not ok" {
-							log.Fatalln("请尝试重新登录")
+							fmt.Println("请尝试重新登录")
+							os.Exit(0)
 						} else if err.Error() == "proxy err" {
-							log.Fatalln("设置的代理有误")
+							fmt.Println("设置的代理有误")
+							os.Exit(0)
 						} else {
-							log.Fatalln("可能是网络问题，可再次尝试")
+							fmt.Println("可能是网络问题，可再次尝试")
+							os.Exit(0)
 						}
 					}
 					aconfig := gmlconfig[f.Email]
@@ -42,9 +47,11 @@ func (f *Flag) Aonline() {
 				}
 			}
 		} else if err.Error() == "not ok" {
-			log.Fatalln("账户名或密码错误")
+			fmt.Println("账户名或密码错误")
+			os.Exit(0)
 		} else {
-			log.Fatalln(err)
+			fmt.Println(err)
+			os.Exit(0)
 		}
 	}
 	f.Userproperties = gmlconfig[f.Email].Userproperties
