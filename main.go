@@ -5,7 +5,9 @@ import (
 	"fmt"
 	"gomclauncher/auth"
 	aflag "gomclauncher/flag"
+	"gomclauncher/launcher"
 	"os"
+	"runtime"
 	"strings"
 )
 
@@ -18,14 +20,15 @@ func main() {
 		f.Arunlist()
 	}
 	if f.Runlist {
-		s := aflag.Find(`.minecraft/versions`)
+		s := aflag.Find(launcher.Minecraft + `/versions`)
 		for _, v := range s {
-			if aflag.Test(`.minecraft/versions/` + v + `/` + v + ".json") {
+			if aflag.Test(launcher.Minecraft + `/versions/` + v + `/` + v + ".json") {
 				fmt.Println(v)
 			}
 		}
 	}
 	if f.Download != "" {
+		f.Outmsg = false
 		f.D()
 	}
 	if f.Online {
@@ -55,11 +58,14 @@ var credit bool
 
 func init() {
 	str, err := os.Getwd()
+	if runtime.GOOS == "windows" {
+		launcher.Minecraft = `.minecraft`
+	}
 	str = strings.ReplaceAll(str, `\`, `/`)
 	if err != nil {
 		panic(err)
 	}
-	f.Minecraftpath = str + `/.minecraft`
+	f.Minecraftpath = str + "/" + launcher.Minecraft
 	flag.BoolVar(&f.Online, "online", false, `是否启用正版登录，默认关闭`)
 	flag.StringVar(&f.Name, "username", "", `用户名`)
 	flag.StringVar(&f.Email, "email", "", `正版帐号邮箱`)
@@ -72,7 +78,7 @@ func init() {
 	flag.StringVar(&f.RAM, "ram", "2048", `分配启动游戏的内存大小(mb)`)
 	flag.StringVar(&f.Aflag, "flag", "", "自定的启动参数，比如 -XX:+AggressiveOpts -XX:+UseCompressedOops")
 	flag.StringVar(&f.Proxy, `proxy`, "", `设置下载用的代理(http)`)
-	flag.StringVar(&f.Atype, "type", "", `设置下载源。目前只能使用官方下载源`)
+	flag.StringVar(&f.Atype, "type", "", `设置下载源。可选 bmclapi 和 mcbbs ，不设置此项则使用官方下载源`)
 	flag.BoolVar(&f.Independent, "independent", false, "是否开启版本隔离")
 	flag.BoolVar(&f.Outmsg, "test", true, "启动游戏前是否效验文件的完整和正确性")
 	flag.BoolVar(&credit, "credits", false, "")
@@ -82,7 +88,8 @@ func init() {
 func credits() {
 	fmt.Println(`使用了 bmclapi 作为下载源，地址 https://bmclapidoc.bangbang93.com/`)
 	fmt.Println(`使用了 github.com/google/uuid 用于生成 uuid ，开源协议`)
-	fmt.Println(`Copyright (c) 2009,2014 Google Inc. All rights reserved.
+	fmt.Println(`
+	Copyright (c) 2009,2014 Google Inc. All rights reserved.
 
 	Redistribution and use in source and binary forms, with or without
 	modification, are permitted provided that the following conditions are

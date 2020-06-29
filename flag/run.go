@@ -3,6 +3,7 @@ package flag
 import (
 	"encoding/json"
 	"fmt"
+	"gomclauncher/launcher"
 	"io/ioutil"
 	"os"
 )
@@ -39,7 +40,7 @@ func (f Flag) Arun() {
 			os.Exit(0)
 		}
 		if err.Error() == "json err" {
-			fmt.Println("json 错误，可尝试到 .minecraft/versions 中删除对应的 json 文件")
+			fmt.Println("json 错误，可尝试到 " + launcher.Minecraft + "/versions 中删除对应的 json 文件")
 			os.Exit(0)
 		}
 	}

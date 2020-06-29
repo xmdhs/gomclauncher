@@ -2,6 +2,7 @@ package download
 
 import (
 	"encoding/json"
+	"gomclauncher/launcher"
 	"io/ioutil"
 )
 
@@ -43,7 +44,7 @@ type VersionVersion struct {
 func (v Version) Downjson(ver string) error {
 	for _, vv := range v.Versions {
 		if vv.ID == ver {
-			err := get(source(vv.URL, v.atype), `.minecraft/versions/`+vv.ID+`/`+vv.ID+`.json`)
+			err := get(source(vv.URL, v.atype), launcher.Minecraft+`/versions/`+vv.ID+`/`+vv.ID+`.json`)
 			if err != nil {
 				return err
 			}

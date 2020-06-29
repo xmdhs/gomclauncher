@@ -17,7 +17,7 @@ func (l Libraries) Downassets(typee string, i int, c chan int) error {
 	go func() {
 		for _, v := range l.assetIndex.Objects {
 			v := v
-			ok := ver(`.minecraft/assets/objects/`+v.Hash[:2]+`/`+v.Hash, v.Hash)
+			ok := ver(launcher.Minecraft+`/assets/objects/`+v.Hash[:2]+`/`+v.Hash, v.Hash)
 			if !ok {
 				ch <- true
 				go func() {
@@ -30,7 +30,7 @@ func (l Libraries) Downassets(typee string, i int, c chan int) error {
 							e <- errors.New("file download fail")
 							break
 						}
-						err := get(source(`http://resources.download.minecraft.net/`+v.Hash[:2]+`/`+v.Hash, typee), `.minecraft/assets/objects/`+v.Hash[:2]+`/`+v.Hash)
+						err := get(source(`http://resources.download.minecraft.net/`+v.Hash[:2]+`/`+v.Hash, typee), launcher.Minecraft+`/assets/objects/`+v.Hash[:2]+`/`+v.Hash)
 						if err != nil {
 							if err.Error() == "proxy err" {
 								e <- errors.New("proxy err")
@@ -39,7 +39,7 @@ func (l Libraries) Downassets(typee string, i int, c chan int) error {
 							fmt.Println("似乎是网络问题，重试", err)
 							continue
 						}
-						ok := ver(`.minecraft/assets/objects/`+v.Hash[:2]+`/`+v.Hash, v.Hash)
+						ok := ver(launcher.Minecraft+`/assets/objects/`+v.Hash[:2]+`/`+v.Hash, v.Hash)
 						if !ok {
 							fmt.Println("文件效验失败，重新下载", v.Hash)
 							continue
@@ -92,7 +92,7 @@ func (l Libraries) Downlibrarie(typee string, i int, c chan int) error {
 	go func() {
 		for _, v := range l.librarie.Libraries {
 			v := v
-			path := `.minecraft/libraries/` + v.Downloads.Artifact.Path
+			path := launcher.Minecraft + `/libraries/` + v.Downloads.Artifact.Path
 			if v.Downloads.Artifact.URL == "" {
 				done <- true
 				continue
@@ -159,7 +159,7 @@ func librariesvar(v launcher.LibraryX115, path string) bool {
 }
 
 func (l Libraries) Downjar(typee string) error {
-	path := `.minecraft/versions/` + l.librarie.ID + "/" + l.librarie.ID + ".jar"
+	path := launcher.Minecraft + `/versions/` + l.librarie.ID + "/" + l.librarie.ID + ".jar"
 	if ver(path, l.librarie.Downloads.Client.Sha1) {
 		return nil
 	}

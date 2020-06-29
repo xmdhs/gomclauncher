@@ -27,7 +27,7 @@ func Newlibraries(b []byte) (Libraries, error) {
 		return Libraries{}, err
 	}
 	if mod.InheritsFrom != "" {
-		b, err := ioutil.ReadFile(`.minecraft/versions/` + mod.InheritsFrom + "/" + mod.InheritsFrom + ".json")
+		b, err := ioutil.ReadFile(launcher.Minecraft + `/versions/` + mod.InheritsFrom + "/" + mod.InheritsFrom + ".json")
 		if err != nil {
 			return Libraries{}, err
 		}
@@ -38,7 +38,7 @@ func Newlibraries(b []byte) (Libraries, error) {
 	}
 	url = l.AssetIndex.URL
 	id = l.AssetIndex.ID
-	path := ".minecraft/assets/indexes/" + id + ".json"
+	path := launcher.Minecraft + "/assets/indexes/" + id + ".json"
 	_, err = os.Stat(path)
 	if err != nil {
 		if os.IsNotExist(err) {
@@ -86,7 +86,7 @@ func get(u, path string) error {
 	if err != nil {
 		s := strings.Split(path, "/")
 		ss := strings.ReplaceAll(path, s[len(s)-1], "")
-		os.MkdirAll(ss, 777)
+		os.MkdirAll(ss, 0777)
 	}
 	f, err := os.Create(path)
 	defer f.Close()
