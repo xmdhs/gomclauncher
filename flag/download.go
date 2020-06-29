@@ -39,17 +39,33 @@ func (f Flag) D() {
 	}
 	dl, err := download.Newlibraries(b)
 	errr(err)
-	fmt.Println("正在下载游戏核心")
+	if f.Outmsg {
+		fmt.Println("正在验证游戏核心")
+	} else {
+		fmt.Println("正在下载游戏核心")
+	}
 	err = dl.Downjar(f.Atype)
 	errr(err)
 	fmt.Println("完成")
-	fmt.Println("正在下载库文件")
+	if f.Outmsg {
+		fmt.Println("正在验证库文件")
+	} else {
+		fmt.Println("正在下载库文件")
+	}
 	f.dd(dl, false)
 	fmt.Println("完成")
-	fmt.Println("正在下载资源文件")
+	if f.Outmsg {
+		fmt.Println("正在验证库文件")
+	} else {
+		fmt.Println("正在验证资源文件")
+	}
 	f.dd(dl, true)
 	fmt.Println("完成")
-	fmt.Println("正在下载解压 natives 库")
+	if f.Outmsg {
+		fmt.Println("正在验证解压 natives 库")
+	} else {
+		fmt.Println("正在下载解压 natives 库")
+	}
 	err = dl.Unzip(f.Atype, f.Downint)
 	if err != nil {
 		fmt.Println(err)
