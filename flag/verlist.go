@@ -11,7 +11,7 @@ func (f Flag) Arunlist() {
 	l, err := download.Getversionlist(f.Atype)
 	errr(err)
 	w := bufio.NewScanner(os.Stdin)
-	fmt.Print("输入想查看的类型，可选")
+	fmt.Print("输入想查看的类型，可选 ")
 	m := make(map[string]bool)
 	for _, v := range l.Versions {
 		m[v.Type] = true
@@ -27,5 +27,4 @@ func (f Flag) Arunlist() {
 			fmt.Println(v.ID)
 		}
 	}
-	w.Scan()
 }
