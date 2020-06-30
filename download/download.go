@@ -37,12 +37,12 @@ func (l Libraries) Downassets(typee string, i int, c chan int) error {
 								e <- errors.New("proxy err")
 								break
 							}
-							fmt.Println("似乎是网络问题，重试", v.Hash, err)
+							fmt.Println("似乎是网络问题，重试", source(`https://resources.download.minecraft.net/`+v.Hash[:2]+`/`+v.Hash, typee), err)
 							continue
 						}
 						ok := ver(launcher.Minecraft+`/assets/objects/`+v.Hash[:2]+`/`+v.Hash, v.Hash)
 						if !ok {
-							fmt.Println("文件效验失败，重新下载", v.Hash)
+							fmt.Println("文件效验失败，重新下载", source(`https://resources.download.minecraft.net/`+v.Hash[:2]+`/`+v.Hash, typee))
 							continue
 						}
 						break
