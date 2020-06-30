@@ -9,7 +9,7 @@ import (
 )
 
 func Getversionlist(atype string) (*Version, error) {
-	rep, err := aget(source(`https://launchermeta.mojang.com/mc/game/version_manifest.json`, atype))
+	rep, err := Aget(source(`https://launchermeta.mojang.com/mc/game/version_manifest.json`, atype))
 	if err != nil {
 		return nil, err
 	}

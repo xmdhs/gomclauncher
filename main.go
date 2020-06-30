@@ -1,19 +1,25 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
+	"io/ioutil"
 	"os"
 	"runtime"
 	"strings"
 
 	"github.com/xmdhs/gomclauncher/auth"
+	"github.com/xmdhs/gomclauncher/download"
 	aflag "github.com/xmdhs/gomclauncher/flag"
 	"github.com/xmdhs/gomclauncher/launcher"
 )
 
 func main() {
 	auth.Proxyaddr = f.Proxy
+	if updata {
+		check()
+	}
 	if credit {
 		credits()
 	}
@@ -55,7 +61,10 @@ func main() {
 
 var f aflag.Flag
 
-var credit bool
+var (
+	credit bool
+	updata bool
+)
 
 func init() {
 	str, err := os.Getwd()
@@ -72,16 +81,17 @@ func init() {
 	flag.StringVar(&f.Passworld, "passworld", "", `正版帐号密码，只需第一次设置，第二次无需使用此参数。`)
 	flag.StringVar(&f.Download, "downver", "", "尝试下载的版本")
 	flag.BoolVar(&f.Verlist, "verlist", false, "显示所有可下载的版本")
-	flag.IntVar(&f.Downint, "int", 64, "下载文件时使用的协程数。默认为 64")
+	flag.IntVar(&f.Downint, "int", 64, "下载文件时使用的协程数。")
 	flag.StringVar(&f.Run, "run", "", `尝试启动的版本`)
 	flag.BoolVar(&f.Runlist, "runlist", false, "显示所有可启动的版本")
 	flag.StringVar(&f.RAM, "ram", "2048", `分配启动游戏的内存大小(mb)`)
 	flag.StringVar(&f.Aflag, "flag", "", "自定的启动参数，比如 -XX:+AggressiveOpts -XX:+UseCompressedOops")
 	flag.StringVar(&f.Proxy, `proxy`, "", `设置下载用的代理(http)`)
 	flag.StringVar(&f.Atype, "type", "", `设置下载源。可选 bmclapi 和 mcbbs ，不设置此项则使用官方下载源`)
-	flag.BoolVar(&f.Independent, "independent", true, "是否开启版本隔离，默认开启")
-	flag.BoolVar(&f.Outmsg, "test", true, "启动游戏前是否效验文件的完整和正确性，默认开启")
+	flag.BoolVar(&f.Independent, "independent", true, "是否开启版本隔离")
+	flag.BoolVar(&f.Outmsg, "test", true, "启动游戏前是否效验文件的完整和正确性")
 	flag.BoolVar(&credit, "credits", false, "")
+	flag.BoolVar(&updata, "updata", true, "是否检测更新")
 	flag.Parse()
 }
 
@@ -117,4 +127,40 @@ func credits() {
 	(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 	`)
+}
+
+type up struct {
+	Tag  string `json:"tag_name"`
+	Body string `json:"body"`
+}
+
+func check() {
+	reps, err := download.Aget(`https://api.github.com/repos/xmdhs/gomclauncher/releases/latest`)
+	if reps.Body != nil {
+		defer reps.Body.Close()
+	}
+	if err != nil {
+		fmt.Println("检测更新失败")
+		fmt.Println(err)
+		return
+	}
+	b, err := ioutil.ReadAll(reps.Body)
+	if err != nil {
+		fmt.Println("检测更新失败")
+		fmt.Println(err)
+		return
+	}
+	u := up{}
+	err = json.Unmarshal(b, &u)
+	if err != nil {
+		fmt.Println("检测更新失败")
+		fmt.Println(err)
+		return
+	}
+	if u.Tag != "v"+launcher.Launcherversion {
+		fmt.Println("检测到更新,新版本为", u.Tag)
+		fmt.Println("当前版本为", "v"+launcher.Launcherversion)
+		fmt.Println("更新内容：")
+		fmt.Println(u.Body)
+	}
 }

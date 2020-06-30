@@ -72,7 +72,7 @@ type asset struct {
 }
 
 func get(u, path string) error {
-	reps, err := aget(u)
+	reps, err := Aget(u)
 	if reps != nil {
 		defer reps.Body.Close()
 	}
@@ -136,7 +136,7 @@ func source(url, types string) string {
 	return url
 }
 
-func aget(aurl string) (*http.Response, error) {
+func Aget(aurl string) (*http.Response, error) {
 	var c http.Client
 	if auth.Proxyaddr != "" {
 		proxy, err := url.Parse(auth.Proxyaddr)
@@ -147,11 +147,11 @@ func aget(aurl string) (*http.Response, error) {
 		transport.Proxy = http.ProxyURL(proxy)
 		c = http.Client{
 			Transport: transport,
-			Timeout:   10 * time.Second,
+			Timeout:   5 * time.Second,
 		}
 	} else {
 		c = http.Client{
-			Timeout: 10 * time.Second,
+			Timeout: 5 * time.Second,
 		}
 	}
 	rep, err := http.NewRequest("GET", aurl, nil)
