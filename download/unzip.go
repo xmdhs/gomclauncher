@@ -48,10 +48,6 @@ func (l Libraries) Unzip(typee string, i int) error {
 							}
 							err := get(source(url, typee), path)
 							if err != nil {
-								if err.Error() == "proxy err" {
-									e <- errors.New("proxy err")
-									break
-								}
 								fmt.Println("似乎是网络问题，重试", url, err)
 								continue
 							}

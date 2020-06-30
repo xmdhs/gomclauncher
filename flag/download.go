@@ -108,9 +108,6 @@ b:
 func errr(err error) {
 	if err != nil {
 		switch err.Error() {
-		case "proxy err":
-			fmt.Println(err)
-			fmt.Println("设置的代理有误")
 		case "no such":
 			fmt.Println("没有这个版本")
 		case "file download fail":

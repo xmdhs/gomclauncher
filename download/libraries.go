@@ -2,7 +2,6 @@ package download
 
 import (
 	"encoding/json"
-	"errors"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -141,7 +140,7 @@ func Aget(aurl string) (*http.Response, error) {
 	if auth.Proxyaddr != "" {
 		proxy, err := url.Parse(auth.Proxyaddr)
 		if err != nil {
-			return nil, errors.New("proxy err")
+			panic(err)
 		}
 		transport := http.DefaultTransport.(*http.Transport).Clone()
 		transport.Proxy = http.ProxyURL(proxy)

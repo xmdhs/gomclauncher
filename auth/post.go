@@ -2,7 +2,6 @@ package auth
 
 import (
 	"bytes"
-	"errors"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -16,7 +15,7 @@ func post(endpoint string, Payload []byte) ([]byte, error, int) {
 	if Proxyaddr != "" {
 		proxy, err := url.Parse(Proxyaddr)
 		if err != nil {
-			return nil, errors.New("proxy err"), 0
+			panic(err)
 		}
 		transport := http.DefaultTransport.(*http.Transport).Clone()
 		transport.Proxy = http.ProxyURL(proxy)

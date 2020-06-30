@@ -29,9 +29,6 @@ func (f *Flag) Aonline() {
 						if err.Error() == "not ok" {
 							fmt.Println("请尝试重新登录")
 							os.Exit(0)
-						} else if err.Error() == "proxy err" {
-							fmt.Println("设置的代理有误")
-							os.Exit(0)
 						} else {
 							fmt.Println("可能是网络问题，可再次尝试")
 							os.Exit(0)

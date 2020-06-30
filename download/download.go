@@ -33,10 +33,6 @@ func (l Libraries) Downassets(typee string, i int, c chan int) error {
 						}
 						err := get(source(`https://resources.download.minecraft.net/`+v.Hash[:2]+`/`+v.Hash, typee), launcher.Minecraft+`/assets/objects/`+v.Hash[:2]+`/`+v.Hash)
 						if err != nil {
-							if err.Error() == "proxy err" {
-								e <- errors.New("proxy err")
-								break
-							}
 							fmt.Println("似乎是网络问题，重试", source(`https://resources.download.minecraft.net/`+v.Hash[:2]+`/`+v.Hash, typee), err)
 							continue
 						}
@@ -112,10 +108,6 @@ func (l Libraries) Downlibrarie(typee string, i int, c chan int) error {
 						}
 						err := get(source(v.Downloads.Artifact.URL, typee), path)
 						if err != nil {
-							if err.Error() == "proxy err" {
-								e <- errors.New("proxy err")
-								break
-							}
 							fmt.Println("似乎是网络问题，重试", source(v.Downloads.Artifact.URL, typee), err)
 							continue
 						}
@@ -174,9 +166,7 @@ func (l Libraries) Downjar(typee string) error {
 		}
 		err := get(source(l.librarie.Downloads.Client.URL, typee), path)
 		if err != nil {
-			if err.Error() == "proxy err" {
-				return errors.New("proxy err")
-			}
+			fmt.Println("似乎是网络问题，重试", err)
 			continue
 		}
 		if !ver(path, l.librarie.Downloads.Client.Sha1) {
