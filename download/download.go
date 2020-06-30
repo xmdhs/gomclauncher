@@ -162,7 +162,7 @@ func (l Libraries) Downjar(typee string) error {
 		}
 		err := get(source(l.librarie.Downloads.Client.URL, typee), path)
 		if err != nil {
-			fmt.Println("似乎是网络问题，重试", err)
+			fmt.Println("似乎是网络问题，重试", source(l.librarie.Downloads.Client.URL, typee), err)
 			continue
 		}
 		if !ver(path, l.librarie.Downloads.Client.Sha1) {
