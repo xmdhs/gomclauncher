@@ -156,10 +156,6 @@ func (l Libraries) Downjar(typee string) error {
 	if ver(path, l.librarie.Downloads.Client.Sha1) {
 		return nil
 	}
-	err := get(l.librarie.Downloads.Client.URL, path)
-	if err != nil {
-		return err
-	}
 	for i := 0; i < 4; i++ {
 		if i == 3 {
 			return errors.New("file download fail")
