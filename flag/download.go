@@ -33,7 +33,7 @@ func (f Flag) D() {
 	errr(err)
 	err = l.Downjson(f.Download)
 	errr(err)
-	b, err := ioutil.ReadFile(launcher.Minecraft + "/versions/" + f.Download + "/" + f.Download + ".json")
+	b, err := ioutil.ReadFile(launcher.Minecraft + "/versions/" + f.Run + "/" + f.Run + ".json")
 	if err != nil {
 		panic(err)
 	}

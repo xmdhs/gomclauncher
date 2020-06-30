@@ -33,6 +33,7 @@ func Newlibraries(b []byte) (Libraries, error) {
 		}
 		json.Unmarshal(b, &l)
 		modlibraries2(mod.Libraries, &l)
+		l.ID = mod.ID
 	} else {
 		json.Unmarshal(b, &l)
 	}
