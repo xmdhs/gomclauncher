@@ -166,6 +166,7 @@ func (l Libraries) Downjar(typee string) error {
 			continue
 		}
 		if !ver(path, l.librarie.Downloads.Client.Sha1) {
+			fmt.Println("文件效验失败，重新下载", source(l.librarie.Downloads.Client.URL, typee), err)
 			continue
 		}
 		break
