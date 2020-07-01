@@ -139,9 +139,12 @@ func (g *Gameinfo) argumentsrelace(s string, l *launcher1155) string {
 }
 
 func archbool(arch string) bool {
-	a := runtime.GOARCH
-	if a == "386" {
-		a = "x86"
+	if arch == "x86" {
+		a := runtime.GOARCH
+		if a == "386" {
+			a = "x86"
+		}
+		return a == arch
 	}
-	return a == arch
+	return true
 }
