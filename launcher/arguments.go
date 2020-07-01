@@ -2,6 +2,7 @@ package launcher
 
 import (
 	"errors"
+	"runtime"
 	"strings"
 )
 
@@ -61,11 +62,17 @@ func Rule(v map[string]interface{}) Jvm {
 	for _, rr := range r {
 		jvmrule := JvmRule{}
 		r := rr.(map[string]interface{})
-		action := r["action"].(string)
-		jvmrule.Action = action
+		action, ok := r["action"].(string)
+		if ok {
+			jvmrule.Action = action
+		}
 		name, ok := r["os"].(map[string]interface{})["name"]
 		if ok {
 			jvmrule.Os = name.(string)
+		}
+		arch, ok := r["os"].(map[string]interface{})["arch"]
+		if ok {
+			jvmrule.arch = arch.(string)
 		}
 		rule = append(rule, jvmrule)
 	}
@@ -79,7 +86,7 @@ func Jvmarguments(j Jvm) []string {
 		if v.Action == "disallow" && osbool(v.Os) {
 			return nil
 		}
-		if v.Action == "allow" && (v.Os == "" || osbool(v.Os)) {
+		if v.Action == "allow" && (v.Os == "" || osbool(v.Os)) && (v.arch == "" || archbool(v.arch)) {
 			allow = true
 		}
 	}
@@ -97,6 +104,7 @@ type Jvm struct {
 type JvmRule struct {
 	Action string
 	Os     string
+	arch   string
 }
 
 func (g *Gameinfo) argumentsGame(l *launcher1155) {
@@ -128,4 +136,12 @@ func (g *Gameinfo) argumentsrelace(s string, l *launcher1155) string {
 	}
 	s = strings.ReplaceAll(s, "${user_properties}", g.Userproperties)
 	return s
+}
+
+func archbool(arch string) bool {
+	a := runtime.GOARCH
+	if a == "386" {
+		a = "x86"
+	}
+	return a == arch
 }
