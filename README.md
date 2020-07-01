@@ -1,5 +1,5 @@
 # gomclauncher
-一个简单的命令行下的 minecraft 启动器。支持自动下载补全和验证 minecraft 游戏文件以及正版登录，支持 linux windows 和 mac 。
+一个简单的命令行下的 minecraft 启动器。支持自动下载补全和验证 minecraft 游戏文件以及正版登录，支持通过安装程序安装后的 fabric 和 forge，支持 linux windows 和 mac。
 
 ## 使用方法
 使用 -h 即可获得相关参数的使用说明。
