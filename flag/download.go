@@ -23,7 +23,6 @@ type Flag struct {
 	Runram      string
 	Runflag     string
 	Proxy       string
-	Aflag       string
 	Independent bool
 	Outmsg      bool
 }
