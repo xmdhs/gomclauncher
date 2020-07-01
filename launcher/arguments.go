@@ -46,6 +46,7 @@ func Rule(v map[string]interface{}) Jvm {
 	var values []interface{}
 	switch vv := v["value"].(type) {
 	case []interface{}:
+		values = append(values, vv...)
 	case string:
 		values = append(values, vv)
 	}
