@@ -3,6 +3,7 @@ package launcher
 import (
 	"bytes"
 	"fmt"
+	"os"
 	"os/exec"
 	"runtime"
 )
@@ -22,8 +23,8 @@ func (l launcher1155) Launcher115() {
 	fmt.Println(l.flag)
 	cmd := exec.Command("java", l.flag...)
 	cmd.Dir = l.Gamedir
-	b, err := cmd.CombinedOutput()
-	fmt.Println(string(b))
+	cmd.Stdout = os.Stdout
+	err := cmd.Run()
 	if err != nil {
 		panic(err)
 	}
