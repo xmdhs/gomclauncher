@@ -151,8 +151,8 @@ func librariesvar(v launcher.LibraryX115, path string) bool {
 
 }
 
-func (l Libraries) Downjar(typee string) error {
-	path := launcher.Minecraft + `/versions/` + l.librarie.ID + "/" + l.librarie.ID + ".jar"
+func (l Libraries) Downjar(typee, version string) error {
+	path := launcher.Minecraft + `/versions/` + version + "/" + version + ".jar"
 	if ver(path, l.librarie.Downloads.Client.Sha1) {
 		return nil
 	}

@@ -49,7 +49,7 @@ func (f Flag) D() {
 	} else {
 		fmt.Println("正在下载游戏核心")
 	}
-	err = dl.Downjar(f.Atype)
+	err = dl.Downjar(f.Atype, f.Download)
 	errr(err)
 	fmt.Println("完成")
 	if f.Outmsg {
