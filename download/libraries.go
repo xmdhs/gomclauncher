@@ -106,12 +106,14 @@ func modlibraries2(l []launcher.Librarie, Launcherjson *launcher.LauncherjsonX11
 			Librarie.Downloads.Artifact.URL = v.Downloads.Artifact.URL
 			Librarie.Downloads.Artifact.Sha1 = v.Downloads.Artifact.Sha1
 			Launcherjson.Libraries = append(Launcherjson.Libraries, Librarie)
-		} else if v.Url != "" {
+		} else {
 			Librarie := launcher.LibraryX115{}
 			s := launcher.Name2path(v.Name)
 			path := strings.ReplaceAll(s[0], ".", "/") + "/" + s[1] + "/" + s[2] + "/" + s[1] + "-" + s[2] + ".jar"
 			Librarie.Downloads.Artifact.Path = path
-			Librarie.Downloads.Artifact.URL = v.Url + path
+			if v.Url != "" {
+				Librarie.Downloads.Artifact.URL = v.Url + path
+			}
 			Launcherjson.Libraries = append(Launcherjson.Libraries, Librarie)
 		}
 	}
