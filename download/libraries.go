@@ -113,6 +113,8 @@ func modlibraries2(l []launcher.Librarie, Launcherjson *launcher.LauncherjsonX11
 			Librarie.Downloads.Artifact.Path = path
 			if v.Url != "" {
 				Librarie.Downloads.Artifact.URL = v.Url + path
+			} else {
+				Librarie.Downloads.Artifact.URL = `https://libraries.minecraft.net/` + path
 			}
 			Launcherjson.Libraries = append(Launcherjson.Libraries, Librarie)
 		}
