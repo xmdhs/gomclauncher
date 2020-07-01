@@ -8,11 +8,11 @@
 
 启动游戏 `./gml-linux -run 1.16.1 -username xmdhs`
 
-启动游戏并关闭检测启动器更新，游戏文件验证，版本隔离 `./gml-linux -run 1.16.1 -username xmdhs -test=f -independent=f -updata=f`
+启动游戏并关闭检测启动器更新检测，游戏文件验证，版本隔离 `./gml-linux -run 1.16.1 -username xmdhs -test=f -independent=f -updata=f`
 
 自定义启动 jvm 参数 `./gml-linux -run 1.16.1 -username xmdhs -flag "-XX:+AggressiveOpts -XX:+UseCompressedOops"`
 
-下载游戏并使用镜像下载源 `./gml-linux -downver 1.16.1 -type=mcbbs`
+下载游戏并使用镜像下载源并设置使用协程数为 32 `./gml-linux -downver 1.16.1 -type=mcbbs -int 32`
 
 ## 截图
 ![image.png](https://i.loli.net/2020/07/02/E7ZcBCGfo1v46kI.png)
