@@ -19,8 +19,8 @@ func TestPost(t *testing.T) {
 		"requestUser": true                   
 	}`
 	b, err, i := post("", []byte(j))
-	if err == nil {
-		t.Fail()
+	if err != nil {
+		t.Fatal(err)
 	}
 	a := string(b)
 	t.Log(i)
