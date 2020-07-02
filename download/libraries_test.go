@@ -7,7 +7,7 @@ import (
 )
 
 func TestNewlibrarie(t *testing.T) {
-	b, err := ioutil.ReadFile("1.15.32.json")
+	b, err := ioutil.ReadFile("1.15.2.json")
 	if err != nil {
 		t.Fatal(err)
 	}

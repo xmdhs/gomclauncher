@@ -18,10 +18,9 @@ func TestPost(t *testing.T) {
 		"clientToken": "客户端标识符",          
 		"requestUser": true                   
 	}`
-
 	b, err, i := post("", []byte(j))
-	if err != nil {
-		t.Fatal(err)
+	if err == nil {
+		t.Fail()
 	}
 	a := string(b)
 	t.Log(i)
