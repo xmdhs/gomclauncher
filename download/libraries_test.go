@@ -15,7 +15,9 @@ func TestNewlibrarie(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Log(l)
+	if l.librarie.ID != "1.15.2" {
+		t.Fatal(l.librarie.ID)
+	}
 }
 
 func TestAssets(t *testing.T) {
