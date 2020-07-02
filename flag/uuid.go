@@ -1,20 +1,16 @@
 package flag
 
 import (
-	"strings"
-
-	"github.com/google/uuid"
+	"encoding/hex"
 )
 
-func UUIDgen(name string) string {
-	b := []byte(name)
-	if len(b) <= 16 {
-		b = append(b, make([]byte, 16)...)
-	}
-	u, err := uuid.FromBytes(b[0:16])
-	aerr(err)
-	UUID := strings.ReplaceAll(u.String(), "-", "")
-	return UUID
+func UUIDgen(t string) string {
+	bb := []byte(t)
+	bb = append(bb, make([]byte, 16)...)
+	bb = bb[0:16]
+	s := make([]byte, hex.EncodedLen(len(bb)))
+	hex.Encode(s, bb)
+	return string(s)
 }
 
 func aerr(err error) {

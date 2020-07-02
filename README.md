@@ -18,6 +18,4 @@
 ![image.png](https://i.loli.net/2020/07/02/E7ZcBCGfo1v46kI.png)
 
 ## 使用项目
-https://github.com/google/uuid
-
 BMCLAPI https://bmclapidoc.bangbang93.com/
