@@ -1,7 +1,6 @@
 package download
 
 import (
-	"fmt"
 	"io/ioutil"
 	"testing"
 )
@@ -27,11 +26,11 @@ func TestNewlibraries(t *testing.T) {
 b:
 	for {
 		select {
-		case i, ok := <-ch:
+		case _, ok := <-ch:
 			if !ok {
 				break b
 			}
-			fmt.Println(i)
+			//fmt.Println(i)
 		case err := <-e:
 			t.Fatal(err)
 			break b
@@ -61,11 +60,11 @@ func TestDownassets(t *testing.T) {
 b:
 	for {
 		select {
-		case i, ok := <-ch:
+		case _, ok := <-ch:
 			if !ok {
 				break b
 			}
-			fmt.Println(i)
+			//fmt.Println(i)
 		case err := <-e:
 			t.Fatal(err)
 			break b
