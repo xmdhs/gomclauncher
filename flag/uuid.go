@@ -1,14 +1,14 @@
 package flag
 
 import (
+	"crypto/md5"
 	"encoding/hex"
 )
 
 func UUIDgen(t string) string {
-	bb := []byte(t)
-	bb = append(bb, make([]byte, 16)...)
-	bb = bb[0:16]
-	return hex.EncodeToString(bb)
+	data := []byte(t)
+	has := md5.Sum(data)
+	return hex.EncodeToString(has[:])
 }
 
 func aerr(err error) {
