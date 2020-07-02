@@ -24,9 +24,8 @@ func TestAssets(t *testing.T) {
 		t.Fatal(err)
 	}
 	a := assets{}
-	json.Unmarshal(bb, &a)
-	for s, v := range a.Objects {
-		t.Log(s)
-		t.Log(v)
+	err = json.Unmarshal(bb, &a)
+	if err != nil {
+		t.Fatal(err)
 	}
 }
