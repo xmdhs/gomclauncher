@@ -12,21 +12,17 @@ var Proxyaddr string
 
 func post(endpoint string, Payload []byte) ([]byte, error, int) {
 	var c http.Client
+	transport := http.DefaultTransport.(*http.Transport).Clone()
 	if Proxyaddr != "" {
 		proxy, err := url.Parse(Proxyaddr)
 		if err != nil {
 			panic(err)
 		}
-		transport := http.DefaultTransport.(*http.Transport).Clone()
 		transport.Proxy = http.ProxyURL(proxy)
-		c = http.Client{
-			Transport: transport,
-			Timeout:   10 * time.Second,
-		}
-	} else {
-		c = http.Client{
-			Timeout: 10 * time.Second,
-		}
+	}
+	c = http.Client{
+		Transport: transport,
+		Timeout:   10 * time.Second,
 	}
 	h, err := http.NewRequest("POST", "https://authserver.mojang.com/"+endpoint, bytes.NewReader(Payload))
 	if err != nil {

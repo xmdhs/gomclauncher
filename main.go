@@ -87,16 +87,17 @@ func init() {
 	flag.StringVar(&f.RAM, "ram", "2048", `分配启动游戏的内存大小(mb)`)
 	flag.StringVar(&f.Runflag, "flag", "", "自定的启动参数，比如 -XX:+AggressiveOpts -XX:+UseCompressedOops")
 	flag.StringVar(&f.Proxy, `proxy`, "", `设置下载用的代理(http)`)
-	flag.StringVar(&f.Atype, "type", "", `设置下载源。可选 bmclapi 和 mcbbs ，不设置此项则使用官方下载源`)
+	flag.StringVar(&f.Atype, "type", "", `设置下载源。可选 bmclapi tss 和 mcbbs ，不设置此项则使用官方下载源`)
 	flag.BoolVar(&f.Independent, "independent", true, "是否开启版本隔离")
 	flag.BoolVar(&f.Outmsg, "test", true, "启动游戏前是否效验文件的完整和正确性")
-	flag.BoolVar(&credit, "credits", false, "")
+	flag.BoolVar(&credit, "credits", false, "使用项目")
 	flag.BoolVar(&updata, "updata", true, "是否检测更新")
 	flag.Parse()
 }
 
 func credits() {
-	fmt.Println(`使用了 bmclapi 作为下载源，地址 https://bmclapidoc.bangbang93.com/`)
+	fmt.Println(`使用了 bmclapi 作为镜像下载源，地址 https://bmclapidoc.bangbang93.com/`)
+	fmt.Println(`使用了 TSS  作为镜像下载源，地址 https://www.mcbbs.net/thread-932755-1-1.html`)
 }
 
 type up struct {

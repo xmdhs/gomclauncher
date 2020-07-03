@@ -135,28 +135,27 @@ func source(url, types string) string {
 		url = strings.ReplaceAll(url, `resources.download.minecraft.net`, `download.mcbbs.net/assets`)
 		url = strings.ReplaceAll(url, `libraries.minecraft.net`, `download.mcbbs.net/maven`)
 		url = strings.ReplaceAll(url, `files.minecraftforge.net/maven`, `download.mcbbs.net/maven`)
-	default:
+	case "tss":
+		url = strings.ReplaceAll(url, `launcher.mojang.com`, `mc.mirrors.tmysam.top`)
+		url = strings.ReplaceAll(url, `resources.download.minecraft.net`, `mcres.mirrors.tmysam.top`)
+		url = strings.ReplaceAll(url, `libraries.minecraft.net`, `mclib.mirrors.tmysam.top`)
 	}
 	return url
 }
 
 func Aget(aurl string) (*http.Response, error) {
 	var c http.Client
+	transport := http.DefaultTransport.(*http.Transport).Clone()
 	if auth.Proxyaddr != "" {
 		proxy, err := url.Parse(auth.Proxyaddr)
 		if err != nil {
 			panic(err)
 		}
-		transport := http.DefaultTransport.(*http.Transport).Clone()
 		transport.Proxy = http.ProxyURL(proxy)
-		c = http.Client{
-			Transport: transport,
-			Timeout:   5 * time.Second,
-		}
-	} else {
-		c = http.Client{
-			Timeout: 5 * time.Second,
-		}
+	}
+	c = http.Client{
+		Transport: transport,
+		Timeout:   10 * time.Second,
 	}
 	rep, err := http.NewRequest("GET", aurl, nil)
 	if err != nil {
