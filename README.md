@@ -1,5 +1,5 @@
 # gomclauncher
-![Go](https://github.com/xmdhs/gomclauncher/workflows/Go/badge.svg)  
+![Go](https://github.com/xmdhs/gomclauncher/workflows/Go/badge.svg) [![Go Report Card](https://goreportcard.com/badge/github.com/xmdhs/gomclauncher)](https://goreportcard.com/report/github.com/xmdhs/gomclauncher)  
 一个简单的命令行下的 minecraft 启动器。支持自动下载补全和验证 minecraft 游戏文件以及正版登录，支持通过安装程序安装后的 fabric 和 forge，支持 linux windows 和 mac。
 
 ## 使用方法

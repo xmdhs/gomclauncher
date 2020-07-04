@@ -50,6 +50,9 @@ func Validate(a Auth) error {
 		return err
 	}
 	_, err, i := post("validate", b)
+	if err != nil {
+		return err
+	}
 	if i == 204 {
 		return nil
 	}
