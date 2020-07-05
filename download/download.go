@@ -123,12 +123,11 @@ func (l Libraries) Downjar(typee, version string) error {
 	if ver(path, l.librarie.Downloads.Client.Sha1) {
 		return nil
 	}
-	t := typee
+	t := auto(typee)
 	for i := 0; i < 4; i++ {
 		if i == 3 {
 			return errors.New("file download fail")
 		}
-		t = auto(t)
 		err := get(source(l.librarie.Downloads.Client.URL, t), path)
 		if err != nil {
 			fmt.Println("似乎是网络问题，重试", source(l.librarie.Downloads.Client.URL, t), err)
@@ -156,13 +155,12 @@ type downinfo struct {
 }
 
 func (d downinfo) down() {
-	f := d.typee
+	f := auto(d.typee)
 	for i := 0; i < 7; i++ {
 		if i == 6 {
 			d.e <- errors.New("file download fail")
 			break
 		}
-		f = auto(f)
 		err := get(source(d.url, f), d.path)
 		if err != nil {
 			fmt.Println("似乎是网络问题，重试", source(d.url, f), err)
