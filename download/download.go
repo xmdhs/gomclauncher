@@ -26,21 +26,25 @@ func (l Libraries) Downassets(typee string, i int, c chan int) error {
 						<-ch
 						done <- true
 					}()
+					t := auto(typee)
 					for i := 0; i < 6; i++ {
 						if i == 5 {
 							e <- errors.New("file download fail")
 							break
 						}
-						err := get(source(`https://resources.download.minecraft.net/`+v.Hash[:2]+`/`+v.Hash, typee), launcher.Minecraft+`/assets/objects/`+v.Hash[:2]+`/`+v.Hash)
+						err := get(source(`https://resources.download.minecraft.net/`+v.Hash[:2]+`/`+v.Hash, t), launcher.Minecraft+`/assets/objects/`+v.Hash[:2]+`/`+v.Hash)
 						if err != nil {
-							fmt.Println("似乎是网络问题，重试", source(`https://resources.download.minecraft.net/`+v.Hash[:2]+`/`+v.Hash, typee), err)
+							fmt.Println("似乎是网络问题，重试", source(`https://resources.download.minecraft.net/`+v.Hash[:2]+`/`+v.Hash, t), err)
+							t = fail(t)
 							continue
 						}
 						ok := ver(launcher.Minecraft+`/assets/objects/`+v.Hash[:2]+`/`+v.Hash, v.Hash)
 						if !ok {
-							fmt.Println("文件效验失败，重新下载", source(`https://resources.download.minecraft.net/`+v.Hash[:2]+`/`+v.Hash, typee))
+							fmt.Println("文件效验失败，重新下载", source(`https://resources.download.minecraft.net/`+v.Hash[:2]+`/`+v.Hash, t))
+							t = fail(t)
 							continue
 						}
+						add(t)
 						break
 					}
 				}()
@@ -101,20 +105,24 @@ func (l Libraries) Downlibrarie(typee string, i int, c chan int) error {
 						<-ch
 						done <- true
 					}()
+					t := auto(typee)
 					for i := 0; i < 4; i++ {
 						if i == 3 {
 							e <- errors.New("file download fail")
 							break
 						}
-						err := get(source(v.Downloads.Artifact.URL, typee), path)
+						err := get(source(v.Downloads.Artifact.URL, t), path)
 						if err != nil {
-							fmt.Println("似乎是网络问题，重试", source(v.Downloads.Artifact.URL, typee), err)
+							fmt.Println("似乎是网络问题，重试", source(v.Downloads.Artifact.URL, t), err)
+							t = fail(t)
 							continue
 						}
 						if !librariesvar(v, path) {
-							fmt.Println("文件效验失败，重新下载", source(v.Downloads.Artifact.URL, typee))
+							fmt.Println("文件效验失败，重新下载", source(v.Downloads.Artifact.URL, t))
+							t = fail(t)
 							continue
 						}
+						add(t)
 						break
 					}
 				}()
@@ -157,18 +165,22 @@ func (l Libraries) Downjar(typee, version string) error {
 		return nil
 	}
 	for i := 0; i < 4; i++ {
+		t := auto(typee)
 		if i == 3 {
 			return errors.New("file download fail")
 		}
-		err := get(source(l.librarie.Downloads.Client.URL, typee), path)
+		err := get(source(l.librarie.Downloads.Client.URL, t), path)
 		if err != nil {
-			fmt.Println("似乎是网络问题，重试", source(l.librarie.Downloads.Client.URL, typee), err)
+			fmt.Println("似乎是网络问题，重试", source(l.librarie.Downloads.Client.URL, t), err)
+			t = fail(t)
 			continue
 		}
 		if !ver(path, l.librarie.Downloads.Client.Sha1) {
-			fmt.Println("文件效验失败，重新下载", source(l.librarie.Downloads.Client.URL, typee), err)
+			fmt.Println("文件效验失败，重新下载", source(l.librarie.Downloads.Client.URL, t), err)
+			t = fail(t)
 			continue
 		}
+		add(t)
 		break
 	}
 	return nil

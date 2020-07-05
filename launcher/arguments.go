@@ -28,8 +28,8 @@ func (g *Gameinfo) argumentsjvm(l *launcher1155) error {
 }
 
 func (g *Gameinfo) jvmflagadd(v string, l *launcher1155) {
-	flag := g.Jvmflagrelace(v, l)
 	if v != "" {
+		flag := g.Jvmflagrelace(v, l)
 		l.flag = append(l.flag, flag)
 	}
 }

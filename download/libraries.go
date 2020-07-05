@@ -139,6 +139,8 @@ func source(url, types string) string {
 		url = strings.ReplaceAll(url, `launcher.mojang.com`, `mc.mirrors.tmysam.top`)
 		url = strings.ReplaceAll(url, `resources.download.minecraft.net`, `mcres.mirrors.tmysam.top`)
 		url = strings.ReplaceAll(url, `libraries.minecraft.net`, `mclib.mirrors.tmysam.top`)
+	case "vanilla":
+		return url
 	}
 	return url
 }

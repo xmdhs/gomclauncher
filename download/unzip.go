@@ -41,20 +41,24 @@ func (l Libraries) Unzip(typee string, i int) error {
 							<-ch
 							done <- true
 						}()
+						t := auto(typee)
 						for i := 0; i < 4; i++ {
 							if i == 3 {
 								e <- errors.New("file download fail")
 								break
 							}
-							err := get(source(url, typee), path)
+							err := get(source(url, t), path)
 							if err != nil {
-								fmt.Println("似乎是网络问题，重试", url, err)
+								fmt.Println("似乎是网络问题，重试", source(url, t), err)
+								t = fail(t)
 								continue
 							}
 							if !ver(path, sha1) {
-								fmt.Println("文件效验失败，重新下载", url)
+								fmt.Println("文件效验失败，重新下载", source(url, t))
+								t = fail(t)
 								continue
 							}
+							add(t)
 							break
 						}
 					}()

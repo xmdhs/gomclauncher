@@ -9,7 +9,8 @@ import (
 )
 
 func Getversionlist(atype string) (*Version, error) {
-	rep, err := Aget(source(`https://launchermeta.mojang.com/mc/game/version_manifest.json`, atype))
+	t := auto(atype)
+	rep, err := Aget(source(`https://launchermeta.mojang.com/mc/game/version_manifest.json`, t))
 	if err != nil {
 		return nil, err
 	}
@@ -46,7 +47,8 @@ type VersionVersion struct {
 func (v Version) Downjson(ver string) error {
 	for _, vv := range v.Versions {
 		if vv.ID == ver {
-			err := get(source(vv.URL, v.atype), launcher.Minecraft+`/versions/`+vv.ID+`/`+vv.ID+`.json`)
+			t := auto(v.atype)
+			err := get(source(vv.URL, t), launcher.Minecraft+`/versions/`+vv.ID+`/`+vv.ID+`.json`)
 			if err != nil {
 				return err
 			}
