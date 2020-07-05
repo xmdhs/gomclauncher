@@ -12,7 +12,19 @@ var (
 )
 
 func fail(typee string) string {
-	if Fail {
+	if v, ok := typeweight.Load(typee); ok {
+		i := v.(int)
+		i--
+		if i <= 0 {
+			typeweight.Store(typee, 0)
+		}
+		for {
+			t := auto("")
+			if t != typee {
+				return t
+			}
+		}
+	} else if Fail {
 		s := rand.NewSource(time.Now().UnixNano())
 		r := rand.New(s)
 		for {
@@ -60,23 +72,6 @@ func auto(typee string) string {
 			}
 		}
 		panic(a)
-	}
-	return typee
-}
-
-func faill(typee string) string {
-	if v, ok := typeweight.Load(typee); ok {
-		i := v.(int)
-		i--
-		if i <= 0 {
-			typeweight.Store(typee, 0)
-		}
-		for {
-			t := auto("")
-			if t != typee {
-				return t
-			}
-		}
 	}
 	return typee
 }

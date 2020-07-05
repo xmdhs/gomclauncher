@@ -126,6 +126,7 @@ func (l Libraries) Downjar(typee, version string) error {
 		if i == 3 {
 			return errors.New("file download fail")
 		}
+		t = auto(t)
 		err := get(source(l.librarie.Downloads.Client.URL, t), path)
 		if err != nil {
 			fmt.Println("似乎是网络问题，重试", source(l.librarie.Downloads.Client.URL, t), err)
@@ -164,11 +165,7 @@ func (l Libraries) down() {
 				err := get(source(d.url, d.typee), d.path)
 				if err != nil {
 					fmt.Println("似乎是网络问题，重试", source(d.url, d.typee), err)
-					if d.typee == "" {
-						d.typee = faill(d.typee)
-					} else {
-						d.typee = fail(d.typee)
-					}
+					d.typee = fail(d.typee)
 					continue
 				}
 				if !ver(d.path, d.Sha1) {
