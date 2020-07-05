@@ -48,7 +48,9 @@ func fail(typee string) string {
 	if v, ok := typeweight.Load(typee); ok {
 		i := v.(int)
 		i--
-		typeweight.Store(typee, i)
+		if i <= 0 {
+			typeweight.Store(typee, 0)
+		}
 		for {
 			t := auto("")
 			if t != typee {
