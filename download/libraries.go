@@ -3,6 +3,7 @@ package download
 import (
 	"encoding/json"
 	"io/ioutil"
+	"math/rand"
 	"net/http"
 	"net/url"
 	"os"
@@ -139,6 +140,12 @@ func source(url, types string) string {
 		url = strings.ReplaceAll(url, `launcher.mojang.com`, `mc.mirrors.tmysam.top`)
 		url = strings.ReplaceAll(url, `resources.download.minecraft.net`, `mcres.mirrors.tmysam.top`)
 		url = strings.ReplaceAll(url, `libraries.minecraft.net`, `mclib.mirrors.tmysam.top`)
+	}
+	if strings.Contains(types, "|") {
+		sou := rand.NewSource(time.Now().UnixNano())
+		r := rand.New(sou)
+		i := r.Intn(len(Types))
+		return source(url, Types[i])
 	}
 	return url
 }
