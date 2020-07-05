@@ -62,6 +62,9 @@ func auto(typee string) string {
 			}
 			return true
 		})
+	if i == 0 {
+		return typee
+	}
 	a := r.Intn(i) + 1
 	for i, v := range b {
 		a = a - v
