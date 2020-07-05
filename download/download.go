@@ -85,7 +85,7 @@ func (l Libraries) Downlibrarie(typee string, c chan int) error {
 				done <- true
 				continue
 			}
-			if !ver(v.Downloads.Artifact.Sha1, path) {
+			if !ver(path, v.Downloads.Artifact.Sha1) {
 				d := downinfo{
 					typee: typee,
 					url:   v.Downloads.Artifact.URL,
