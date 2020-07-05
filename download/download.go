@@ -155,15 +155,20 @@ func (l Libraries) down() {
 	for {
 		select {
 		case d := <-l.downlist:
-			for i := 0; i < 4; i++ {
-				if i == 3 {
+			for i := 0; i < 7; i++ {
+				if i == 6 {
 					d.e <- errors.New("file download fail")
 					break
 				}
+				d.typee = auto(d.typee)
 				err := get(source(d.url, d.typee), d.path)
 				if err != nil {
 					fmt.Println("似乎是网络问题，重试", source(d.url, d.typee), err)
-					d.typee = fail(d.typee)
+					if d.typee == "" {
+						d.typee = faill(d.typee)
+					} else {
+						d.typee = fail(d.typee)
+					}
 					continue
 				}
 				if !ver(d.path, d.Sha1) {
@@ -172,6 +177,7 @@ func (l Libraries) down() {
 					continue
 				}
 				d.done <- true
+				add(d.typee)
 				break
 			}
 		case <-l.done:
