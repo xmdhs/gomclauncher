@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-var types = []string{"bmclapi", "mcbbs", "tss"}
+var types = []string{"bmclapi", "mcbbs", "tss", ""}
 
 var Fail bool
 
