@@ -144,8 +144,8 @@ func source(url, types string) string {
 	if strings.Contains(types, "|") {
 		sou := rand.NewSource(time.Now().UnixNano())
 		r := rand.New(sou)
-		i := r.Intn(len(Types))
-		return source(url, Types[i])
+		i := r.Intn(len(ttypes))
+		return source(url, ttypes[i])
 	}
 	return url
 }

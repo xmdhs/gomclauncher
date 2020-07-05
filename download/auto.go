@@ -7,11 +7,6 @@ import (
 	"time"
 )
 
-var (
-	Types []string
-	Fail  bool
-)
-
 func fail(typee string) string {
 	if v, ok := typeweight.Load(typee); ok {
 		i := v.(int)
@@ -35,6 +30,7 @@ var (
 	typeweight sync.Map
 	one        sync.Once
 	r          *rand.Rand
+	ttypes     []string
 )
 
 func auto(typee string) string {
@@ -48,7 +44,9 @@ func auto(typee string) string {
 			typeweight.Store("mcbbs", 9)
 			typeweight.Store("tss", 12)
 		} else {
-			for _, v := range Types {
+			s := strings.Split(typee, "|")
+			ttypes = s
+			for _, v := range ttypes {
 				typeweight.Store(v, 5)
 			}
 		}

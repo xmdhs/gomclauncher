@@ -23,11 +23,6 @@ func main() {
 	if credit {
 		credits()
 	}
-	if strings.Contains(f.Atype, "|") {
-		s := strings.Split(f.Atype, "|")
-		download.Fail = true
-		download.Types = s
-	}
 	if f.Verlist {
 		f.Arunlist()
 	}
