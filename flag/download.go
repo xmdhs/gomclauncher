@@ -77,6 +77,7 @@ func (f Flag) D() {
 		os.Exit(0)
 	}
 	fmt.Println("完成")
+	close(download.Done)
 }
 
 func (f Flag) dd(l download.Libraries, a bool) {
