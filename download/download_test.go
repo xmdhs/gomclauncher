@@ -18,7 +18,7 @@ func TestNewlibraries(t *testing.T) {
 	ch := make(chan int, 5)
 	e := make(chan error)
 	go func() {
-		err = l.Downlibrarie("vanilla", ch)
+		err = l.Downlibrarie("", ch)
 		if err != nil {
 			e <- err
 		}
@@ -53,7 +53,7 @@ func TestDownassets(t *testing.T) {
 	ch := make(chan int, 5)
 	e := make(chan error)
 	go func() {
-		err = l.Downassets("vanilla", ch)
+		err = l.Downassets("", ch)
 		if err != nil {
 			e <- err
 		}

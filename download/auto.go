@@ -49,9 +49,9 @@ var (
 func auto(typee string) string {
 	one.Do(func() {
 		typeweight.Store("vanilla", 5)
-		typeweight.Store("bmclapi", 8)
-		typeweight.Store("mcbbs", 5)
-		typeweight.Store("tss", 8)
+		typeweight.Store("bmclapi", 6)
+		typeweight.Store("mcbbs", 9)
+		typeweight.Store("tss", 12)
 		s := rand.NewSource(time.Now().Unix())
 		r = rand.New(s)
 	})
