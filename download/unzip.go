@@ -2,8 +2,6 @@ package download
 
 import (
 	"archive/zip"
-	"errors"
-	"fmt"
 	"io"
 	"os"
 	"runtime"
@@ -13,8 +11,7 @@ import (
 	"github.com/xmdhs/gomclauncher/launcher"
 )
 
-func (l Libraries) Unzip(typee string, i int) error {
-	ch := make(chan bool, i)
+func (l Libraries) Unzip(typee string) error {
 	e := make(chan error, len(l.librarie.Libraries))
 	done := make(chan bool, len(l.librarie.Libraries))
 	natives := make([]string, 0)
@@ -35,32 +32,15 @@ func (l Libraries) Unzip(typee string, i int) error {
 			}
 			if ifallow(v) && !ver(path, sha1) {
 				if path != "" {
-					ch <- true
-					go func() {
-						defer func() {
-							<-ch
-							done <- true
-						}()
-						t := typee
-						for i := 0; i < 4; i++ {
-							if i == 3 {
-								e <- errors.New("file download fail")
-								break
-							}
-							err := get(source(url, t), path)
-							if err != nil {
-								fmt.Println("似乎是网络问题，重试", source(url, t), err)
-								t = fail(t)
-								continue
-							}
-							if !ver(path, sha1) {
-								fmt.Println("文件效验失败，重新下载", source(url, t))
-								t = fail(t)
-								continue
-							}
-							break
-						}
-					}()
+					d := downinfo{
+						typee: typee,
+						url:   url,
+						path:  path,
+						e:     e,
+						Sha1:  sha1,
+						done:  done,
+					}
+					downlist <- d
 				}
 			} else {
 				done <- true

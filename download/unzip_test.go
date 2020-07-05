@@ -10,11 +10,11 @@ func TestUnzip(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	l, err := Newlibraries(b)
+	l, err := Newlibraries(b, 5)
 	if err != nil {
 		t.Fatal(err)
 	}
-	err = l.Unzip("", 5)
+	err = l.Unzip("")
 	if err != nil {
 		t.Fatal(err)
 	}

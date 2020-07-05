@@ -19,7 +19,8 @@ type Libraries struct {
 	assetIndex assets
 }
 
-func Newlibraries(b []byte) (Libraries, error) {
+func Newlibraries(b []byte, i int) (Libraries, error) {
+	creat(i)
 	mod := launcher.Modsjson{}
 	var url, id string
 	l := launcher.LauncherjsonX115{}
@@ -175,4 +176,10 @@ func Aget(aurl string) (*http.Response, error) {
 		return reps, err
 	}
 	return reps, nil
+}
+
+func creat(a int) {
+	for i := 0; i < a; i++ {
+		go down()
+	}
 }
