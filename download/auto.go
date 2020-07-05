@@ -2,6 +2,7 @@ package download
 
 import (
 	"math/rand"
+	"strings"
 	"sync"
 	"time"
 )
@@ -37,7 +38,7 @@ var (
 )
 
 func auto(typee string) string {
-	if typee != "" {
+	if typee != "" && !strings.Contains(typee, "|") {
 		return typee
 	}
 	one.Do(func() {
