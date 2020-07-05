@@ -25,6 +25,7 @@ func (l Libraries) Downassets(typee string, i int, c chan int) error {
 					e:     e,
 					Sha1:  v.Hash,
 					done:  done,
+					ch:    ch,
 				}
 				ch <- true
 				go d.down()
@@ -92,6 +93,7 @@ func (l Libraries) Downlibrarie(typee string, i int, c chan int) error {
 					e:     e,
 					Sha1:  v.Downloads.Artifact.Sha1,
 					done:  done,
+					ch:    ch,
 				}
 				ch <- true
 				go d.down()

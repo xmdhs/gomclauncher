@@ -38,6 +38,7 @@ func (l Libraries) Unzip(typee string, i int) error {
 						e:     e,
 						Sha1:  sha1,
 						done:  done,
+						ch:    ch,
 					}
 					ch <- true
 					go d.down()
