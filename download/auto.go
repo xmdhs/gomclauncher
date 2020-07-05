@@ -63,7 +63,7 @@ func auto(typee string) string {
 			}
 			return true
 		})
-	if i == 0 {
+	if typee != "" {
 		return typee
 	}
 	a := r.Intn(i) + 1
