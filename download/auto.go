@@ -33,12 +33,11 @@ func fail(typee string) string {
 var (
 	typeweight sync.Map
 	one        sync.Once
-	r          *rand.Rand
 )
 
 func auto(typee string) string {
 	one.Do(func() {
-		if len(Types) == 0 {
+		if typee == "" {
 			typeweight.Store("vanilla", 5)
 			typeweight.Store("bmclapi", 6)
 			typeweight.Store("mcbbs", 9)
@@ -48,9 +47,9 @@ func auto(typee string) string {
 				typeweight.Store(v, 5)
 			}
 		}
-		s := rand.NewSource(time.Now().Unix())
-		r = rand.New(s)
 	})
+	s := rand.NewSource(time.Now().Unix())
+	r := rand.New(s)
 	i := 0
 	t := make([]string, 0, 4)
 	b := make([]int, 0, 4)
