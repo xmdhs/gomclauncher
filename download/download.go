@@ -26,7 +26,7 @@ func (l Libraries) Downassets(typee string, i int, c chan int) error {
 						<-ch
 						done <- true
 					}()
-					t := auto(typee)
+					t := typee
 					for i := 0; i < 6; i++ {
 						if i == 5 {
 							e <- errors.New("file download fail")
@@ -44,7 +44,6 @@ func (l Libraries) Downassets(typee string, i int, c chan int) error {
 							t = fail(t)
 							continue
 						}
-						add(t)
 						break
 					}
 				}()
@@ -105,7 +104,7 @@ func (l Libraries) Downlibrarie(typee string, i int, c chan int) error {
 						<-ch
 						done <- true
 					}()
-					t := auto(typee)
+					t := typee
 					for i := 0; i < 4; i++ {
 						if i == 3 {
 							e <- errors.New("file download fail")
@@ -122,7 +121,6 @@ func (l Libraries) Downlibrarie(typee string, i int, c chan int) error {
 							t = fail(t)
 							continue
 						}
-						add(t)
 						break
 					}
 				}()
@@ -164,8 +162,8 @@ func (l Libraries) Downjar(typee, version string) error {
 	if ver(path, l.librarie.Downloads.Client.Sha1) {
 		return nil
 	}
+	t := typee
 	for i := 0; i < 4; i++ {
-		t := auto(typee)
 		if i == 3 {
 			return errors.New("file download fail")
 		}
@@ -180,7 +178,6 @@ func (l Libraries) Downjar(typee, version string) error {
 			t = fail(t)
 			continue
 		}
-		add(t)
 		break
 	}
 	return nil

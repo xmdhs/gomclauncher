@@ -41,7 +41,7 @@ func (l Libraries) Unzip(typee string, i int) error {
 							<-ch
 							done <- true
 						}()
-						t := auto(typee)
+						t := typee
 						for i := 0; i < 4; i++ {
 							if i == 3 {
 								e <- errors.New("file download fail")
@@ -58,7 +58,6 @@ func (l Libraries) Unzip(typee string, i int) error {
 								t = fail(t)
 								continue
 							}
-							add(t)
 							break
 						}
 					}()

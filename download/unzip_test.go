@@ -14,7 +14,7 @@ func TestUnzip(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	err = l.Unzip("vanilla", 5)
+	err = l.Unzip("", 5)
 	if err != nil {
 		t.Fatal(err)
 	}
