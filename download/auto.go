@@ -37,6 +37,9 @@ var (
 )
 
 func auto(typee string) string {
+	if typee != "" {
+		return typee
+	}
 	one.Do(func() {
 		if typee == "" {
 			typeweight.Store("vanilla", 5)
@@ -63,9 +66,6 @@ func auto(typee string) string {
 			}
 			return true
 		})
-	if typee != "" {
-		return typee
-	}
 	a := r.Intn(i) + 1
 	for i, v := range b {
 		a = a - v
