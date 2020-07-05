@@ -14,10 +14,10 @@ var (
 
 func auto(typee string) string {
 	one.Do(func() {
-		typeweight.Store("vanilla", 1)
-		typeweight.Store("bmclapi", 1)
-		typeweight.Store("mcbbs", 2)
-		typeweight.Store("tss", 2)
+		typeweight.Store("vanilla", 2)
+		typeweight.Store("bmclapi", 2)
+		typeweight.Store("mcbbs", 4)
+		typeweight.Store("tss", 4)
 		s := rand.NewSource(time.Now().Unix())
 		r = rand.New(s)
 	})
