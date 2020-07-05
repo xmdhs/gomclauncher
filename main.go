@@ -92,7 +92,7 @@ func init() {
 	flag.StringVar(&f.RAM, "ram", "2048", `分配启动游戏的内存大小(mb)`)
 	flag.StringVar(&f.Runflag, "flag", "", "自定的启动参数，比如 -XX:+AggressiveOpts -XX:+UseCompressedOops")
 	flag.StringVar(&f.Proxy, `proxy`, "", `设置下载用的代理(http)`)
-	flag.StringVar(&f.Atype, "type", "", `设置下载源。可选 vanilla bmclapi tss 和 mcbbs，不设置此项则使用将自动的为每一个文件选择下载源。可以使用 "bmclapi|vanilla" 的形式来负载均衡的使用两个下载源。`)
+	flag.StringVar(&f.Atype, "type", "", `设置下载源。可选 vanilla bmclapi tss 和 mcbbs，不设置此项则使用将自动的为每一个文件选择下载源。可以使用 "bmclapi|vanilla" 的形式来负载均衡的使用多个下载源。`)
 	flag.BoolVar(&f.Independent, "independent", true, "是否开启版本隔离")
 	flag.BoolVar(&f.Outmsg, "test", true, "启动游戏前是否效验文件的完整和正确性")
 	flag.BoolVar(&credit, "credits", false, "使用项目")

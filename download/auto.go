@@ -17,6 +17,8 @@ func fail(typee string) string {
 		i--
 		if i <= 0 {
 			typeweight.Store(typee, 0)
+		} else {
+			typeweight.Store(typee, i)
 		}
 		for {
 			t := auto("")
@@ -59,9 +61,11 @@ func auto(typee string) string {
 		b := make([]int, 0, 4)
 		typeweight.Range(
 			func(k, v interface{}) bool {
-				t = append(t, k.(string))
-				b = append(b, v.(int))
-				i += v.(int)
+				if v.(int) != 0 {
+					t = append(t, k.(string))
+					b = append(b, v.(int))
+					i += v.(int)
+				}
 				return true
 			})
 		a := r.Intn(i) + 1
