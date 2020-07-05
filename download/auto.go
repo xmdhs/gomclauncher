@@ -26,16 +26,6 @@ func fail(typee string) string {
 				return t
 			}
 		}
-	} else if Fail {
-		s := rand.NewSource(time.Now().UnixNano())
-		r := rand.New(s)
-		for {
-			i := r.Intn(len(Types))
-			t := Types[i]
-			if t != typee {
-				return t
-			}
-		}
 	}
 	return typee
 }
@@ -48,36 +38,40 @@ var (
 
 func auto(typee string) string {
 	one.Do(func() {
-		typeweight.Store("vanilla", 5)
-		typeweight.Store("bmclapi", 6)
-		typeweight.Store("mcbbs", 9)
-		typeweight.Store("tss", 12)
+		if len(Types) == 0 {
+			typeweight.Store("vanilla", 5)
+			typeweight.Store("bmclapi", 6)
+			typeweight.Store("mcbbs", 9)
+			typeweight.Store("tss", 12)
+		} else {
+			for _, v := range Types {
+				typeweight.Store(v, 5)
+			}
+		}
 		s := rand.NewSource(time.Now().Unix())
 		r = rand.New(s)
 	})
-	if typee == "" {
-		i := 0
-		t := make([]string, 0, 4)
-		b := make([]int, 0, 4)
-		typeweight.Range(
-			func(k, v interface{}) bool {
-				if v.(int) != 0 {
-					t = append(t, k.(string))
-					b = append(b, v.(int))
-					i += v.(int)
-				}
-				return true
-			})
-		a := r.Intn(i) + 1
-		for i, v := range b {
-			a = a - v
-			if a <= 0 {
-				return t[i]
+	i := 0
+	t := make([]string, 0, 4)
+	b := make([]int, 0, 4)
+	typeweight.Range(
+		func(k, v interface{}) bool {
+			if v.(int) != 0 {
+				t = append(t, k.(string))
+				b = append(b, v.(int))
+				i += v.(int)
 			}
+			return true
+		})
+	a := r.Intn(i) + 1
+	for i, v := range b {
+		a = a - v
+		if a <= 0 {
+			return t[i]
 		}
-		panic(a)
 	}
-	return typee
+	panic(a)
+
 }
 
 func add(typee string) {
@@ -86,5 +80,4 @@ func add(typee string) {
 		i++
 		typeweight.Store(typee, i)
 	}
-
 }
