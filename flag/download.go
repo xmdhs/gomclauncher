@@ -41,7 +41,8 @@ func (f Flag) D() {
 	if err != nil {
 		panic(err)
 	}
-	dl, err := download.Newlibraries(b, f.Downint)
+	dl, err := download.Newlibraries(b)
+	dl.Creat(f.Downint)
 	errr(err)
 	if f.Outmsg {
 		fmt.Println("正在验证游戏核心")
@@ -77,7 +78,7 @@ func (f Flag) D() {
 		os.Exit(0)
 	}
 	fmt.Println("完成")
-	close(download.Done)
+	dl.Close()
 }
 
 func (f Flag) dd(l download.Libraries, a bool) {

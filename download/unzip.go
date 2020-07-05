@@ -40,7 +40,7 @@ func (l Libraries) Unzip(typee string) error {
 						Sha1:  sha1,
 						done:  done,
 					}
-					downlist <- d
+					l.downlist <- d
 				}
 			} else {
 				done <- true

@@ -27,7 +27,7 @@ func (l Libraries) Downassets(typee string, c chan int) error {
 					Sha1:  v.Hash,
 					done:  done,
 				}
-				downlist <- d
+				l.downlist <- d
 			} else {
 				done <- true
 			}
@@ -94,7 +94,7 @@ func (l Libraries) Downlibrarie(typee string, c chan int) error {
 					Sha1:  v.Downloads.Artifact.Sha1,
 					done:  done,
 				}
-				downlist <- d
+				l.downlist <- d
 			} else {
 				done <- true
 			}
@@ -151,13 +151,10 @@ type downinfo struct {
 	done  chan bool
 }
 
-var Done = make(chan struct{})
-var downlist = make(chan downinfo, 30)
-
-func down() {
+func (l Libraries) down() {
 	for {
 		select {
-		case d := <-downlist:
+		case d := <-l.downlist:
 			for i := 0; i < 4; i++ {
 				if i == 3 {
 					d.e <- errors.New("file download fail")
@@ -177,8 +174,12 @@ func down() {
 				d.done <- true
 				break
 			}
-		case <-Done:
+		case <-l.done:
 			return
 		}
 	}
+}
+
+func (l Libraries) Close() {
+	close(l.done)
 }

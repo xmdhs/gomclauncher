@@ -10,7 +10,8 @@ func TestNewlibraries(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	l, err := Newlibraries(b, 64)
+	l, err := Newlibraries(b)
+	l.Creat(64)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -44,7 +45,8 @@ func TestDownassets(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	l, err := Newlibraries(b, 64)
+	l, err := Newlibraries(b)
+	l.Creat(64)
 	if err != nil {
 		t.Fatal(err)
 	}
