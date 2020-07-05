@@ -11,9 +11,8 @@ import (
 	"github.com/xmdhs/gomclauncher/launcher"
 )
 
-func (l Libraries) Downassets(typee string, c chan int) error {
-	e := make(chan error, len(l.assetIndex.Objects))
-	done := make(chan bool, len(l.assetIndex.Objects))
+func (l Libraries) Downassets(typee string, i int, c chan int) error {
+	e, done, ch := creatch(len(l.assetIndex.Objects), i)
 	go func() {
 		for _, v := range l.assetIndex.Objects {
 			v := v
@@ -27,7 +26,8 @@ func (l Libraries) Downassets(typee string, c chan int) error {
 					Sha1:  v.Hash,
 					done:  done,
 				}
-				l.downlist <- d
+				ch <- true
+				go d.down()
 			} else {
 				done <- true
 			}
@@ -74,9 +74,8 @@ func ver(path, hash string) bool {
 
 }
 
-func (l Libraries) Downlibrarie(typee string, c chan int) error {
-	e := make(chan error, len(l.librarie.Libraries))
-	done := make(chan bool, len(l.librarie.Libraries))
+func (l Libraries) Downlibrarie(typee string, i int, c chan int) error {
+	e, done, ch := creatch(len(l.librarie.Libraries), i)
 	go func() {
 		for _, v := range l.librarie.Libraries {
 			v := v
@@ -94,7 +93,8 @@ func (l Libraries) Downlibrarie(typee string, c chan int) error {
 					Sha1:  v.Downloads.Artifact.Sha1,
 					done:  done,
 				}
-				l.downlist <- d
+				ch <- true
+				go d.down()
 			} else {
 				done <- true
 			}
@@ -150,40 +150,39 @@ type downinfo struct {
 	e     chan error
 	Sha1  string
 	done  chan bool
+	ch    chan bool
 }
 
-func (l Libraries) down() {
-	for {
-		select {
-		case d := <-l.downlist:
-			f := d.typee
-			for i := 0; i < 7; i++ {
-				if i == 6 {
-					d.e <- errors.New("file download fail")
-					break
-				}
-				f = auto(f)
-				err := get(source(d.url, f), d.path)
-				if err != nil {
-					fmt.Println("似乎是网络问题，重试", source(d.url, f), err)
-					f = fail(f)
-					continue
-				}
-				if !ver(d.path, d.Sha1) {
-					fmt.Println("文件效验失败，重新下载", source(d.url, f))
-					f = fail(f)
-					continue
-				}
-				d.done <- true
-				add(f)
-				break
-			}
-		case <-l.done:
-			return
+func (d downinfo) down() {
+	f := d.typee
+	for i := 0; i < 7; i++ {
+		if i == 6 {
+			d.e <- errors.New("file download fail")
+			break
 		}
+		f = auto(f)
+		err := get(source(d.url, f), d.path)
+		if err != nil {
+			fmt.Println("似乎是网络问题，重试", source(d.url, f), err)
+			f = fail(f)
+			continue
+		}
+		if !ver(d.path, d.Sha1) {
+			fmt.Println("文件效验失败，重新下载", source(d.url, f))
+			f = fail(f)
+			continue
+		}
+		d.done <- true
+		<-d.ch
+		add(f)
+		break
 	}
+
 }
 
-func (l Libraries) Close() {
-	close(l.done)
+func creatch(a, i int) (e chan error, done, ch chan bool) {
+	e = make(chan error, a)
+	done = make(chan bool, a)
+	ch = make(chan bool, i)
+	return
 }

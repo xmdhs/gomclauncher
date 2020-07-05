@@ -11,9 +11,8 @@ import (
 	"github.com/xmdhs/gomclauncher/launcher"
 )
 
-func (l Libraries) Unzip(typee string) error {
-	e := make(chan error, len(l.librarie.Libraries))
-	done := make(chan bool, len(l.librarie.Libraries))
+func (l Libraries) Unzip(typee string, i int) error {
+	e, done, ch := creatch(len(l.librarie.Libraries), i)
 	natives := make([]string, 0)
 	m := sync.Mutex{}
 	go func() {
@@ -40,7 +39,8 @@ func (l Libraries) Unzip(typee string) error {
 						Sha1:  sha1,
 						done:  done,
 					}
-					l.downlist <- d
+					ch <- true
+					go d.down()
 				}
 			} else {
 				done <- true

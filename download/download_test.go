@@ -11,14 +11,13 @@ func TestNewlibraries(t *testing.T) {
 		t.Fatal(err)
 	}
 	l, err := Newlibraries(b)
-	l.Creat(64)
 	if err != nil {
 		t.Fatal(err)
 	}
 	ch := make(chan int, 5)
 	e := make(chan error)
 	go func() {
-		err = l.Downlibrarie("", ch)
+		err = l.Downlibrarie("", 64, ch)
 		if err != nil {
 			e <- err
 		}
@@ -46,14 +45,13 @@ func TestDownassets(t *testing.T) {
 		t.Fatal(err)
 	}
 	l, err := Newlibraries(b)
-	l.Creat(64)
 	if err != nil {
 		t.Fatal(err)
 	}
 	ch := make(chan int, 5)
 	e := make(chan error)
 	go func() {
-		err = l.Downassets("", ch)
+		err = l.Downassets("", 64, ch)
 		if err != nil {
 			e <- err
 		}

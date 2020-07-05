@@ -12,7 +12,6 @@ func TestNewlibrarie(t *testing.T) {
 		t.Fatal(err)
 	}
 	l, err := Newlibraries(b)
-	l.Creat(64)
 	if err != nil {
 		t.Fatal(err)
 	}

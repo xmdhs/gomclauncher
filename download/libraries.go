@@ -17,13 +17,9 @@ import (
 type Libraries struct {
 	librarie   launcher.LauncherjsonX115
 	assetIndex assets
-	done       chan struct{}
-	downlist   chan downinfo
 }
 
 func Newlibraries(b []byte) (Libraries, error) {
-	done := make(chan struct{})
-	downlist := make(chan downinfo, 30)
 	mod := launcher.Modsjson{}
 	var url, id string
 	l := launcher.LauncherjsonX115{}
@@ -65,8 +61,6 @@ func Newlibraries(b []byte) (Libraries, error) {
 	return Libraries{
 		librarie:   l,
 		assetIndex: a,
-		done:       done,
-		downlist:   downlist,
 	}, nil
 }
 
@@ -182,10 +176,4 @@ func Aget(aurl string) (*http.Response, error) {
 		return reps, err
 	}
 	return reps, nil
-}
-
-func (l Libraries) Creat(a int) {
-	for i := 0; i < a; i++ {
-		go l.down()
-	}
 }

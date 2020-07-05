@@ -42,7 +42,6 @@ func (f Flag) D() {
 		panic(err)
 	}
 	dl, err := download.Newlibraries(b)
-	dl.Creat(f.Downint)
 	errr(err)
 	if f.Outmsg {
 		fmt.Println("正在验证游戏核心")
@@ -71,14 +70,13 @@ func (f Flag) D() {
 	} else {
 		fmt.Println("正在下载解压 natives 库")
 	}
-	err = dl.Unzip(f.Atype)
+	err = dl.Unzip(f.Atype, f.Downint)
 	if err != nil {
 		fmt.Println(err)
 		fmt.Println("下载失败")
 		os.Exit(0)
 	}
 	fmt.Println("完成")
-	dl.Close()
 }
 
 func (f Flag) dd(l download.Libraries, a bool) {
@@ -87,9 +85,9 @@ func (f Flag) dd(l download.Libraries, a bool) {
 	var err error
 	go func() {
 		if a {
-			err = l.Downassets(f.Atype, ch)
+			err = l.Downassets(f.Atype, f.Downint, ch)
 		} else {
-			err = l.Downlibrarie(f.Atype, ch)
+			err = l.Downlibrarie(f.Atype, f.Downint, ch)
 		}
 		if err != nil {
 			e <- err
