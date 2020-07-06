@@ -3,7 +3,9 @@ package download
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io/ioutil"
+	"strings"
 
 	"github.com/xmdhs/gomclauncher/launcher"
 )
@@ -46,13 +48,31 @@ type VersionVersion struct {
 	URL         string `json:"url"`
 }
 
-func (v Version) Downjson(ver string) error {
+func (v Version) Downjson(version string) error {
 	f := auto(v.atype)
 	for _, vv := range v.Versions {
-		if vv.ID == ver {
-			err := get(source(vv.URL, f), launcher.Minecraft+`/versions/`+vv.ID+`/`+vv.ID+`.json`)
-			if err != nil {
-				return err
+		if vv.ID == version {
+			s := strings.Split(vv.URL, "/")
+			path := launcher.Minecraft + `/versions/` + vv.ID + `/` + vv.ID + `.json`
+			if ver(path, s[len(s)-2]) {
+				return nil
+			}
+			for i := 0; i < 4; i++ {
+				if i == 3 {
+					return errors.New("file download fail")
+				}
+				err := get(source(vv.URL, f), path)
+				if err != nil {
+					fmt.Println("似乎是网络问题，重试", source(vv.URL, f), err)
+					f = fail(f)
+					continue
+				}
+				if !ver(path, s[len(s)-2]) {
+					fmt.Println("文件效验失败，重新下载", source(vv.URL, f), err)
+					f = fail(f)
+					continue
+				}
+				break
 			}
 			return nil
 		}
