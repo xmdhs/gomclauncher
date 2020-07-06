@@ -14,6 +14,8 @@ type launcher1155 struct {
 	*Gameinfo
 }
 
+var Log bool
+
 func NewLauncher1155(json LauncherjsonX115) *launcher1155 {
 	flag := make([]string, 0)
 	return &launcher1155{json: json, flag: flag}
@@ -21,12 +23,26 @@ func NewLauncher1155(json LauncherjsonX115) *launcher1155 {
 
 func (l launcher1155) Launcher115() {
 	fmt.Println(l.flag)
-	cmd := exec.Command("java", l.flag...)
+	var cmd *exec.Cmd
 	cmd.Dir = l.Gamedir
-	cmd.Stdout = os.Stdout
-	err := cmd.Run()
-	if err != nil {
-		panic(err)
+	if Log {
+		cmd = exec.Command("java", l.flag...)
+		cmd.Stdout = os.Stdout
+		err := cmd.Run()
+		if err != nil {
+			panic(err)
+		}
+	} else {
+		if runtime.GOOS == "windows" {
+			cmd = exec.Command("javaw", l.flag...)
+		} else {
+			l.flag = append(l.flag, "&")
+			cmd = exec.Command("java", l.flag...)
+		}
+		err := cmd.Start()
+		if err != nil {
+			panic(err)
+		}
 	}
 }
 

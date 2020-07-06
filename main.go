@@ -100,6 +100,7 @@ func init() {
 	flag.BoolVar(&f.Outmsg, "test", true, "启动游戏前是否效验文件的完整和正确性")
 	flag.BoolVar(&credit, "credits", false, "使用项目")
 	flag.BoolVar(&updata, "updata", true, "是否检测更新")
+	flag.BoolVar(&launcher.Log, "log", false, "是否输出游戏日志")
 	flag.Parse()
 }
 
