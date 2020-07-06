@@ -152,23 +152,21 @@ func source(url, types string) string {
 
 func Aget(aurl string) (*http.Response, error) {
 	var c http.Client
-	transport := http.DefaultTransport.(*http.Transport).Clone()
 	if auth.Proxyaddr != "" {
 		proxy, err := url.Parse(auth.Proxyaddr)
 		if err != nil {
 			panic(err)
 		}
-		transport.Proxy = http.ProxyURL(proxy)
+		auth.Transport.Proxy = http.ProxyURL(proxy)
 	}
 	c = http.Client{
-		Transport: transport,
+		Transport: auth.Transport,
 		Timeout:   10 * time.Second,
 	}
 	rep, err := http.NewRequest("GET", aurl, nil)
 	if err != nil {
 		return nil, err
 	}
-	rep.Close = true
 	rep.Header.Set("Accept", "*/*")
 	rep.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36")
 	reps, err := c.Do(rep)

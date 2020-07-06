@@ -11,11 +11,13 @@ import (
 func Getversionlist(atype string) (*Version, error) {
 	f := auto(atype)
 	rep, err := Aget(source(`https://launchermeta.mojang.com/mc/game/version_manifest.json`, f))
+	if rep != nil {
+		defer rep.Body.Close()
+	}
 	if err != nil {
 		return nil, err
 	}
 	b, err := ioutil.ReadAll(rep.Body)
-	defer rep.Body.Close()
 	if err != nil {
 		return nil, err
 	}

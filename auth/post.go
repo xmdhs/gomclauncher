@@ -10,18 +10,19 @@ import (
 
 var Proxyaddr string
 
+var Transport = http.DefaultTransport.(*http.Transport).Clone()
+
 func post(endpoint string, Payload []byte) ([]byte, error, int) {
 	var c http.Client
-	transport := http.DefaultTransport.(*http.Transport).Clone()
 	if Proxyaddr != "" {
 		proxy, err := url.Parse(Proxyaddr)
 		if err != nil {
 			panic(err)
 		}
-		transport.Proxy = http.ProxyURL(proxy)
+		Transport.Proxy = http.ProxyURL(proxy)
 	}
 	c = http.Client{
-		Transport: transport,
+		Transport: Transport,
 		Timeout:   10 * time.Second,
 	}
 	h, err := http.NewRequest("POST", "https://authserver.mojang.com/"+endpoint, bytes.NewReader(Payload))
