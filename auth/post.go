@@ -7,8 +7,6 @@ import (
 	"time"
 )
 
-var Proxyaddr string
-
 var Transport = http.DefaultTransport.(*http.Transport).Clone()
 
 func post(endpoint string, Payload []byte) ([]byte, error, int) {

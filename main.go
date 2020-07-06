@@ -19,7 +19,7 @@ import (
 
 func main() {
 	if f.Proxy != "" {
-		proxy, err := url.Parse(auth.Proxyaddr)
+		proxy, err := url.Parse(f.Proxy)
 		if err != nil {
 			panic(err)
 		}
