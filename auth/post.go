@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"io/ioutil"
 	"net/http"
-	"net/url"
 	"time"
 )
 
@@ -13,15 +12,7 @@ var Proxyaddr string
 var Transport = http.DefaultTransport.(*http.Transport).Clone()
 
 func post(endpoint string, Payload []byte) ([]byte, error, int) {
-	var c http.Client
-	if Proxyaddr != "" {
-		proxy, err := url.Parse(Proxyaddr)
-		if err != nil {
-			panic(err)
-		}
-		Transport.Proxy = http.ProxyURL(proxy)
-	}
-	c = http.Client{
+	c := http.Client{
 		Transport: Transport,
 		Timeout:   10 * time.Second,
 	}

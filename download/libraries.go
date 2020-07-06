@@ -5,7 +5,6 @@ import (
 	"io/ioutil"
 	"math/rand"
 	"net/http"
-	"net/url"
 	"os"
 	"strings"
 	"time"
@@ -151,15 +150,7 @@ func source(url, types string) string {
 }
 
 func Aget(aurl string) (*http.Response, error) {
-	var c http.Client
-	if auth.Proxyaddr != "" {
-		proxy, err := url.Parse(auth.Proxyaddr)
-		if err != nil {
-			panic(err)
-		}
-		auth.Transport.Proxy = http.ProxyURL(proxy)
-	}
-	c = http.Client{
+	c := http.Client{
 		Transport: auth.Transport,
 		Timeout:   10 * time.Second,
 	}

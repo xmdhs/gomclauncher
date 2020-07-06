@@ -5,6 +5,8 @@ import (
 	"flag"
 	"fmt"
 	"io/ioutil"
+	"net/http"
+	"net/url"
 	"os"
 	"runtime"
 	"strings"
@@ -16,7 +18,13 @@ import (
 )
 
 func main() {
-	auth.Proxyaddr = f.Proxy
+	if f.Proxy != "" {
+		proxy, err := url.Parse(auth.Proxyaddr)
+		if err != nil {
+			panic(err)
+		}
+		auth.Transport.Proxy = http.ProxyURL(proxy)
+	}
 	if updata {
 		check()
 	}
