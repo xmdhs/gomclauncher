@@ -19,6 +19,10 @@
 下载游戏并指定镜像下载源并设置使用的协程数为 32 `./gml-linux -downver 1.16.1 -type=mcbbs -int 32`
 
 下载游戏并混合的使用两个下载源 `./gml-linux -downver 1.16.1 -type "mcbbs|vanilla"`
+
+查看所有可以下载的正式版本 `./gml-linux -verlist release`
+
+查看其他可选的版本类型 `./gml-linux -verlist ?`
 ## 截图
 ![image.png](https://i.loli.net/2020/07/02/E7ZcBCGfo1v46kI.png)
 
