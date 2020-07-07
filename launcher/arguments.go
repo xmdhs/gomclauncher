@@ -184,28 +184,28 @@ func (g *Gameinfo) legacy(l *launcher1155) {
 		go func() {
 			s := strings.Split(path, "/")
 			ss := strings.ReplaceAll(path, s[len(s)-1], "")
-			if l.json.AssetIndex.ID != "legacy" {
-				err = os.MkdirAll(g.Gamedir+"/resources/"+ss, 0777)
-			} else {
+			if a.Virtual {
 				err = os.MkdirAll(p+ss, 0777)
+			} else {
+				err = os.MkdirAll(g.Gamedir+"/resources/"+ss, 0777)
 			}
 			if err != nil {
 				panic(err)
 			}
 			f, err := os.Open(g.Minecraftpath + "/assets/objects/" + v.Hash[0:2] + "/" + v.Hash)
 			fileerr(err)
-			if l.json.AssetIndex.ID != "legacy" {
-				fff, err := os.Create(g.Gamedir + "/resources/" + path)
-				if err != nil {
-					panic(err)
-				}
-				_, err = io.Copy(fff, f)
-			} else {
+			if a.Virtual {
 				ff, err := os.Create(p + path)
 				if err != nil {
 					panic(err)
 				}
 				_, err = io.Copy(ff, f)
+			} else {
+				fff, err := os.Create(g.Gamedir + "/resources/" + path)
+				if err != nil {
+					panic(err)
+				}
+				_, err = io.Copy(fff, f)
 			}
 			w.Done()
 		}()
@@ -215,6 +215,7 @@ func (g *Gameinfo) legacy(l *launcher1155) {
 
 type assets struct {
 	Objects map[string]asset `json:"objects"`
+	Virtual bool             `json:"virtual"`
 }
 
 type asset struct {
