@@ -1,9 +1,7 @@
 package flag
 
 import (
-	"bufio"
 	"fmt"
-	"os"
 
 	"github.com/xmdhs/gomclauncher/download"
 )
@@ -11,21 +9,27 @@ import (
 func (f Flag) Arunlist() {
 	l, err := download.Getversionlist(f.Atype)
 	errr(err)
-	w := bufio.NewScanner(os.Stdin)
-	fmt.Print("输入想查看的类型，可选 ")
 	m := make(map[string]bool)
 	for _, v := range l.Versions {
 		m[v.Type] = true
 	}
+	var ok bool
 	for k := range m {
-		fmt.Print(k)
-		fmt.Print(", ")
-	}
-	w.Scan()
-	t := w.Text()
-	for _, v := range l.Versions {
-		if v.Type == t {
-			fmt.Println(v.ID)
+		if f.Verlist == k {
+			ok = true
 		}
 	}
+	if ok {
+		for _, v := range l.Versions {
+			if v.Type == f.Verlist {
+				fmt.Println(v.ID)
+			}
+		}
+	} else {
+		fmt.Println("可选: ")
+		for k := range m {
+			fmt.Println(k)
+		}
+	}
+
 }

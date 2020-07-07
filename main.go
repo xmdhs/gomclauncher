@@ -31,7 +31,7 @@ func main() {
 	if credit {
 		credits()
 	}
-	if f.Verlist {
+	if f.Verlist != "" {
 		f.Arunlist()
 	}
 	if f.Runlist {
@@ -88,7 +88,7 @@ func init() {
 	flag.StringVar(&f.Email, "email", "", `正版帐号邮箱，需要正版登录时设置此项，然后无需设置 username`)
 	flag.StringVar(&f.Passworld, "passworld", "", `正版帐号密码，只需第一次设置，第二次无需使用此参数。`)
 	flag.StringVar(&f.Download, "downver", "", "尝试下载的版本")
-	flag.BoolVar(&f.Verlist, "verlist", false, "显示所有可下载的版本")
+	flag.StringVar(&f.Verlist, "verlist", "", "显示所有可下载的版本，例如 release，使用 ? 可查看所有可选参数。")
 	flag.IntVar(&f.Downint, "int", 64, "下载文件时使用的协程数。")
 	flag.StringVar(&f.Run, "run", "", `尝试启动的版本`)
 	flag.BoolVar(&f.Runlist, "runlist", false, "显示所有可启动的版本")

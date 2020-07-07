@@ -17,7 +17,7 @@ type Flag struct {
 	Passworld   string
 	Email       string
 	Download    string
-	Verlist     bool
+	Verlist     string
 	Run         string
 	Runlist     bool
 	Runram      string
