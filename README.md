@@ -1,9 +1,8 @@
 # gomclauncher
 ![Go](https://github.com/xmdhs/gomclauncher/workflows/Go/badge.svg) [![Go Report Card](https://goreportcard.com/badge/github.com/xmdhs/gomclauncher)](https://goreportcard.com/report/github.com/xmdhs/gomclauncher)  
-一个简单的命令行下的 minecraft 启动器。支持自动下载补全和验证 minecraft 游戏文件以及正版登录，支持通过安装程序安装后的 fabric 和 forge，支持 linux windows 和 mac。
-
+一个简单的命令行下的 minecraft 启动器。支持自动下载补全和验证 minecraft 游戏文件以及正版登录，支持启动通过安装程序安装后的 fabric 和 forge，支持 linux windows 和 mac（mac 暂未测试）。
 ## 使用方法
-使用 -h 即可获得相关参数的使用说明。
+使用 `-h` 即可获得相关参数的使用说明。
 
 例子 `./gml-linux -h`
 
@@ -17,8 +16,9 @@
 
 自定义启动 jvm 参数 `./gml-linux -run 1.16.1 -username xmdhs -flag "-XX:+AggressiveOpts -XX:+UseCompressedOops"`
 
-下载游戏并使用镜像下载源并设置使用协程数为 32 `./gml-linux -downver 1.16.1 -type=mcbbs -int 32`
+下载游戏并指定镜像下载源并设置使用的协程数为 32 `./gml-linux -downver 1.16.1 -type=mcbbs -int 32`
 
+下载游戏并混合的使用两个下载源 `./gml-linux -downver 1.16.1 -type "mcbbs|vanilla"`
 ## 截图
 ![image.png](https://i.loli.net/2020/07/02/E7ZcBCGfo1v46kI.png)
 

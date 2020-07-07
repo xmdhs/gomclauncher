@@ -87,7 +87,10 @@ func get(u, path string) error {
 	if err != nil {
 		s := strings.Split(path, "/")
 		ss := strings.ReplaceAll(path, s[len(s)-1], "")
-		os.MkdirAll(ss, 0777)
+		err := os.MkdirAll(ss, 0777)
+		if err != nil {
+			panic(err)
+		}
 	}
 	f, err := os.Create(path)
 	defer f.Close()

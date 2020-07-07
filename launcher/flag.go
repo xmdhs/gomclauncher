@@ -19,7 +19,7 @@ type Gameinfo struct {
 	UUID string
 	//eyJhbGciOiJIUzI1NiJ9
 	AccessToken string
-	//D:/mc/.minecraft/versions/1.15.2/
+	//D:/mc/.minecraft/versions/1.15.2
 	Gamedir string
 	//1.15.2
 	Version string

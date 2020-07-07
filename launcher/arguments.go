@@ -1,9 +1,15 @@
 package launcher
 
 import (
+	"encoding/json"
 	"errors"
+	"fmt"
+	"io"
+	"io/ioutil"
+	"os"
 	"runtime"
 	"strings"
+	"sync"
 )
 
 func (g *Gameinfo) argumentsjvm(l *launcher1155) error {
@@ -125,7 +131,10 @@ func (g *Gameinfo) argumentsrelace(s string, l *launcher1155) string {
 	s = strings.ReplaceAll(s, "${version_name}", Launcherbrand+" "+Launcherversion)
 	s = strings.ReplaceAll(s, "${game_directory}", g.Gamedir)
 	s = strings.ReplaceAll(s, "${assets_root}", g.Minecraftpath+`/assets`)
-	s = strings.ReplaceAll(s, "${game_assets}", g.Minecraftpath+`/assets`)
+	if strings.Contains(s, "${game_assets}") {
+		g.legacy(l)
+	}
+	s = strings.ReplaceAll(s, "${game_assets}", g.Minecraftpath+`/assets/virtual/legacy`)
 	s = strings.ReplaceAll(s, "${assets_index_name}", l.json.AssetIndex.ID)
 	s = strings.ReplaceAll(s, "${auth_uuid}", g.UUID)
 	s = strings.ReplaceAll(s, "${auth_access_token}", g.AccessToken)
@@ -149,4 +158,65 @@ func archbool(arch string) bool {
 		}
 	}
 	return false
+}
+
+func (g *Gameinfo) legacy(l *launcher1155) {
+	p := g.Minecraftpath + `/assets/virtual/legacy/`
+	fileerr := func(err error) {
+		if err != nil {
+			fmt.Println("文件不存在，请开启文件效验")
+			os.Exit(0)
+		}
+	}
+	var f *os.File
+	f, err := os.Open(g.Minecraftpath + "/assets/indexes/" + l.json.AssetIndex.ID + ".json")
+	fileerr(err)
+	b, err := ioutil.ReadAll(f)
+	if err != nil {
+		panic(err)
+	}
+	a := assets{}
+	json.Unmarshal(b, &a)
+	var w sync.WaitGroup
+	for path, v := range a.Objects {
+		path, v := path, v
+		w.Add(1)
+		go func() {
+			s := strings.Split(path, "/")
+			ss := strings.ReplaceAll(path, s[len(s)-1], "")
+			if l.json.AssetIndex.ID != "legacy" {
+				err = os.MkdirAll(g.Gamedir+"/resources/"+ss, 0777)
+			} else {
+				err = os.MkdirAll(p+ss, 0777)
+			}
+			if err != nil {
+				panic(err)
+			}
+			f, err := os.Open(g.Minecraftpath + "/assets/objects/" + v.Hash[0:2] + "/" + v.Hash)
+			fileerr(err)
+			if l.json.AssetIndex.ID != "legacy" {
+				fff, err := os.Create(g.Gamedir + "/resources/" + path)
+				if err != nil {
+					panic(err)
+				}
+				_, err = io.Copy(fff, f)
+			} else {
+				ff, err := os.Create(p + path)
+				if err != nil {
+					panic(err)
+				}
+				_, err = io.Copy(ff, f)
+			}
+			w.Done()
+		}()
+	}
+	w.Wait()
+}
+
+type assets struct {
+	Objects map[string]asset `json:"objects"`
+}
+
+type asset struct {
+	Hash string `json:"hash"`
 }
