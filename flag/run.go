@@ -28,7 +28,7 @@ func (f Flag) Arun() {
 		json.Unmarshal(b, &t)
 		if t.ID != f.Version {
 			b = bytes.ReplaceAll(b, []byte(t.ID), []byte(f.Version))
-			ioutil.WriteFile(f.Minecraftpath+"/versions/"+f.Version+"/"+f.Version+".json", b, 0777)
+			err := ioutil.WriteFile(f.Minecraftpath+"/versions/"+f.Version+"/"+f.Version+".json", b, 0777)
 			if err != nil {
 				panic(err)
 			}
