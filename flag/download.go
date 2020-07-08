@@ -31,7 +31,9 @@ func (f Flag) D() {
 	l, err := download.Getversionlist(f.Atype)
 	errr(err)
 	err = l.Downjson(f.Download)
-	errr(err)
+	if !f.Outmsg {
+		errr(err)
+	}
 	var b []byte
 	if f.Run != "" {
 		b, err = ioutil.ReadFile(launcher.Minecraft + "/versions/" + f.Run + "/" + f.Run + ".json")
