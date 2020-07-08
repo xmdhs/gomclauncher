@@ -31,8 +31,11 @@ func (f Flag) D() {
 	l, err := download.Getversionlist(f.Atype)
 	errr(err)
 	err = l.Downjson(f.Download)
-	if !f.Outmsg {
+	var a bool
+	if f.Run == "" {
 		errr(err)
+	} else if err.Error() == "no such" {
+		a = true
 	}
 	var b []byte
 	if f.Run != "" {
@@ -50,7 +53,11 @@ func (f Flag) D() {
 	} else {
 		fmt.Println("正在下载游戏核心")
 	}
-	err = dl.Downjar(f.Atype, f.Download)
+	if a {
+		err = dl.Downjar(f.Atype, f.Run)
+	} else {
+		err = dl.Downjar(f.Atype, f.Download)
+	}
 	errr(err)
 	fmt.Println("完成")
 	if f.Outmsg {
