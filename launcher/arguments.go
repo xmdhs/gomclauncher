@@ -138,6 +138,7 @@ func (g *Gameinfo) argumentsrelace(s string, l *launcher1155) string {
 	s = strings.ReplaceAll(s, "${assets_index_name}", l.json.AssetIndex.ID)
 	s = strings.ReplaceAll(s, "${auth_uuid}", g.UUID)
 	s = strings.ReplaceAll(s, "${auth_access_token}", g.AccessToken)
+	s = strings.ReplaceAll(s, "${auth_session}", g.AccessToken)
 	s = strings.ReplaceAll(s, "${user_type}", "mojang")
 	s = strings.ReplaceAll(s, "${version_type}", Launcherbrand+" "+Launcherversion)
 	if g.Userproperties == "" {
