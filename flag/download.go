@@ -32,10 +32,10 @@ func (f Flag) D() {
 	errr(err)
 	err = l.Downjson(f.Download)
 	var a bool
-	if f.Run == "" {
-		errr(err)
-	} else if err.Error() == "no such" {
+	if f.Run != "" && err != nil && err.Error() == "no such" {
 		a = true
+	} else {
+		errr(err)
 	}
 	var b []byte
 	if f.Run != "" {
