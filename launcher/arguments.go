@@ -165,8 +165,12 @@ func (g *Gameinfo) legacy(l *launcher1155) {
 	p := g.Minecraftpath + `/assets/virtual/legacy/`
 	fileerr := func(err error) {
 		if err != nil {
-			fmt.Println("文件不存在，请开启文件效验")
-			os.Exit(0)
+			if os.IsNotExist(err) {
+				fmt.Println("文件不存在，请开启文件效验")
+				os.Exit(0)
+			} else {
+				panic(err)
+			}
 		}
 	}
 	var f *os.File

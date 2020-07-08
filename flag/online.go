@@ -30,6 +30,7 @@ func (f *Flag) Aonline() {
 							fmt.Println("请尝试重新登录正版帐号")
 							os.Exit(0)
 						} else {
+							fmt.Println(err)
 							fmt.Println("正版登录失败，可能是网络问题，可再次尝试")
 							os.Exit(0)
 						}
