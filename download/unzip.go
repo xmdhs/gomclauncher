@@ -24,25 +24,23 @@ func (l Libraries) Unzip(typee string, i int) error {
 				done <- true
 				continue
 			}
-			if ifallow(v) {
+			if launcher.Ifallow(v) {
 				m.Lock()
 				natives = append(natives, path)
 				m.Unlock()
 			}
-			if ifallow(v) && !ver(path, sha1) {
-				if path != "" {
-					d := downinfo{
-						typee: typee,
-						url:   url,
-						path:  path,
-						e:     e,
-						Sha1:  sha1,
-						done:  done,
-						ch:    ch,
-					}
-					ch <- true
-					go d.down()
+			if launcher.Ifallow(v) && !ver(path, sha1) {
+				d := downinfo{
+					typee: typee,
+					url:   url,
+					path:  path,
+					e:     e,
+					Sha1:  sha1,
+					done:  done,
+					ch:    ch,
 				}
+				ch <- true
+				go d.down()
 			} else {
 				done <- true
 			}
@@ -97,22 +95,6 @@ func (l Libraries) unzipnative(n []string) error {
 			return err
 		}
 	}
-}
-
-func ifallow(l launcher.LibraryX115) bool {
-	if l.Rules != nil {
-		var allow bool
-		for _, r := range l.Rules {
-			if r.Action == "disallow" && osbool(r.Os.Name) {
-				return false
-			}
-			if r.Action == "allow" && (r.Os.Name == "" || osbool(r.Os.Name)) {
-				allow = true
-			}
-		}
-		return allow
-	}
-	return true
 }
 
 func osbool(os string) bool {

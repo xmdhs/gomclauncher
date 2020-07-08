@@ -51,20 +51,10 @@ func (l *launcher1155) cp() string {
 	path := l.Minecraftpath + `/libraries/`
 	b := bytes.NewBuffer(nil)
 	for _, p := range l.json.Libraries {
-		if paths(p) != "" {
+		if Ifallow(p) {
 			pack := Name2path(p.Name)
 			v, ok := l.Gameinfo.flag[pack[0]]
-			if ok {
-				if v == pack[2] {
-					b.WriteString(path)
-					b.WriteString(p.Downloads.Artifact.Path)
-					if runtime.GOOS == "windows" {
-						b.WriteString(";")
-					} else {
-						b.WriteString(":")
-					}
-				}
-			} else {
+			add := func() {
 				b.WriteString(path)
 				b.WriteString(p.Downloads.Artifact.Path)
 				if runtime.GOOS == "windows" {
@@ -73,28 +63,33 @@ func (l *launcher1155) cp() string {
 					b.WriteString(":")
 				}
 			}
+			if ok {
+				if v == pack[2] {
+					add()
+				}
+			} else {
+				add()
+			}
 		}
 	}
 	b.WriteString(l.Minecraftpath + `/versions/` + l.json.ID + `/` + l.json.ID + `.jar`)
 	return b.String()
 }
 
-func paths(l LibraryX115) string {
+func Ifallow(l LibraryX115) bool {
 	if l.Rules != nil {
 		var allow bool
 		for _, r := range l.Rules {
 			if r.Action == "disallow" && osbool(r.Os.Name) {
-				return ""
+				return false
 			}
 			if r.Action == "allow" && (r.Os.Name == "" || osbool(r.Os.Name)) {
 				allow = true
 			}
 		}
-		if !allow {
-			return ""
-		}
+		return allow
 	}
-	return l.Downloads.Artifact.Path
+	return true
 }
 
 func osbool(os string) bool {
