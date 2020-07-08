@@ -74,9 +74,8 @@ func (f Flag) D() {
 	}
 	err = dl.Unzip(f.Atype, f.Downint)
 	if err != nil {
-		fmt.Println(err)
 		fmt.Println("下载失败")
-		os.Exit(0)
+		panic(err)
 	}
 	fmt.Println("完成")
 }
@@ -119,7 +118,7 @@ func errr(err error) {
 		case "file download fail":
 			fmt.Println("失败次数过多，尝试切换下载源或者重新尝试")
 		default:
-			fmt.Println(err)
+			panic(err)
 		}
 		os.Exit(0)
 	}

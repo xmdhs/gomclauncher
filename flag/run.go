@@ -20,8 +20,7 @@ func (f Flag) Arun() {
 	b, err := ioutil.ReadFile(f.Minecraftpath + "/versions/" + f.Version + "/" + f.Version + ".json")
 	if err != nil {
 		fmt.Println("没有这个版本或者其他问题")
-		fmt.Println(err)
-		os.Exit(0)
+		panic(err)
 	}
 	if f.Outmsg {
 		t := test{}

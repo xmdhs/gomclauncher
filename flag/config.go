@@ -29,9 +29,8 @@ func init() {
 	}
 	err = json.Unmarshal(b, &gmlconfig)
 	if err != nil {
-		fmt.Println(err)
 		fmt.Println("json 损坏，可尝试删除 gml.json")
-		os.Exit(0)
+		panic(err)
 	}
 }
 
