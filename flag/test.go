@@ -3,7 +3,6 @@ package flag
 import (
 	"encoding/json"
 	"io/ioutil"
-	"strings"
 )
 
 func Test(path string) bool {
@@ -16,8 +15,7 @@ func Test(path string) bool {
 	if len(t.Libraries) == 0 {
 		return false
 	}
-	p := strings.Split(path, "/")
-	if t.ID != p[len(p)-2] {
+	if t.MainClass == "" {
 		return false
 	}
 	return true
@@ -25,8 +23,7 @@ func Test(path string) bool {
 
 type t struct {
 	Libraries []interface{} `json:"Libraries"`
-
-	ID string `json:"id"`
+	MainClass string        `json:"mainClass"`
 }
 
 func Find(path string) []string {
