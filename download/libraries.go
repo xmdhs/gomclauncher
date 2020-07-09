@@ -100,7 +100,7 @@ func get(u, path string) error {
 	}
 	for {
 		timer.Reset(5 * time.Second)
-		i, err := io.CopyN(bw, reps.Body, 500000)
+		i, err := io.CopyN(bw, reps.Body, 100000)
 		if err != nil && err != io.EOF {
 			return err
 		}

@@ -68,7 +68,7 @@ func (v Version) Downjson(version string) error {
 					continue
 				}
 				if !ver(path, s[len(s)-2]) {
-					fmt.Println("文件效验失败，重新下载", source(vv.URL, f), err)
+					fmt.Println("文件效验失败，重新下载", source(vv.URL, f))
 					f = fail(f)
 					continue
 				}
