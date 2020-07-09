@@ -1,6 +1,8 @@
 package download
 
 import (
+	"bufio"
+	"context"
 	"encoding/json"
 	"io"
 	"io/ioutil"
@@ -73,7 +75,7 @@ type asset struct {
 }
 
 func get(u, path string) error {
-	reps, err := Aget(u)
+	reps, timer, err := Aget(u)
 	if reps != nil {
 		defer reps.Body.Close()
 	}
@@ -81,6 +83,7 @@ func get(u, path string) error {
 		return err
 	}
 	_, err = os.Stat(path)
+
 	if err != nil {
 		s := strings.Split(path, "/")
 		ss := strings.ReplaceAll(path, s[len(s)-1], "")
@@ -90,11 +93,22 @@ func get(u, path string) error {
 		}
 	}
 	f, err := os.Create(path)
+	bw := bufio.NewWriter(f)
 	defer f.Close()
 	if err != nil {
 		return err
 	}
-	_, err = io.Copy(f, reps.Body)
+	for {
+		timer.Reset(3 * time.Second)
+		i, err := io.CopyN(bw, reps.Body, 40000)
+		if err != nil && err != io.EOF {
+			return err
+		}
+		if i == 0 {
+			break
+		}
+	}
+	err = bw.Flush()
 	if err != nil {
 		return err
 	}
@@ -152,16 +166,20 @@ func source(url, types string) string {
 	return url
 }
 
-func Aget(aurl string) (*http.Response, error) {
-	rep, err := http.NewRequest("GET", aurl, nil)
+func Aget(aurl string) (*http.Response, *time.Timer, error) {
+	ctx, cancel := context.WithCancel(context.TODO())
+	rep, err := http.NewRequestWithContext(ctx, "GET", aurl, nil)
+	timer := time.AfterFunc(10*time.Second, func() {
+		cancel()
+	})
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	rep.Header.Set("Accept", "*/*")
 	rep.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36")
 	reps, err := auth.HttpClient.Do(rep)
 	if err != nil {
-		return reps, err
+		return reps, nil, err
 	}
-	return reps, nil
+	return reps, timer, nil
 }

@@ -115,7 +115,7 @@ type up struct {
 }
 
 func check() {
-	reps, err := download.Aget(`https://api.github.com/repos/xmdhs/gomclauncher/releases/latest`)
+	reps, _, err := download.Aget(`https://api.github.com/repos/xmdhs/gomclauncher/releases/latest`)
 	if reps != nil {
 		defer reps.Body.Close()
 	}

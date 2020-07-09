@@ -12,7 +12,7 @@ import (
 
 func Getversionlist(atype string) (*Version, error) {
 	f := auto(atype)
-	rep, err := Aget(source(`https://launchermeta.mojang.com/mc/game/version_manifest.json`, f))
+	rep, _, err := Aget(source(`https://launchermeta.mojang.com/mc/game/version_manifest.json`, f))
 	if rep != nil {
 		defer rep.Body.Close()
 	}
