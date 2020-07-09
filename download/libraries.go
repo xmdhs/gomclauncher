@@ -99,8 +99,8 @@ func get(u, path string) error {
 		return err
 	}
 	for {
-		timer.Reset(3 * time.Second)
-		i, err := io.CopyN(bw, reps.Body, 40000)
+		timer.Reset(2 * time.Second)
+		i, err := io.CopyN(bw, reps.Body, 80000)
 		if err != nil && err != io.EOF {
 			return err
 		}
@@ -169,7 +169,7 @@ func source(url, types string) string {
 func Aget(aurl string) (*http.Response, *time.Timer, error) {
 	ctx, cancel := context.WithCancel(context.TODO())
 	rep, err := http.NewRequestWithContext(ctx, "GET", aurl, nil)
-	timer := time.AfterFunc(10*time.Second, func() {
+	timer := time.AfterFunc(5*time.Second, func() {
 		cancel()
 	})
 	if err != nil {
