@@ -13,6 +13,7 @@ import (
 var gmlconfig Gmlconfig
 
 func init() {
+	gmlconfig = make(Gmlconfig)
 	b, err := ioutil.ReadFile("gml.json")
 	if err != nil {
 		if os.IsNotExist(err) {
