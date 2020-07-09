@@ -2,6 +2,7 @@ package download
 
 import (
 	"encoding/json"
+	"io"
 	"io/ioutil"
 	"math/rand"
 	"net/http"
@@ -79,10 +80,6 @@ func get(u, path string) error {
 	if err != nil {
 		return err
 	}
-	b, err := ioutil.ReadAll(reps.Body)
-	if err != nil {
-		return err
-	}
 	_, err = os.Stat(path)
 	if err != nil {
 		s := strings.Split(path, "/")
@@ -97,7 +94,10 @@ func get(u, path string) error {
 	if err != nil {
 		return err
 	}
-	f.Write(b)
+	_, err = io.Copy(f, reps.Body)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
