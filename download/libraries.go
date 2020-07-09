@@ -153,17 +153,13 @@ func source(url, types string) string {
 }
 
 func Aget(aurl string) (*http.Response, error) {
-	c := http.Client{
-		Transport: auth.Transport,
-		Timeout:   10 * time.Second,
-	}
 	rep, err := http.NewRequest("GET", aurl, nil)
 	if err != nil {
 		return nil, err
 	}
 	rep.Header.Set("Accept", "*/*")
 	rep.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36")
-	reps, err := c.Do(rep)
+	reps, err := auth.HttpClient.Do(rep)
 	if err != nil {
 		return reps, err
 	}
