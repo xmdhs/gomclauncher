@@ -10,7 +10,7 @@ import (
 
 var Transport = http.DefaultTransport.(*http.Transport).Clone()
 
-var HttpClient http.Client
+var HttpClient *http.Client
 
 func init() {
 	Transport.DialContext = (&net.Dialer{
@@ -18,7 +18,7 @@ func init() {
 		KeepAlive: 30 * time.Second,
 		DualStack: true,
 	}).DialContext
-	HttpClient = http.Client{
+	HttpClient = &http.Client{
 		Transport: Transport,
 		Timeout:   20 * time.Second,
 	}
