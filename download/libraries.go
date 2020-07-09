@@ -99,8 +99,8 @@ func get(u, path string) error {
 		return err
 	}
 	for {
-		timer.Reset(2 * time.Second)
-		i, err := io.CopyN(bw, reps.Body, 80000)
+		timer.Reset(5 * time.Second)
+		i, err := io.CopyN(bw, reps.Body, 500000)
 		if err != nil && err != io.EOF {
 			return err
 		}

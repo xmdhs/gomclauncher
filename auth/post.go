@@ -20,7 +20,7 @@ func init() {
 	}).DialContext
 	HttpClient = http.Client{
 		Transport: Transport,
-		Timeout:   25 * time.Second,
+		Timeout:   20 * time.Second,
 	}
 }
 
