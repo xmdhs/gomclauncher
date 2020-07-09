@@ -13,18 +13,11 @@ import (
 var gmlconfig Gmlconfig
 
 func init() {
-	gmlconfig = make(Gmlconfig)
-	_, err := os.Stat("gml.json")
+	b, err := ioutil.ReadFile("gml.json")
 	if err != nil {
-		return
-	}
-	f, err := os.Open("gml.json")
-	defer f.Close()
-	if err != nil {
-		panic(err)
-	}
-	b, err := ioutil.ReadAll(f)
-	if err != nil {
+		if os.IsNotExist(err) {
+			return
+		}
 		panic(err)
 	}
 	err = json.Unmarshal(b, &gmlconfig)

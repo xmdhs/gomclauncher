@@ -51,6 +51,11 @@ func (f Flag) Arun() {
 			fmt.Println("json 错误，可尝试到 " + launcher.Minecraft + "/versions 中删除对应的 json 文件")
 			os.Exit(0)
 		}
+		if err.Error() == "json not true" {
+			fmt.Println("此版本 json 有误")
+			os.Exit(0)
+		}
+		panic(err)
 	}
 }
 
