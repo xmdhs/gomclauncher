@@ -14,13 +14,13 @@ var HttpClient http.Client
 
 func init() {
 	Transport.DialContext = (&net.Dialer{
-		Timeout:   5 * time.Second,
+		Timeout:   10 * time.Second,
 		KeepAlive: 30 * time.Second,
 		DualStack: true,
 	}).DialContext
 	HttpClient = http.Client{
 		Transport: Transport,
-		Timeout:   25 * time.Second,
+		Timeout:   30 * time.Second,
 	}
 }
 
