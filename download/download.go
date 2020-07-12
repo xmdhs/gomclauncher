@@ -27,10 +27,10 @@ func (l Libraries) Downassets(typee string, i int, c chan int) error {
 					done:  done,
 					ch:    ch,
 				}
-				ch <- true
+				ch <- struct{}{}
 				go d.down()
 			} else {
-				done <- true
+				done <- struct{}{}
 			}
 		}
 	}()
@@ -82,7 +82,7 @@ func (l Libraries) Downlibrarie(typee string, i int, c chan int) error {
 			v := v
 			path := launcher.Minecraft + `/libraries/` + v.Downloads.Artifact.Path
 			if v.Downloads.Artifact.URL == "" {
-				done <- true
+				done <- struct{}{}
 				continue
 			}
 			if !ver(path, v.Downloads.Artifact.Sha1) {
@@ -95,10 +95,10 @@ func (l Libraries) Downlibrarie(typee string, i int, c chan int) error {
 					done:  done,
 					ch:    ch,
 				}
-				ch <- true
+				ch <- struct{}{}
 				go d.down()
 			} else {
-				done <- true
+				done <- struct{}{}
 			}
 		}
 	}()
@@ -150,8 +150,8 @@ type downinfo struct {
 	path  string
 	e     chan error
 	Sha1  string
-	done  chan bool
-	ch    chan bool
+	done  chan struct{}
+	ch    chan struct{}
 }
 
 func (d downinfo) down() {
@@ -172,7 +172,7 @@ func (d downinfo) down() {
 			f = fail(f)
 			continue
 		}
-		d.done <- true
+		d.done <- struct{}{}
 		<-d.ch
 		add(f)
 		break
@@ -180,9 +180,9 @@ func (d downinfo) down() {
 
 }
 
-func creatch(a, i int) (e chan error, done, ch chan bool) {
+func creatch(a, i int) (e chan error, done, ch chan struct{}) {
 	e = make(chan error, a)
-	done = make(chan bool, a)
-	ch = make(chan bool, i)
+	done = make(chan struct{}, a)
+	ch = make(chan struct{}, i)
 	return
 }

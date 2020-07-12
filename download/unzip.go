@@ -21,7 +21,7 @@ func (l Libraries) Unzip(typee string, i int) error {
 			path, sha1, url := swichnatives(v)
 			path = launcher.Minecraft + `/libraries/` + path
 			if url == "" {
-				done <- true
+				done <- struct{}{}
 				continue
 			}
 			if launcher.Ifallow(v) {
@@ -39,10 +39,10 @@ func (l Libraries) Unzip(typee string, i int) error {
 					done:  done,
 					ch:    ch,
 				}
-				ch <- true
+				ch <- struct{}{}
 				go d.down()
 			} else {
-				done <- true
+				done <- struct{}{}
 			}
 
 		}
