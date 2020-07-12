@@ -14,7 +14,7 @@ type Flag struct {
 	Atype       string
 	Downint     int
 	Username    string
-	Passworld   string
+	Password    string
 	Email       string
 	Download    string
 	Verlist     string

@@ -14,7 +14,7 @@ func (f *Flag) Aonline() {
 		fmt.Println("比如 -email xxx@xxx.xx")
 		os.Exit(0)
 	}
-	err := gmlconfig[f.Email].setonline(f.Email, f.Passworld)
+	err := gmlconfig[f.Email].setonline(f.Email, f.Password)
 	if err != nil {
 		if err.Error() == "have" {
 			a := auth.Auth{

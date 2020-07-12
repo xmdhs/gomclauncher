@@ -10,7 +10,7 @@
 
 启动游戏并关闭检测启动器更新检测，游戏文件验证，版本隔离 `./gml-linux -run 1.16.1 -username xmdhs -test=f -independent=f -updata=f`
 
-首次正版登录 `./gml-linux -run 1.16.1 -email example@example.com -passworld example`
+首次正版登录 `./gml-linux -run 1.16.1 -email example@example.com -password example`
 
 第二次 `./gml-linux -run 1.16.1 -email example@example.com` 启动器不会保存你的密码，而是保存 accessToken 用于下次免密登录。
 
