@@ -12,9 +12,10 @@ import (
 )
 
 func Getversionlist(atype string) (*Version, error) {
-	f := auto(atype)
 	var rep *http.Response
 	var err error
+	var b []byte
+	f := auto(atype)
 	for i := 0; i < 4; i++ {
 		if i == 3 {
 			return nil, err
@@ -27,15 +28,14 @@ func Getversionlist(atype string) (*Version, error) {
 			f = fail(f)
 			continue
 		}
+		b, err = ioutil.ReadAll(rep.Body)
+		if err != nil {
+			rep.Body.Close()
+			f = fail(f)
+			continue
+		}
 		err = nil
 		break
-	}
-	if rep != nil {
-		defer rep.Body.Close()
-	}
-	b, err := ioutil.ReadAll(rep.Body)
-	if err != nil {
-		return nil, err
 	}
 	v := Version{}
 	json.Unmarshal(b, &v)
