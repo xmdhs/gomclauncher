@@ -25,23 +25,24 @@ func Getversionlist(atype string) (*Version, error) {
 			if rep != nil {
 				rep.Body.Close()
 			}
+			fmt.Println("获取版本列表失败，重试", err)
 			f = fail(f)
 			continue
 		}
 		b, err = ioutil.ReadAll(rep.Body)
 		if err != nil {
 			rep.Body.Close()
+			fmt.Println("获取版本列表失败，重试", err)
 			f = fail(f)
 			continue
 		}
 		rep.Body.Close()
-		err = nil
 		break
 	}
 	v := Version{}
-	json.Unmarshal(b, &v)
+	err = json.Unmarshal(b, &v)
 	v.atype = atype
-	return &v, nil
+	return &v, err
 }
 
 type Version struct {

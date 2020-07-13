@@ -11,7 +11,10 @@ func Test(path string) bool {
 		return false
 	}
 	t := t{}
-	json.Unmarshal(b, &t)
+	err = json.Unmarshal(b, &t)
+	if err != nil {
+		return false
+	}
 	if len(t.Libraries) == 0 {
 		return false
 	}

@@ -173,15 +173,13 @@ func (g *Gameinfo) legacy(l *launcher1155) {
 			}
 		}
 	}
-	var f *os.File
-	f, err := os.Open(g.Minecraftpath + "/assets/indexes/" + l.json.AssetIndex.ID + ".json")
+	b, err := ioutil.ReadFile(g.Minecraftpath + "/assets/indexes/" + l.json.AssetIndex.ID + ".json")
 	fileerr(err)
-	b, err := ioutil.ReadAll(f)
+	a := assets{}
+	err = json.Unmarshal(b, &a)
 	if err != nil {
 		panic(err)
 	}
-	a := assets{}
-	json.Unmarshal(b, &a)
 	var w sync.WaitGroup
 	for path, v := range a.Objects {
 		path, v := path, v
@@ -205,12 +203,18 @@ func (g *Gameinfo) legacy(l *launcher1155) {
 					panic(err)
 				}
 				_, err = io.Copy(ff, f)
+				if err != nil {
+					panic(err)
+				}
 			} else {
 				fff, err := os.Create(g.Gamedir + "/resources/" + path)
 				if err != nil {
 					panic(err)
 				}
 				_, err = io.Copy(fff, f)
+				if err != nil {
+					panic(err)
+				}
 			}
 			w.Done()
 		}()

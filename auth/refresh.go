@@ -22,11 +22,11 @@ func Refresh(a *Auth) error {
 	if i != http.StatusOK {
 		return errors.New("not ok")
 	}
-	json.Unmarshal(b, &r)
+	err = json.Unmarshal(b, &r)
 	a.AccessToken = r.AccessToken
 	a.Username = r.SelectedProfile.Name
 	a.ID = r.SelectedProfile.ID
-	return nil
+	return err
 }
 
 type Refreshs struct {

@@ -36,11 +36,17 @@ func Newlibraries(b []byte, typee string) (Libraries, error) {
 		if err != nil {
 			return Libraries{}, err
 		}
-		json.Unmarshal(b, &l)
+		err = json.Unmarshal(b, &l)
+		if err != nil {
+			return Libraries{}, err
+		}
 		modlibraries2(mod.Libraries, &l)
 		l.ID = mod.ID
 	} else {
-		json.Unmarshal(b, &l)
+		err = json.Unmarshal(b, &l)
+		if err != nil {
+			return Libraries{}, err
+		}
 	}
 	url = l.AssetIndex.URL
 	id = l.AssetIndex.ID
@@ -61,7 +67,10 @@ func Newlibraries(b []byte, typee string) (Libraries, error) {
 		panic(err)
 	}
 	a := assets{}
-	json.Unmarshal(bb, &a)
+	err = json.Unmarshal(bb, &a)
+	if err != nil {
+		return Libraries{}, err
+	}
 	return Libraries{
 		librarie:   l,
 		assetIndex: a,
