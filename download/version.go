@@ -27,6 +27,7 @@ func Getversionlist(atype string) (*Version, error) {
 			f = fail(f)
 			continue
 		}
+		err = nil
 		break
 	}
 	if rep != nil {
