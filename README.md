@@ -8,7 +8,7 @@
 
 启动游戏 `./gml-linux -run 1.16.1 -username xmdhs`
 
-启动游戏并关闭检测启动器更新检测，游戏文件验证，版本隔离 `./gml-linux -run 1.16.1 -username xmdhs -test=f -independent=f -updata=f`
+启动游戏并关闭检测启动器更新检测，游戏文件验证，版本隔离 `./gml-linux -run 1.16.1 -username xmdhs -test=f -independent=f -update=f`
 
 首次正版登录 `./gml-linux -run 1.16.1 -email example@example.com -password example`
 
