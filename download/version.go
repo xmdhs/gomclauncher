@@ -34,6 +34,7 @@ func Getversionlist(atype string) (*Version, error) {
 			f = fail(f)
 			continue
 		}
+		rep.Body.Close()
 		err = nil
 		break
 	}
