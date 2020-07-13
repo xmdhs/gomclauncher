@@ -20,14 +20,17 @@ func Getversionlist(atype string) (*Version, error) {
 			return nil, err
 		}
 		rep, _, err = Aget(source(`https://launchermeta.mojang.com/mc/game/version_manifest.json`, f))
-		if rep != nil {
-			rep.Body.Close()
-		}
 		if err != nil {
+			if rep != nil {
+				rep.Body.Close()
+			}
 			f = fail(f)
 			continue
 		}
 		break
+	}
+	if rep != nil {
+		defer rep.Body.Close()
 	}
 	b, err := ioutil.ReadAll(rep.Body)
 	if err != nil {
