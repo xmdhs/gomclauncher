@@ -25,7 +25,7 @@ func main() {
 		}
 		auth.Transport.Proxy = http.ProxyURL(proxy)
 	}
-	if updata {
+	if update {
 		check()
 	}
 	if credit {
@@ -71,7 +71,7 @@ var f aflag.Flag
 
 var (
 	credit bool
-	updata bool
+	update bool
 )
 
 func init() {
@@ -99,7 +99,7 @@ func init() {
 	flag.BoolVar(&f.Independent, "independent", true, "是否开启版本隔离")
 	flag.BoolVar(&f.Outmsg, "test", true, "启动游戏前是否效验文件的完整和正确性")
 	flag.BoolVar(&credit, "credits", false, "使用项目")
-	flag.BoolVar(&updata, "updata", true, "是否检测更新")
+	flag.BoolVar(&update, "update", true, "是否检测更新")
 	flag.BoolVar(&launcher.Log, "log", false, "是否输出游戏日志")
 	flag.Parse()
 }

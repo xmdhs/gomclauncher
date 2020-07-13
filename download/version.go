@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
+	"net/http"
 	"strings"
 
 	"github.com/xmdhs/gomclauncher/launcher"
@@ -12,12 +13,21 @@ import (
 
 func Getversionlist(atype string) (*Version, error) {
 	f := auto(atype)
-	rep, _, err := Aget(source(`https://launchermeta.mojang.com/mc/game/version_manifest.json`, f))
-	if rep != nil {
-		defer rep.Body.Close()
-	}
-	if err != nil {
-		return nil, err
+	var rep *http.Response
+	var err error
+	for i := 0; i < 4; i++ {
+		if i == 3 {
+			return nil, err
+		}
+		rep, _, err = Aget(source(`https://launchermeta.mojang.com/mc/game/version_manifest.json`, f))
+		if rep != nil {
+			rep.Body.Close()
+		}
+		if err != nil {
+			f = fail(f)
+			continue
+		}
+		break
 	}
 	b, err := ioutil.ReadAll(rep.Body)
 	if err != nil {

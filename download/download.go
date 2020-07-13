@@ -11,7 +11,7 @@ import (
 	"github.com/xmdhs/gomclauncher/launcher"
 )
 
-func (l Libraries) Downassets(typee string, i int, c chan int) error {
+func (l Libraries) Downassets(i int, c chan int) error {
 	e, done, ch := creatch(len(l.assetIndex.Objects), i)
 	go func() {
 		for _, v := range l.assetIndex.Objects {
@@ -19,7 +19,7 @@ func (l Libraries) Downassets(typee string, i int, c chan int) error {
 			ok := ver(launcher.Minecraft+`/assets/objects/`+v.Hash[:2]+`/`+v.Hash, v.Hash)
 			if !ok {
 				d := downinfo{
-					typee: typee,
+					typee: l.typee,
 					url:   `https://resources.download.minecraft.net/` + v.Hash[:2] + `/` + v.Hash,
 					path:  launcher.Minecraft + `/assets/objects/` + v.Hash[:2] + `/` + v.Hash,
 					e:     e,
@@ -75,7 +75,7 @@ func ver(path, hash string) bool {
 
 }
 
-func (l Libraries) Downlibrarie(typee string, i int, c chan int) error {
+func (l Libraries) Downlibrarie(i int, c chan int) error {
 	e, done, ch := creatch(len(l.librarie.Libraries), i)
 	go func() {
 		for _, v := range l.librarie.Libraries {
@@ -87,7 +87,7 @@ func (l Libraries) Downlibrarie(typee string, i int, c chan int) error {
 			}
 			if !ver(path, v.Downloads.Artifact.Sha1) {
 				d := downinfo{
-					typee: typee,
+					typee: l.typee,
 					url:   v.Downloads.Artifact.URL,
 					path:  path,
 					e:     e,
@@ -118,12 +118,12 @@ func (l Libraries) Downlibrarie(typee string, i int, c chan int) error {
 	}
 }
 
-func (l Libraries) Downjar(typee, version string) error {
+func (l Libraries) Downjar(version string) error {
 	path := launcher.Minecraft + `/versions/` + version + "/" + version + ".jar"
 	if ver(path, l.librarie.Downloads.Client.Sha1) {
 		return nil
 	}
-	t := auto(typee)
+	t := auto(l.typee)
 	for i := 0; i < 4; i++ {
 		if i == 3 {
 			return errors.New("file download fail")

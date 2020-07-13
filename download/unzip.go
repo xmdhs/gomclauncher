@@ -11,7 +11,7 @@ import (
 	"github.com/xmdhs/gomclauncher/launcher"
 )
 
-func (l Libraries) Unzip(typee string, i int) error {
+func (l Libraries) Unzip(i int) error {
 	e, done, ch := creatch(len(l.librarie.Libraries), i)
 	natives := make([]string, 0)
 	m := sync.Mutex{}
@@ -31,7 +31,7 @@ func (l Libraries) Unzip(typee string, i int) error {
 			}
 			if launcher.Ifallow(v) && !ver(path, sha1) {
 				d := downinfo{
-					typee: typee,
+					typee: l.typee,
 					url:   url,
 					path:  path,
 					e:     e,

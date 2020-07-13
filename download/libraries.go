@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"context"
 	"encoding/json"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"math/rand"
@@ -19,9 +20,10 @@ import (
 type Libraries struct {
 	librarie   launcher.LauncherjsonX115
 	assetIndex assets
+	typee      string
 }
 
-func Newlibraries(b []byte) (Libraries, error) {
+func Newlibraries(b []byte, typee string) (Libraries, error) {
 	mod := launcher.Modsjson{}
 	var url, id string
 	l := launcher.LauncherjsonX115{}
@@ -46,7 +48,7 @@ func Newlibraries(b []byte) (Libraries, error) {
 	_, err = os.Stat(path)
 	if err != nil {
 		if os.IsNotExist(err) {
-			err := get(url, path)
+			err := assetsjson(url, path, typee)
 			if err != nil {
 				return Libraries{}, err
 			}
@@ -63,6 +65,7 @@ func Newlibraries(b []byte) (Libraries, error) {
 	return Libraries{
 		librarie:   l,
 		assetIndex: a,
+		typee:      typee,
 	}, nil
 }
 
@@ -182,4 +185,22 @@ func Aget(aurl string) (*http.Response, *time.Timer, error) {
 		return reps, nil, err
 	}
 	return reps, timer, nil
+}
+
+func assetsjson(url, path, typee string) error {
+	var err error
+	f := auto(typee)
+	for i := 0; i < 4; i++ {
+		if i == 3 {
+			return err
+		}
+		err = get(source(url, f), path)
+		if err != nil {
+			f = fail(f)
+			fmt.Println("下载失败，重试", err)
+			continue
+		}
+		break
+	}
+	return nil
 }
