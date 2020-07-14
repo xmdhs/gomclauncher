@@ -11,6 +11,9 @@ func Refresh(a *Auth) error {
 		AccessToken: a.AccessToken,
 		ClientToken: a.ClientToken,
 	}
+	if a.selectedProfile.Name != "" {
+		r.SelectedProfile = a.selectedProfile
+	}
 	b, err := json.Marshal(r)
 	if err != nil {
 		return err

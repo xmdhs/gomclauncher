@@ -49,6 +49,9 @@ func main() {
 		f.Outmsg = false
 		f.D()
 	}
+	if yggdrasilname != "" {
+		auth.Name = yggdrasilname
+	}
 	if f.Yggdrasil != "" {
 		f.Authlib()
 	}
@@ -76,8 +79,9 @@ func main() {
 var f aflag.Flag
 
 var (
-	credit bool
-	update bool
+	credit        bool
+	update        bool
+	yggdrasilname string
 )
 
 func init() {
@@ -108,6 +112,7 @@ func init() {
 	flag.BoolVar(&update, "update", true, "是否检测更新")
 	flag.BoolVar(&launcher.Log, "log", false, "是否输出游戏日志")
 	flag.StringVar(&f.Yggdrasil, "yggdrasil", "", "外置登录地址，只需要第一次登录时设置。(authlib-injector)")
+	flag.StringVar(&yggdrasilname, "yggdrasilname", "", "外置登录选择的角色名")
 	flag.Parse()
 }
 

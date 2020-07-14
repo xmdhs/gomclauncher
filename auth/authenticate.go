@@ -3,8 +3,12 @@ package auth
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
+	"os"
 )
+
+var Name string
 
 //Authenticate return accessToken, err
 func Authenticate(username, password, clientToken string) (Auth, error) {
@@ -35,18 +39,56 @@ func Authenticate(username, password, clientToken string) (Auth, error) {
 		panic(err)
 	}
 	Auth.AccessToken = auth.AccessToken
-	Auth.ID = auth.SelectedProfile.ID
 	Auth.ClientToken = auth.ClientToken
-	Auth.Username = auth.SelectedProfile.Name
+	if len(auth.AvailableProfiles) == 0 {
+		return Auth, errors.New("无可用角色")
+	}
+	if auth.SelectedProfile.Name == "" {
+		a := selectProfile(auth.AvailableProfiles)
+		Auth.selectedProfile = a
+		err := Refresh(&Auth)
+		if err != nil {
+			return Auth, err
+		}
+	} else {
+		Auth.ID = auth.SelectedProfile.ID
+		Auth.Username = auth.SelectedProfile.Name
+	}
 	return Auth, nil
 }
 
+func selectProfile(a []AuthenticateResponseAvailableProfile) SElectedProfile {
+	if Name == "" {
+		fmt.Println("请选择一个角色，通过 -yggdrasilname 参数设置")
+		for _, p := range a {
+			fmt.Println(p.Name)
+		}
+		os.Exit(0)
+	}
+	var selectedProfile AuthenticateResponseAvailableProfile
+	for _, p := range a {
+		if p.Name == Name {
+			selectedProfile = p
+		}
+	}
+	if selectedProfile.Name == "" {
+		fmt.Println("没有这个角色")
+		os.Exit(0)
+	}
+	s := SElectedProfile{
+		Name: selectedProfile.Name,
+		ID:   selectedProfile.ID,
+	}
+	return s
+}
+
 type Auth struct {
-	Username       string
-	ClientToken    string
-	ID             string
-	AccessToken    string
-	Userproperties string
+	Username        string
+	ClientToken     string
+	ID              string
+	AccessToken     string
+	Userproperties  string
+	selectedProfile SElectedProfile
 }
 
 type AuthenticatePayload struct {
