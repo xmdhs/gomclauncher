@@ -21,7 +21,9 @@ func (f *Flag) Aonline() {
 				AccessToken: gmlconfig[f.Email].AccessToken,
 				ClientToken: gmlconfig[f.Email].ClientToken,
 			}
-			auth.ApiAddress = gmlconfig[f.Email].Authlib
+			if gmlconfig[f.Email].Authlib != "" {
+				auth.ApiAddress = gmlconfig[f.Email].Authlib
+			}
 			atime := time.Now().Unix()
 			if atime-gmlconfig[f.Email].Time > 1200 {
 				if err := auth.Validate(a); err != nil {
@@ -52,6 +54,9 @@ func (f *Flag) Aonline() {
 		} else {
 			panic(err)
 		}
+	}
+	if gmlconfig[f.Email].Name == "" {
+		panic("请创建或者选择角色")
 	}
 	f.Userproperties = gmlconfig[f.Email].Userproperties
 	f.AccessToken = gmlconfig[f.Email].AccessToken

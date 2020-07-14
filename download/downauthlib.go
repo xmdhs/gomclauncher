@@ -4,41 +4,45 @@ import (
 	"errors"
 	"fmt"
 	"math/rand"
+	"runtime"
 	"time"
 
 	"github.com/xmdhs/gomclauncher/auth"
-	"github.com/xmdhs/gomclauncher/launcher"
 )
 
 var authliburls = []string{"https://authlib-injector.yushi.moe/artifact/27/authlib-injector-1.1.27-5ef5f8e.jar", "https://download.mcbbs.net/mirrors/authlib-injector/artifact/27/authlib-injector-1.1.27-5ef5f8e.jar"}
-var authlibpath = launcher.Minecraft + `/libraries/` + `moe/yushi/authlibinjector/` + "authlib-injector/" + Authlibversion + "/authlib-injector-" + Authlibversion + ".jar"
+var minecraft string
 
 const authlibsha1 = "EBE6CEFF486816E060356B9657A9263616AFB8C1"
 const Authlibversion = "1.1.27-5ef5f8e"
 
 func Downauthlib() error {
+	if runtime.GOOS == "windows" {
+		minecraft = `.minecraft`
+	}
 	url := randurl("")
-	if ver(authlibpath, authlibsha1) {
+	var path = minecraft + `/libraries/` + `moe/yushi/authlibinjector/` + "authlib-injector/" + Authlibversion + "/authlib-injector-" + Authlibversion + ".jar"
+	if ver(path, authlibsha1) {
 		return nil
 	}
 	for i := 0; i < 5; i++ {
 		if i == 3 {
 			return errors.New("download fail")
 		}
-		err := get(url, authlibpath)
+		err := get(url, path)
 		if err != nil {
 			fmt.Println("authlib 下载失败，重试", err)
 			url = randurl(url)
 			continue
 		}
-		if !ver(authlibpath, authlibsha1) {
+		if !ver(path, authlibsha1) {
 			fmt.Println("authlib 效验出错，重试")
 			url = randurl(url)
 			continue
 		}
 		break
 	}
-	auth.Authlibpath = authlibpath
+	auth.Authlibpath = path
 	return nil
 }
 
