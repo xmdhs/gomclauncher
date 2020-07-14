@@ -10,7 +10,7 @@ func TestGetauthlibapi(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if api != `https://littleskin.cn/api/yggdrasil` {
+	if api != `https://littleskin.cn/api/yggdrasil/authserver` {
 		t.Fail()
 	}
 	fmt.Println(api)
