@@ -104,7 +104,7 @@ func init() {
 	flag.BoolVar(&credit, "credits", false, "使用项目")
 	flag.BoolVar(&update, "update", true, "是否检测更新")
 	flag.BoolVar(&launcher.Log, "log", false, "是否输出游戏日志")
-	flag.StringVar(&f.Yggdrasil, "yggdrasil", "", "外置登录地址。(authlib-injector)")
+	flag.StringVar(&f.Yggdrasil, "yggdrasil", "", "外置登录地址，只需要第一次登录时设置。(authlib-injector)")
 	flag.Parse()
 }
 

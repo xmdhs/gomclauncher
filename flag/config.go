@@ -65,6 +65,7 @@ func (c Config) setonline(email, pass string) error {
 	aconfig.UUID = a.ID
 	aconfig.AccessToken = a.AccessToken
 	aconfig.Userproperties = a.Userproperties
+	aconfig.Authlib = auth.ApiAddress
 	gmlconfig[email] = aconfig
 	saveconfig()
 	return nil
@@ -79,4 +80,5 @@ type Config struct {
 	Userproperties string
 	AccessToken    string
 	Time           int64
+	Authlib        string
 }

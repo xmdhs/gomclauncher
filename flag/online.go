@@ -21,16 +21,17 @@ func (f *Flag) Aonline() {
 				AccessToken: gmlconfig[f.Email].AccessToken,
 				ClientToken: gmlconfig[f.Email].ClientToken,
 			}
+			auth.ApiAddress = gmlconfig[f.Email].Authlib
 			atime := time.Now().Unix()
 			if atime-gmlconfig[f.Email].Time > 1200 {
 				if err := auth.Validate(a); err != nil {
 					err = auth.Refresh(&a)
 					if err != nil {
 						if err.Error() == "not ok" {
-							fmt.Println("请尝试重新登录正版帐号")
+							fmt.Println("请尝试重新登录帐号")
 							os.Exit(0)
 						} else {
-							fmt.Println("正版登录失败，可能是网络问题，可再次尝试")
+							fmt.Println("登录失败，可能是网络问题，可再次尝试")
 							panic(err)
 						}
 					}
@@ -40,6 +41,7 @@ func (f *Flag) Aonline() {
 					aconfig.AccessToken = a.AccessToken
 					aconfig.Time = time.Now().Unix()
 					aconfig.ClientToken = a.ClientToken
+					aconfig.Authlib = auth.ApiAddress
 					gmlconfig[f.Email] = aconfig
 					saveconfig()
 				}
