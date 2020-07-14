@@ -48,7 +48,7 @@ func (g *Gameinfo) Run115() error {
 	l.flag = append(l.flag, `-Dfml.ignorePatchDiscrepancies=true`)
 	if auth.ApiAddress != "https://authserver.mojang.com" {
 		l.flag = append(l.flag, `-Dauthlibinjector.side=client`)
-		l.flag = append(l.flag, `-javaagent:{`+auth.Authlibpath+`}={`+auth.ApiAddress+`}`)
+		l.flag = append(l.flag, `-javaagent:`+authlibpath+`=`+auth.ApiAddress)
 	}
 	if g.Flag != nil {
 		l.flag = append(l.flag, g.Flag...)
@@ -63,7 +63,10 @@ func (g *Gameinfo) Run115() error {
 	return nil
 }
 
+var authlibpath string
+
 func creatlauncherprofiles(g *Gameinfo) {
+	authlibpath = g.Minecraftpath + `/libraries/` + `moe/yushi/authlibinjector/` + "authlib-injector/" + auth.Authlibversion + "/authlib-injector-" + auth.Authlibversion + ".jar"
 	path := g.Minecraftpath + "/launcher_profiles.json"
 	_, err := os.Stat(path)
 	if err != nil && os.IsNotExist(err) {

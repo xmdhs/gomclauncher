@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-var Authlibpath string
+const Authlibversion = "1.1.27-5ef5f8e"
 
 func Getauthlibapi(api string) (apiaddress string, err error) {
 	if !strings.Contains(strings.ToTitle(api), strings.ToTitle("http")) {
@@ -30,7 +30,7 @@ func Getauthlibapi(api string) (apiaddress string, err error) {
 		return "", err
 	}
 	defer func() {
-		err = checkapi(&apiaddress)
+		err = checkapi(apiaddress)
 	}()
 	header := reps.Header.Get("X-Authlib-Injector-API-Location")
 	if header == "" {
@@ -48,11 +48,11 @@ type Yggdrasil struct {
 	SignaturePublickey string `json:"signaturePublickey"`
 }
 
-func checkapi(url *string) error {
+func checkapi(url string) error {
 	c := &http.Client{
 		Timeout: 5 * time.Second,
 	}
-	req, err := http.NewRequest("GET", *url, nil)
+	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return err
 	}
@@ -72,6 +72,5 @@ func checkapi(url *string) error {
 	if y.SignaturePublickey == "" {
 		return errors.New("json not true")
 	}
-	*url = *url + "/authserver"
 	return err
 }
