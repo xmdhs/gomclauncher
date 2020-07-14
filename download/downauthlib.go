@@ -11,17 +11,17 @@ import (
 )
 
 var authliburls = []string{"https://authlib-injector.yushi.moe/artifact/27/authlib-injector-1.1.27-5ef5f8e.jar", "https://download.mcbbs.net/mirrors/authlib-injector/artifact/27/authlib-injector-1.1.27-5ef5f8e.jar"}
-var minecraft string
 
 const authlibsha1 = "EBE6CEFF486816E060356B9657A9263616AFB8C1"
-const Authlibversion = "1.1.27-5ef5f8e"
+const authlibversion = "1.1.27-5ef5f8e"
 
 func Downauthlib() error {
+	minecraft := "minecraft"
 	if runtime.GOOS == "windows" {
 		minecraft = `.minecraft`
 	}
 	url := randurl("")
-	var path = minecraft + `/libraries/` + `moe/yushi/authlibinjector/` + "authlib-injector/" + Authlibversion + "/authlib-injector-" + Authlibversion + ".jar"
+	var path = minecraft + `/libraries/` + `moe/yushi/authlibinjector/` + "authlib-injector/" + authlibversion + "/authlib-injector-" + authlibversion + ".jar"
 	if ver(path, authlibsha1) {
 		return nil
 	}
