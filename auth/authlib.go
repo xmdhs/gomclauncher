@@ -9,6 +9,8 @@ import (
 	"time"
 )
 
+var Authlibpath string
+
 func Getauthlibapi(api string) (apiaddress string, err error) {
 	if !strings.Contains(strings.ToTitle(api), strings.ToTitle("http")) {
 		api = `https://` + api

@@ -8,7 +8,6 @@ import (
 	"strings"
 
 	"github.com/xmdhs/gomclauncher/auth"
-	"github.com/xmdhs/gomclauncher/download"
 )
 
 type Gameinfo struct {
@@ -49,7 +48,7 @@ func (g *Gameinfo) Run115() error {
 	l.flag = append(l.flag, `-Dfml.ignorePatchDiscrepancies=true`)
 	if auth.ApiAddress != "https://authserver.mojang.com" {
 		l.flag = append(l.flag, `-Dauthlibinjector.side=client`)
-		l.flag = append(l.flag, `-javaagent:{`+download.Authlibpath+`}={`+auth.ApiAddress+`}`)
+		l.flag = append(l.flag, `-javaagent:{`+auth.Authlibpath+`}={`+auth.ApiAddress+`}`)
 	}
 	if g.Flag != nil {
 		l.flag = append(l.flag, g.Flag...)
