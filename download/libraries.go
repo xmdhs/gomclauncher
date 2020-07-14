@@ -51,15 +51,10 @@ func Newlibraries(b []byte, typee string) (Libraries, error) {
 	url = l.AssetIndex.URL
 	id = l.AssetIndex.ID
 	path := launcher.Minecraft + "/assets/indexes/" + id + ".json"
-	_, err = os.Stat(path)
-	if err != nil {
-		if os.IsNotExist(err) {
-			err := assetsjson(url, path, typee)
-			if err != nil {
-				return Libraries{}, err
-			}
-		} else {
-			panic(err)
+	if !ver(path, l.AssetIndex.Sha1) {
+		err := assetsjson(url, path, typee, l.AssetIndex.Sha1)
+		if err != nil {
+			return Libraries{}, err
 		}
 	}
 	bb, err := ioutil.ReadFile(path)
@@ -196,7 +191,7 @@ func Aget(aurl string) (*http.Response, *time.Timer, error) {
 	return reps, timer, nil
 }
 
-func assetsjson(url, path, typee string) error {
+func assetsjson(url, path, typee, sha1 string) error {
 	var err error
 	f := auto(typee)
 	for i := 0; i < 4; i++ {
@@ -207,6 +202,11 @@ func assetsjson(url, path, typee string) error {
 		if err != nil {
 			f = fail(f)
 			fmt.Println("下载失败，重试", err)
+			continue
+		}
+		if !ver(path, sha1) {
+			f = fail(f)
+			fmt.Println("文件效验失败，重试", err)
 			continue
 		}
 		break
