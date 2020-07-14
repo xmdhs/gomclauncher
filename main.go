@@ -18,6 +18,9 @@ import (
 )
 
 func main() {
+	f.Yggdrasil = "mcskin.littleservice.cn"
+	f.Email = "mopemopes@icloud.com"
+	f.Password = "C7JWjh5xQEr2gJM"
 	if f.Proxy != "" {
 		proxy, err := url.Parse(f.Proxy)
 		if err != nil {
