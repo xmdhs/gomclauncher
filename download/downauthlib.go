@@ -3,11 +3,13 @@ package download
 import (
 	"errors"
 	"fmt"
+	"math/rand"
+	"time"
 
 	"github.com/xmdhs/gomclauncher/launcher"
 )
 
-var authliburls = []string{"https://authlib-injector.yushi.moe/artifact/27/authlib-injector-1.1.27-5ef5f8e.jar", "https://bmclapi2.bangbang93.com/mirrors/authlib-injector/artifact/27/authlib-injector-1.1.27-5ef5f8e.jar"}
+var authliburls = []string{"https://authlib-injector.yushi.moe/artifact/27/authlib-injector-1.1.27-5ef5f8e.jar", "https://download.mcbbs.net/mirrors/authlib-injector/artifact/27/authlib-injector-1.1.27-5ef5f8e.jar"}
 var Authlibpath = launcher.Minecraft + `/libraries/` + `moe/yushi/authlibinjector/` + "authlib-injector/" + Authlibversion + "/authlib-injector-" + Authlibversion + ".jar"
 
 const authlibsha1 = "EBE6CEFF486816E060356B9657A9263616AFB8C1"
@@ -40,6 +42,7 @@ func Downauthlib() error {
 
 func randurl(aurl string) string {
 	var url string
+	r := rand.New(rand.NewSource(time.Now().Unix()))
 	for {
 		i := r.Intn(len(authliburls) - 1)
 		url = authliburls[i]

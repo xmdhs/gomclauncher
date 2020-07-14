@@ -25,6 +25,7 @@ type Flag struct {
 	Proxy       string
 	Independent bool
 	Outmsg      bool
+	Yggdrasil   string
 }
 
 func (f Flag) D() {

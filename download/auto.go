@@ -50,8 +50,7 @@ func auto(typee string) string {
 				typeweight.Store(v, 5)
 			}
 		}
-		s := rand.NewSource(time.Now().Unix())
-		r = rand.New(s)
+		r = rand.New(rand.NewSource(time.Now().Unix()))
 	})
 	i := 0
 	t := make([]string, 0, 4)

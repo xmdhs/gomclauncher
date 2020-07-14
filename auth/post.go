@@ -23,8 +23,10 @@ func init() {
 	}
 }
 
+var ApiAddress string = "https://authserver.mojang.com"
+
 func post(endpoint string, Payload []byte) ([]byte, error, int) {
-	h, err := http.NewRequest("POST", "https://authserver.mojang.com/"+endpoint, bytes.NewReader(Payload))
+	h, err := http.NewRequest("POST", ApiAddress+"/"+endpoint, bytes.NewReader(Payload))
 	if err != nil {
 		return nil, err, 0
 	}
