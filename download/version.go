@@ -17,27 +17,33 @@ func Getversionlist(atype string) (*Version, error) {
 	var b []byte
 	f := auto(atype)
 	for i := 0; i < 4; i++ {
-		if i == 3 {
-			return nil, err
-		}
-		rep, _, err = Aget(source(`https://launchermeta.mojang.com/mc/game/version_manifest.json`, f))
-		if err != nil {
-			if rep != nil {
-				rep.Body.Close()
+		if err := func() error {
+			if i == 3 {
+				return err
 			}
-			fmt.Println("获取版本列表失败，重试", err)
-			f = fail(f)
-			continue
+			rep, _, err = Aget(source(`https://launchermeta.mojang.com/mc/game/version_manifest.json`, f))
+			if rep != nil {
+				defer rep.Body.Close()
+			}
+			if err != nil {
+				fmt.Println("获取版本列表失败，重试", err)
+				f = fail(f)
+				return nil
+			}
+			b, err = ioutil.ReadAll(rep.Body)
+			if err != nil {
+				fmt.Println("获取版本列表失败，重试", err)
+				f = fail(f)
+				return nil
+			}
+			return errors.New("")
+		}(); err != nil {
+			if err.Error() == "" {
+				break
+			} else {
+				return nil, err
+			}
 		}
-		b, err = ioutil.ReadAll(rep.Body)
-		if err != nil {
-			rep.Body.Close()
-			fmt.Println("获取版本列表失败，重试", err)
-			f = fail(f)
-			continue
-		}
-		rep.Body.Close()
-		break
 	}
 	v := Version{}
 	err = json.Unmarshal(b, &v)

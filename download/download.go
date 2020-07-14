@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strings"
 
 	"github.com/xmdhs/gomclauncher/launcher"
 )
@@ -62,7 +63,7 @@ func ver(path, hash string) bool {
 			return false
 		}
 		h := hex.EncodeToString(m.Sum(nil))
-		if h == hash {
+		if strings.ToTitle(h) == strings.ToTitle(hash) {
 			return true
 		}
 		return false
