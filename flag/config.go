@@ -49,7 +49,7 @@ func saveconfig() {
 }
 
 func (c Config) setonline(email, pass string) error {
-	if _, ok := gmlconfig[email]; ok && pass == "" {
+	if _, ok := gmlconfig[auth.ApiAddress][email]; ok && pass == "" {
 		return errors.New("have")
 	}
 	if c.ClientToken == "" {
@@ -65,13 +65,12 @@ func (c Config) setonline(email, pass string) error {
 	aconfig.UUID = a.ID
 	aconfig.AccessToken = a.AccessToken
 	aconfig.Userproperties = a.Userproperties
-	aconfig.Authlib = auth.ApiAddress
-	gmlconfig[email] = aconfig
+	gmlconfig[auth.ApiAddress][email] = aconfig
 	saveconfig()
 	return nil
 }
 
-type Gmlconfig map[string]Config
+type Gmlconfig map[string]map[string]Config
 
 type Config struct {
 	Name           string
@@ -80,5 +79,4 @@ type Config struct {
 	Userproperties string
 	AccessToken    string
 	Time           int64
-	Authlib        string
 }
