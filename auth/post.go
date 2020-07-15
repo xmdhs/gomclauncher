@@ -40,7 +40,11 @@ func post(endpoint string, Payload []byte) ([]byte, error, int) {
 	h.Header.Set("Content-Type", "application/json")
 	h.Header.Set("Accept", "*/*")
 	h.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36")
-	rep, err := HttpClient.Do(h)
+	c := &http.Client{
+		Timeout:   5 * time.Second,
+		Transport: Transport,
+	}
+	rep, err := c.Do(h)
 	if rep != nil {
 		defer rep.Body.Close()
 	}
