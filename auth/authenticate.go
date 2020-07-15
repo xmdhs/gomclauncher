@@ -59,7 +59,7 @@ func Authenticate(username, password, clientToken string) (Auth, error) {
 
 func selectProfile(a []AuthenticateResponseAvailableProfile) SElectedProfile {
 	if Name == "" {
-		fmt.Println("请选择一个角色，通过 -yggdrasilname 参数设置")
+		fmt.Println("请选择一个角色，通过设置 -yggdrasilname 参数指定")
 		for _, p := range a {
 			fmt.Println(p.Name)
 		}

@@ -16,6 +16,8 @@
 
 首次外置登录 `./gml-linux -run 1.16.1 -email example@example.com -password example -yggdrasil example.com` 无需完整的 api 地址，启动器会按照协议自动补全。
 
+第二次 `./gml-linux -run 1.16.1 -email example@example.com -yggdrasil example.com` 
+
 自定义启动 jvm 参数 `./gml-linux -run 1.16.1 -username xmdhs -flag "-XX:+AggressiveOpts -XX:+UseCompressedOops"`
 
 下载游戏并指定镜像下载源并设置使用的协程数为 32 `./gml-linux -downver 1.16.1 -type=mcbbs -int 32`
