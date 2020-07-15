@@ -46,6 +46,9 @@ func main() {
 		f.Outmsg = false
 		f.D()
 	}
+	if list {
+		aflag.Listname()
+	}
 	if yggdrasilname != "" {
 		auth.Name = yggdrasilname
 	}
@@ -78,6 +81,7 @@ var f aflag.Flag
 var (
 	credit        bool
 	update        bool
+	list          bool
 	yggdrasilname string
 )
 
@@ -92,7 +96,7 @@ func init() {
 	}
 	f.Minecraftpath = str + "/" + launcher.Minecraft
 	flag.StringVar(&f.Name, "username", "", `用户名`)
-	flag.StringVar(&f.Email, "email", "", `正版/外置登录帐号邮箱，需要正版登录时设置此项，然后无需设置 username`)
+	flag.StringVar(&f.Email, "email", "", `正版/外置登录帐号邮箱，需要正版/外置登录时设置此项，然后无需设置 username`)
 	flag.StringVar(&f.Password, "password", "", `正版/外置登录帐号密码，只需第一次设置，第二次无需使用此参数。`)
 	flag.StringVar(&f.Download, "downver", "", "尝试下载的版本")
 	flag.StringVar(&f.Verlist, "verlist", "", "显示所有可下载的版本，例如 release，使用 ? 可查看所有可选参数。")
@@ -110,6 +114,7 @@ func init() {
 	flag.BoolVar(&launcher.Log, "log", false, "是否输出游戏日志")
 	flag.StringVar(&f.Yggdrasil, "yggdrasil", "", "外置登录地址。(authlib-injector)")
 	flag.StringVar(&yggdrasilname, "yggdrasilname", "", "外置登录选择的角色名")
+	flag.BoolVar(&list, "list", false, "查看所有保存的正版/外置登录账号")
 	flag.Parse()
 }
 

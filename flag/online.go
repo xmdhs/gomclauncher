@@ -63,3 +63,19 @@ func (f *Flag) Aonline() {
 	f.Name = gmlconfig[auth.ApiAddress][f.Email].Name
 	f.UUID = gmlconfig[auth.ApiAddress][f.Email].UUID
 }
+
+func Listname() {
+	fmt.Println("-----------------")
+	for k, v := range gmlconfig {
+		if k == "https://authserver.mojang.com" {
+			fmt.Println("正版登录")
+		} else {
+			fmt.Println("外置登录，api 地址", k)
+		}
+		for k, v := range v {
+			fmt.Println("邮箱:", k)
+			fmt.Println("用户名:", v.Name)
+		}
+		fmt.Println("-----------------")
+	}
+}
