@@ -16,7 +16,8 @@ func Getauthlibapi(api string) (apiaddress string, err error) {
 		api = `https://` + api
 	}
 	c := &http.Client{
-		Timeout: 5 * time.Second,
+		Timeout:   5 * time.Second,
+		Transport: Transport,
 	}
 	req, err := http.NewRequest("GET", api, nil)
 	if err != nil {
@@ -50,7 +51,8 @@ type Yggdrasil struct {
 
 func checkapi(url string) error {
 	c := &http.Client{
-		Timeout: 5 * time.Second,
+		Timeout:   5 * time.Second,
+		Transport: Transport,
 	}
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
