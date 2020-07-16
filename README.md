@@ -20,6 +20,8 @@
 
 查看所有保存的正版/外置登录账号 `./gml-linux -list`
 
+删除保存的正版/外置登录账号 `./gml-linux -run 1.16.1 -email example@example.com -yggdrasil example.com -remove` 
+
 自定义启动 jvm 参数 `./gml-linux -run 1.16.1 -username xmdhs -flag "-XX:+AggressiveOpts -XX:+UseCompressedOops"`
 
 下载游戏并指定镜像下载源并设置使用的协程数为 32 `./gml-linux -downver 1.16.1 -type=mcbbs -int 32`

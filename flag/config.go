@@ -64,7 +64,6 @@ func (c Config) setonline(email, pass string) error {
 	aconfig.Name = a.Username
 	aconfig.UUID = a.ID
 	aconfig.AccessToken = a.AccessToken
-	aconfig.Userproperties = a.Userproperties
 	gmlconfig[auth.ApiAddress][email] = aconfig
 	saveconfig()
 	return nil

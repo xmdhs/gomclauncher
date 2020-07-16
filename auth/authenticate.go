@@ -87,7 +87,6 @@ type Auth struct {
 	ClientToken     string
 	ID              string
 	AccessToken     string
-	Userproperties  string
 	selectedProfile SElectedProfile
 }
 

@@ -55,6 +55,9 @@ func main() {
 	if f.Yggdrasil != "" {
 		f.Authlib()
 	}
+	if remove {
+		f.Remove()
+	}
 	if f.Email != "" {
 		f.Aonline()
 	} else {
@@ -83,6 +86,7 @@ var (
 	update        bool
 	list          bool
 	yggdrasilname string
+	remove        bool
 )
 
 func init() {
@@ -115,6 +119,7 @@ func init() {
 	flag.StringVar(&f.Yggdrasil, "yggdrasil", "", "外置登录地址。(authlib-injector)")
 	flag.StringVar(&yggdrasilname, "yggdrasilname", "", "外置登录选择的角色名")
 	flag.BoolVar(&list, "list", false, "查看所有保存的正版/外置登录账号")
+	flag.BoolVar(&remove, "remove", false, "删除保存的账号")
 	flag.Parse()
 }
 
