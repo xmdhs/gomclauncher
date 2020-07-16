@@ -58,7 +58,6 @@ func (f *Flag) Aonline() {
 	if gmlconfig[auth.ApiAddress][f.Email].Name == "" {
 		panic("请创建角色")
 	}
-	f.Userproperties = gmlconfig[auth.ApiAddress][f.Email].Userproperties
 	f.AccessToken = gmlconfig[auth.ApiAddress][f.Email].AccessToken
 	f.Name = gmlconfig[auth.ApiAddress][f.Email].Name
 	f.UUID = gmlconfig[auth.ApiAddress][f.Email].UUID

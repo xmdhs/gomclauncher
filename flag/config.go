@@ -72,10 +72,9 @@ func (c Config) setonline(email, pass string) error {
 type Gmlconfig map[string]map[string]Config
 
 type Config struct {
-	Name           string
-	UUID           string
-	ClientToken    string
-	Userproperties string
-	AccessToken    string
-	Time           int64
+	Name        string
+	UUID        string
+	ClientToken string
+	AccessToken string
+	Time        int64
 }
