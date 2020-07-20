@@ -11,7 +11,7 @@ func TestGetauthlibapi(t *testing.T) {
 		t.Fatal(err)
 	}
 	if api != `https://littleskin.cn/api/yggdrasil` {
-		t.Fail()
+		t.Fatal(api)
 	}
 	fmt.Println(api)
 	api, err = Getauthlibapi(`baidu.com`)
