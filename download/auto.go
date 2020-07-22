@@ -29,8 +29,8 @@ func fail(typee string) string {
 var (
 	typeweight sync.Map
 	one        sync.Once
-	r          *rand.Rand
 	ttypes     []string
+	t          int64
 )
 
 func auto(typee string) string {
@@ -50,8 +50,9 @@ func auto(typee string) string {
 				typeweight.Store(v, 5)
 			}
 		}
-		r = rand.New(rand.NewSource(time.Now().Unix()))
+		t = time.Now().Unix()
 	})
+	r := rand.New(rand.NewSource(t))
 	i := 0
 	t := make([]string, 0, 4)
 	b := make([]int, 0, 4)
