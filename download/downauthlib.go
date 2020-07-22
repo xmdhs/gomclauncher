@@ -10,10 +10,6 @@ import (
 	"github.com/xmdhs/gomclauncher/auth"
 )
 
-var authliburls = []string{"https://authlib-injector.yushi.moe/artifact/27/authlib-injector-1.1.27-5ef5f8e.jar", "https://download.mcbbs.net/mirrors/authlib-injector/artifact/27/authlib-injector-1.1.27-5ef5f8e.jar"}
-
-const authlibsha1 = "EBE6CEFF486816E060356B9657A9263616AFB8C1"
-
 func Downauthlib() error {
 	minecraft := "minecraft"
 	if runtime.GOOS == "windows" {
@@ -21,7 +17,7 @@ func Downauthlib() error {
 	}
 	url := randurl("")
 	var path = minecraft + `/libraries/` + `moe/yushi/authlibinjector/` + "authlib-injector/" + auth.Authlibversion + "/authlib-injector-" + auth.Authlibversion + ".jar"
-	if ver(path, authlibsha1) {
+	if ver(path, auth.Authlibsha1) {
 		return nil
 	}
 	for i := 0; i < 5; i++ {
@@ -34,7 +30,7 @@ func Downauthlib() error {
 			url = randurl(url)
 			continue
 		}
-		if !ver(path, authlibsha1) {
+		if !ver(path, auth.Authlibsha1) {
 			fmt.Println("authlib 效验出错，重试")
 			url = randurl(url)
 			continue
@@ -48,8 +44,8 @@ func randurl(aurl string) string {
 	var url string
 	r := rand.New(rand.NewSource(time.Now().Unix()))
 	for {
-		i := r.Intn(len(authliburls) - 1)
-		url = authliburls[i]
+		i := r.Intn(len(auth.Authliburls) - 1)
+		url = auth.Authliburls[i]
 		if url != aurl {
 			break
 		}

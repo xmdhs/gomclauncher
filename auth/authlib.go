@@ -9,7 +9,12 @@ import (
 	"time"
 )
 
-const Authlibversion = "1.1.27-5ef5f8e"
+const (
+	Authlibversion = "1.1.27-5ef5f8e"
+	Authlibsha1    = "EBE6CEFF486816E060356B9657A9263616AFB8C1"
+)
+
+var Authliburls = []string{"https://authlib-injector.yushi.moe/artifact/27/authlib-injector-1.1.27-5ef5f8e.jar", "https://download.mcbbs.net/mirrors/authlib-injector/artifact/27/authlib-injector-1.1.27-5ef5f8e.jar"}
 
 func Getauthlibapi(api string) (apiaddress string, err error) {
 	if !strings.Contains(strings.ToTitle(api), strings.ToTitle("http")) {
