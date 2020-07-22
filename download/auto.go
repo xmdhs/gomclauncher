@@ -30,8 +30,13 @@ var (
 	typeweight sync.Map
 	one        sync.Once
 	ttypes     []string
-	t          int64
+	r          arand
 )
+
+type arand struct {
+	*rand.Rand
+	*sync.Mutex
+}
 
 func auto(typee string) string {
 	if typee != "" && !strings.Contains(typee, "|") {
@@ -50,9 +55,9 @@ func auto(typee string) string {
 				typeweight.Store(v, 5)
 			}
 		}
-		t = time.Now().Unix()
+		r.Rand = rand.New(rand.NewSource(time.Now().Unix()))
+		r.Mutex = &sync.Mutex{}
 	})
-	r := rand.New(rand.NewSource(t))
 	i := 0
 	t := make([]string, 0, 4)
 	b := make([]int, 0, 4)
@@ -65,7 +70,9 @@ func auto(typee string) string {
 			}
 			return true
 		})
+	r.Lock()
 	a := r.Intn(i) + 1
+	r.Unlock()
 	for i, v := range b {
 		a = a - v
 		if a <= 0 {
