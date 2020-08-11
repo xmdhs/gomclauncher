@@ -159,10 +159,6 @@ func source(url, types string) string {
 		url = strings.ReplaceAll(url, `resources.download.minecraft.net`, `download.mcbbs.net/assets`)
 		url = strings.ReplaceAll(url, `libraries.minecraft.net`, `download.mcbbs.net/maven`)
 		url = strings.ReplaceAll(url, `files.minecraftforge.net/maven`, `download.mcbbs.net/maven`)
-	case "tss":
-		url = strings.ReplaceAll(url, `launcher.mojang.com`, `mc.mirrors.tmysam.top`)
-		url = strings.ReplaceAll(url, `resources.download.minecraft.net`, `mcres.mirrors.tmysam.top`)
-		url = strings.ReplaceAll(url, `libraries.minecraft.net`, `mclib.mirrors.tmysam.top`)
 	}
 	if strings.Contains(types, "|") {
 		sou := rand.NewSource(time.Now().UnixNano())

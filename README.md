@@ -36,5 +36,4 @@
 
 ## 使用项目
 BMCLAPI https://bmclapidoc.bangbang93.com/  
-TSS Mirror https://www.mcbbs.net/thread-932755-1-1.html  
 authlib-injector https://github.com/yushijinhun/authlib-injector  

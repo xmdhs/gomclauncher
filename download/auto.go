@@ -47,7 +47,6 @@ func auto(typee string) string {
 			typeweight.Store("vanilla", 5)
 			typeweight.Store("bmclapi", 6)
 			typeweight.Store("mcbbs", 9)
-			typeweight.Store("tss", 12)
 		} else {
 			s := strings.Split(typee, "|")
 			ttypes = s

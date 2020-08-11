@@ -125,7 +125,6 @@ func init() {
 
 func credits() {
 	fmt.Println(`使用了 bmclapi 作为镜像下载源，地址 https://bmclapidoc.bangbang93.com/`)
-	fmt.Println(`使用了 TSS  作为镜像下载源，地址 https://www.mcbbs.net/thread-932755-1-1.html`)
 	fmt.Println(`使用了 authlib-injector，地址 https://github.com/yushijinhun/authlib-injector`)
 }
 
