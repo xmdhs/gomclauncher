@@ -43,7 +43,7 @@ func randurl(aurl string) string {
 	var url string
 	r := rand.New(rand.NewSource(time.Now().Unix()))
 	for {
-		i := r.Intn(len(auth.Authliburls) - 1)
+		i := r.Intn(len(auth.Authliburls))
 		url = auth.Authliburls[i]
 		if url != aurl {
 			break
