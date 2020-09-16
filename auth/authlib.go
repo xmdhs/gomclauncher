@@ -11,11 +11,14 @@ import (
 )
 
 const (
-	Authlibversion = "1.1.27-5ef5f8e"
-	Authlibsha1    = "EBE6CEFF486816E060356B9657A9263616AFB8C1"
+	Authlibversion = "1.1.33"
+	Authlibsha1    = "c04f50955e782ad5f0a3ba88117312fc71b08dd6"
 )
 
-var Authliburls = []string{"https://authlib-injector.yushi.moe/artifact/27/authlib-injector-1.1.27-5ef5f8e.jar", "https://download.mcbbs.net/mirrors/authlib-injector/artifact/27/authlib-injector-1.1.27-5ef5f8e.jar"}
+var Authliburls = []string{
+	"https://download.mcbbs.net/mirrors/authlib-injector/artifact/33/authlib-injector-1.1.33.jar",
+	"https://authlib-injector.yushi.moe/artifact/33/authlib-injector-1.1.33.jar",
+}
 
 func Getauthlibapi(api string) (apiaddress string, err error) {
 	if !strings.Contains(strings.ToTitle(api), strings.ToTitle("http")) {
