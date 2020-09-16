@@ -3,6 +3,7 @@ package flag
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -46,15 +47,15 @@ func (f Flag) Arun() {
 	f.Jsonbyte = b
 	err = f.Run115()
 	if err != nil {
-		if err.Error() == "json not exist" {
+		if errors.Is(err, os.ErrNotExist) {
 			fmt.Println("请先安装对应的原版")
 			os.Exit(0)
 		}
-		if err.Error() == "json err" {
+		if errors.Is(err, launcher.JsonErr) {
 			fmt.Println("json 错误，可尝试到 " + launcher.Minecraft + "/versions 中删除对应的 json 文件")
 			os.Exit(0)
 		}
-		if err.Error() == "json not true" {
+		if errors.Is(err, launcher.JsonNorTrue) {
 			fmt.Println("此版本 json 有误")
 			os.Exit(0)
 		}

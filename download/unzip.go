@@ -2,6 +2,7 @@ package download
 
 import (
 	"archive/zip"
+	"fmt"
 	"io"
 	"os"
 	"runtime"
@@ -58,7 +59,7 @@ func (l Libraries) Unzip(i int) error {
 				return l.unzipnative(natives)
 			}
 		case err := <-e:
-			return err
+			return fmt.Errorf("Unzip: %w", err)
 		}
 	}
 }
@@ -69,7 +70,7 @@ func (l Libraries) unzipnative(n []string) error {
 	p := launcher.Minecraft + `/versions/` + l.librarie.ID + `/natives/`
 	err := os.MkdirAll(p, 0777)
 	if err != nil {
-		return err
+		return fmt.Errorf("unzipnative: %w", err)
 	}
 	go func() {
 		for _, v := range n {
@@ -92,7 +93,7 @@ func (l Libraries) unzipnative(n []string) error {
 				return nil
 			}
 		case err := <-e:
-			return err
+			return fmt.Errorf("unzipnative: %w", err)
 		}
 	}
 }
@@ -135,28 +136,28 @@ func swichnatives(l launcher.LibraryX115) (path, sha1, url string) {
 func DeCompress(zipFile, dest string) error {
 	reader, err := zip.OpenReader(zipFile)
 	if err != nil {
-		return err
+		return fmt.Errorf("DeCompress: %w", err)
 	}
 	defer reader.Close()
 	for _, file := range reader.File {
 		if !strings.Contains(strings.ToTitle(file.Name), strings.ToTitle("META-INF")) && (strings.HasSuffix(strings.ToTitle(file.Name), strings.ToTitle("dll")) || strings.HasSuffix(strings.ToTitle(file.Name), strings.ToTitle("dylib")) || strings.HasSuffix(strings.ToTitle(file.Name), strings.ToTitle("so"))) {
 			rc, err := file.Open()
 			if err != nil {
-				return err
+				return fmt.Errorf("DeCompress: %w", err)
 			}
 			defer rc.Close()
 			filename := dest + file.Name
 			if err != nil {
-				return err
+				return fmt.Errorf("DeCompress: %w", err)
 			}
 			w, err := os.Create(filename)
 			if err != nil {
-				return err
+				return fmt.Errorf("DeCompress: %w", err)
 			}
 			defer w.Close()
 			_, err = io.Copy(w, rc)
 			if err != nil {
-				return err
+				return fmt.Errorf("DeCompress: %w", err)
 			}
 			w.Close()
 			rc.Close()

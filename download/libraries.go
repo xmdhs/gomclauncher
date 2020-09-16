@@ -29,23 +29,23 @@ func Newlibraries(b []byte, typee string) (Libraries, error) {
 	l := launcher.LauncherjsonX115{}
 	err := json.Unmarshal(b, &mod)
 	if err != nil {
-		return Libraries{}, err
+		return Libraries{}, fmt.Errorf("Newlibraries: %w", err)
 	}
 	if mod.InheritsFrom != "" {
 		b, err := ioutil.ReadFile(launcher.Minecraft + `/versions/` + mod.InheritsFrom + "/" + mod.InheritsFrom + ".json")
 		if err != nil {
-			return Libraries{}, err
+			return Libraries{}, fmt.Errorf("Newlibraries: %w", err)
 		}
 		err = json.Unmarshal(b, &l)
 		if err != nil {
-			return Libraries{}, err
+			return Libraries{}, fmt.Errorf("Newlibraries: %w", err)
 		}
 		modlibraries2(mod.Libraries, &l)
 		l.ID = mod.ID
 	} else {
 		err = json.Unmarshal(b, &l)
 		if err != nil {
-			return Libraries{}, err
+			return Libraries{}, fmt.Errorf("Newlibraries: %w", err)
 		}
 	}
 	url = l.AssetIndex.URL
@@ -54,7 +54,7 @@ func Newlibraries(b []byte, typee string) (Libraries, error) {
 	if !ver(path, l.AssetIndex.Sha1) {
 		err := assetsjson(url, path, typee, l.AssetIndex.Sha1)
 		if err != nil {
-			return Libraries{}, err
+			return Libraries{}, fmt.Errorf("Newlibraries: %w", err)
 		}
 	}
 	bb, err := ioutil.ReadFile(path)
@@ -64,7 +64,7 @@ func Newlibraries(b []byte, typee string) (Libraries, error) {
 	a := assets{}
 	err = json.Unmarshal(bb, &a)
 	if err != nil {
-		return Libraries{}, err
+		return Libraries{}, fmt.Errorf("Newlibraries: %w", err)
 	}
 	return Libraries{
 		librarie:   l,
@@ -87,7 +87,7 @@ func get(u, path string) error {
 		defer reps.Body.Close()
 	}
 	if err != nil {
-		return err
+		return fmt.Errorf("get: %w", err)
 	}
 	_, err = os.Stat(path)
 
@@ -103,13 +103,13 @@ func get(u, path string) error {
 	bw := bufio.NewWriter(f)
 	defer f.Close()
 	if err != nil {
-		return err
+		return fmt.Errorf("get: %w", err)
 	}
 	for {
 		timer.Reset(5 * time.Second)
 		i, err := io.CopyN(bw, reps.Body, 100000)
 		if err != nil && err != io.EOF {
-			return err
+			return fmt.Errorf("get: %w", err)
 		}
 		if i == 0 {
 			break
@@ -117,7 +117,7 @@ func get(u, path string) error {
 	}
 	err = bw.Flush()
 	if err != nil {
-		return err
+		return fmt.Errorf("get: %w", err)
 	}
 	return nil
 }
@@ -176,13 +176,13 @@ func Aget(aurl string) (*http.Response, *time.Timer, error) {
 		cancel()
 	})
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, fmt.Errorf("Aget: %w", err)
 	}
 	rep.Header.Set("Accept", "*/*")
 	rep.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36")
 	reps, err := auth.HttpClient.Do(rep)
 	if err != nil {
-		return reps, nil, err
+		return reps, nil, fmt.Errorf("Aget: %w", err)
 	}
 	return reps, timer, nil
 }
@@ -197,12 +197,12 @@ func assetsjson(url, path, typee, sha1 string) error {
 		err = get(source(url, f), path)
 		if err != nil {
 			f = fail(f)
-			fmt.Println("下载失败，重试", err)
+			fmt.Println("下载失败，重试", fmt.Errorf("assetsjson: %w", err))
 			continue
 		}
 		if !ver(path, sha1) {
 			f = fail(f)
-			fmt.Println("文件效验失败，重试", err)
+			fmt.Println("文件效验失败，重试", fmt.Errorf("assetsjson: %w", err))
 			continue
 		}
 		break

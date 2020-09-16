@@ -3,6 +3,7 @@ package auth
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -26,7 +27,7 @@ func Getauthlibapi(api string) (apiaddress string, err error) {
 	}
 	req, err := http.NewRequest("GET", api, nil)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("Getauthlibapi: %w", err)
 	}
 	req.Header.Set("Accept", "*/*")
 	req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36")
@@ -35,7 +36,7 @@ func Getauthlibapi(api string) (apiaddress string, err error) {
 		defer reps.Body.Close()
 	}
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("Getauthlibapi: %w", err)
 	}
 	defer func() {
 		err = checkapi(apiaddress)
@@ -63,7 +64,7 @@ func checkapi(url string) error {
 	}
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		return err
+		return fmt.Errorf("checkapi: %w", err)
 	}
 	req.Header.Set("Accept", "*/*")
 	req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36")
@@ -72,19 +73,21 @@ func checkapi(url string) error {
 		defer reps.Body.Close()
 	}
 	if err != nil {
-		return err
+		return fmt.Errorf("checkapi: %w", err)
 	}
 	b, err := ioutil.ReadAll(reps.Body)
 	if err != nil {
-		return err
+		return fmt.Errorf("checkapi: %w", err)
 	}
 	var y Yggdrasil
 	err = json.Unmarshal(b, &y)
 	if err != nil {
-		return err
+		return fmt.Errorf("checkapi: %w", err)
 	}
 	if y.SignaturePublickey == "" {
-		return errors.New("json not true")
+		return JsonNotTrue
 	}
-	return err
+	return nil
 }
+
+var JsonNotTrue = errors.New("json not true")

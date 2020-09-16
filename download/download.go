@@ -46,7 +46,7 @@ func (l Libraries) Downassets(i int, c chan int) error {
 				return nil
 			}
 		case err := <-e:
-			return err
+			return fmt.Errorf("Downassets: %w", err)
 		}
 	}
 }
@@ -114,10 +114,12 @@ func (l Libraries) Downlibrarie(i int, c chan int) error {
 				return nil
 			}
 		case err := <-e:
-			return err
+			return fmt.Errorf("Downlibrarie: %w", err)
 		}
 	}
 }
+
+var FileDownLoadFail = errors.New("file download fail")
 
 func (l Libraries) Downjar(version string) error {
 	path := launcher.Minecraft + `/versions/` + version + "/" + version + ".jar"
@@ -127,11 +129,11 @@ func (l Libraries) Downjar(version string) error {
 	t := auto(l.typee)
 	for i := 0; i < 4; i++ {
 		if i == 3 {
-			return errors.New("file download fail")
+			return FileDownLoadFail
 		}
 		err := get(source(l.librarie.Downloads.Client.URL, t), path)
 		if err != nil {
-			fmt.Println("似乎是网络问题，重试", source(l.librarie.Downloads.Client.URL, t), err)
+			fmt.Println("似乎是网络问题，重试", source(l.librarie.Downloads.Client.URL, t), fmt.Errorf("Downjar: %w", err))
 			t = fail(t)
 			continue
 		}
@@ -159,7 +161,7 @@ func (d downinfo) down() {
 	f := auto(d.typee)
 	for i := 0; i < 7; i++ {
 		if i == 6 {
-			d.e <- errors.New("file download fail")
+			d.e <- FileDownLoadFail
 			break
 		}
 		err := get(source(d.url, f), d.path)

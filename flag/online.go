@@ -1,6 +1,7 @@
 package flag
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"time"
@@ -19,7 +20,7 @@ func (f *Flag) Aonline() {
 	}
 	err := gmlconfig[auth.ApiAddress][f.Email].setonline(f.Email, f.Password)
 	if err != nil {
-		if err.Error() == "have" {
+		if errors.Is(err, HaveProfiles) {
 			a := auth.Auth{
 				AccessToken: gmlconfig[auth.ApiAddress][f.Email].AccessToken,
 				ClientToken: gmlconfig[auth.ApiAddress][f.Email].ClientToken,
@@ -30,7 +31,7 @@ func (f *Flag) Aonline() {
 				if err := auth.Validate(a); err != nil {
 					err = auth.Refresh(&a)
 					if err != nil {
-						if err.Error() == "not ok" {
+						if errors.Is(err, auth.NotOk) {
 							fmt.Println("请尝试重新登录帐号")
 							os.Exit(0)
 						} else {
@@ -48,7 +49,7 @@ func (f *Flag) Aonline() {
 					saveconfig()
 				}
 			}
-		} else if err.Error() == "not ok" {
+		} else if errors.Is(err, auth.NotOk) {
 			fmt.Println("账户名或密码错误")
 			os.Exit(0)
 		} else {

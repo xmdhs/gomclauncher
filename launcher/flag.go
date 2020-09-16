@@ -3,6 +3,7 @@ package launcher
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"strings"
@@ -37,7 +38,7 @@ func (g *Gameinfo) Run115() error {
 	creatlauncherprofiles(g)
 	l, err := g.Modjson()
 	if err != nil {
-		return err
+		return fmt.Errorf("Run115: %w", err)
 	}
 	l.flag = append(l.flag, `-Dminecraft.client.jar=`+g.Minecraftpath+`/versions/`+l.json.ID+`/`+l.json.ID+`.jar`)
 	l.flag = append(l.flag, `-XX:+UseG1GC`)
@@ -55,7 +56,7 @@ func (g *Gameinfo) Run115() error {
 	}
 	err = g.argumentsjvm(l)
 	if err != nil {
-		return err
+		return fmt.Errorf("Run115: %w", err)
 	}
 	l.flag = append(l.flag, l.json.MainClass)
 	g.argumentsGame(l)
@@ -79,6 +80,8 @@ func creatlauncherprofiles(g *Gameinfo) {
 	}
 }
 
+var JsonErr = errors.New("json err")
+
 func (g *Gameinfo) Modjson() (*launcher1155, error) {
 	g.flag = make(map[string]string)
 	j := LauncherjsonX115{}
@@ -86,19 +89,19 @@ func (g *Gameinfo) Modjson() (*launcher1155, error) {
 	var err error
 	err = json.Unmarshal(g.Jsonbyte, &mod)
 	if err != nil {
-		return nil, errors.New("json err")
+		return nil, JsonErr
 	}
 	if mod.InheritsFrom != "" {
 		b, err := ioutil.ReadFile(g.Minecraftpath + `/versions/` + mod.InheritsFrom + "/" + mod.InheritsFrom + ".json")
 		if err != nil {
 			if os.IsNotExist(err) {
-				return nil, errors.New("json not exist")
+				return nil, err
 			}
 			panic(err)
 		}
 		err = json.Unmarshal(b, &j)
 		if err != nil {
-			return nil, errors.New("json err")
+			return nil, JsonErr
 		}
 		for _, v := range mod.Libraries {
 			l := g.Libraries2LibraryX115(v)
@@ -117,7 +120,7 @@ func (g *Gameinfo) Modjson() (*launcher1155, error) {
 	} else {
 		err = json.Unmarshal(g.Jsonbyte, &j)
 		if err != nil {
-			return nil, errors.New("json err")
+			return nil, JsonErr
 		}
 		if j.MinecraftArguments != "" {
 			j.Arguments.Game = append(j.Arguments.Game, MinecraftArguments2jvm(j.MinecraftArguments)...)

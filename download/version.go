@@ -19,20 +19,20 @@ func Getversionlist(atype string) (*Version, error) {
 	for i := 0; i < 4; i++ {
 		if err := func() error {
 			if i == 3 {
-				return err
+				return fmt.Errorf("Getversionlist: %w", err)
 			}
 			rep, _, err = Aget(source(`https://launchermeta.mojang.com/mc/game/version_manifest.json`, f))
 			if rep != nil {
 				defer rep.Body.Close()
 			}
 			if err != nil {
-				fmt.Println("获取版本列表失败，重试", err)
+				fmt.Println("获取版本列表失败，重试", fmt.Errorf("Getversionlist: %w", err))
 				f = fail(f)
 				return nil
 			}
 			b, err = ioutil.ReadAll(rep.Body)
 			if err != nil {
-				fmt.Println("获取版本列表失败，重试", err)
+				fmt.Println("获取版本列表失败，重试", fmt.Errorf("Getversionlist: %w", err))
 				f = fail(f)
 				return nil
 			}
@@ -41,14 +41,17 @@ func Getversionlist(atype string) (*Version, error) {
 			if err.Error() == "" {
 				break
 			} else {
-				return nil, err
+				return nil, fmt.Errorf("Getversionlist: %w", err)
 			}
 		}
 	}
 	v := Version{}
 	err = json.Unmarshal(b, &v)
 	v.atype = atype
-	return &v, err
+	if err != nil {
+		return nil, fmt.Errorf("Getversionlist: %w", err)
+	}
+	return &v, nil
 }
 
 type Version struct {
@@ -81,11 +84,11 @@ func (v Version) Downjson(version string) error {
 			}
 			for i := 0; i < 4; i++ {
 				if i == 3 {
-					return errors.New("file download fail")
+					return FileDownLoadFail
 				}
 				err := get(source(vv.URL, f), path)
 				if err != nil {
-					fmt.Println("似乎是网络问题，重试", source(vv.URL, f), err)
+					fmt.Println("似乎是网络问题，重试", source(vv.URL, f), fmt.Errorf("Downjson: %w", err))
 					f = fail(f)
 					continue
 				}
@@ -99,5 +102,7 @@ func (v Version) Downjson(version string) error {
 			return nil
 		}
 	}
-	return errors.New("no such")
+	return NoSuch
 }
+
+var NoSuch = errors.New("no such")

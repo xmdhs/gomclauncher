@@ -1,7 +1,6 @@
 package download
 
 import (
-	"errors"
 	"fmt"
 	"math/rand"
 	"runtime"
@@ -22,11 +21,11 @@ func Downauthlib() error {
 	}
 	for i := 0; i < 5; i++ {
 		if i == 3 {
-			return errors.New("download fail")
+			return FileDownLoadFail
 		}
 		err := get(url, path)
 		if err != nil {
-			fmt.Println("authlib 下载失败，重试", err)
+			fmt.Println("authlib 下载失败，重试", fmt.Errorf("Downauthlib: %w", err))
 			url = randurl(url)
 			continue
 		}

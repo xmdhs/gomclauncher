@@ -2,6 +2,7 @@ package auth
 
 import (
 	"bytes"
+	"fmt"
 	"io/ioutil"
 	"net"
 	"net/http"
@@ -35,7 +36,7 @@ func post(endpoint string, Payload []byte) ([]byte, error, int) {
 	}
 	h, err := http.NewRequest("POST", api+"/"+endpoint, bytes.NewReader(Payload))
 	if err != nil {
-		return nil, err, 0
+		return nil, fmt.Errorf("post: %w", err), 0
 	}
 	h.Header.Set("Content-Type", "application/json")
 	h.Header.Set("Accept", "*/*")
@@ -49,11 +50,11 @@ func post(endpoint string, Payload []byte) ([]byte, error, int) {
 		defer rep.Body.Close()
 	}
 	if err != nil {
-		return nil, err, 0
+		return nil, fmt.Errorf("post: %w", err), 0
 	}
 	b, err := ioutil.ReadAll(rep.Body)
 	if err != nil {
-		return nil, err, 0
+		return nil, fmt.Errorf("post: %w", err), 0
 	}
 	return b, nil, rep.StatusCode
 }

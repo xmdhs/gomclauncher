@@ -1,6 +1,7 @@
 package flag
 
 import (
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -32,7 +33,7 @@ func (f Flag) D() {
 	l, err := download.Getversionlist(f.Atype)
 	errr(err)
 	err = l.Downjson(f.Download)
-	if !(f.Run != "" && err != nil && err.Error() == "no such") {
+	if !(f.Run != "" && err != nil && errors.Is(err, download.NoSuch)) {
 		errr(err)
 	}
 	var b []byte
@@ -113,10 +114,10 @@ b:
 
 func errr(err error) {
 	if err != nil {
-		switch err.Error() {
-		case "no such":
+		switch {
+		case errors.Is(err, download.NoSuch):
 			fmt.Println("没有这个版本")
-		case "file download fail":
+		case errors.Is(err, download.FileDownLoadFail):
 			fmt.Println("失败次数过多，尝试切换下载源或者重新尝试")
 		default:
 			panic(err)

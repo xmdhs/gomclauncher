@@ -27,11 +27,13 @@ func (g *Gameinfo) argumentsjvm(l *launcher1155) error {
 		case string:
 			g.jvmflagadd(v, l)
 		default:
-			return errors.New("json not true")
+			return JsonNorTrue
 		}
 	}
 	return nil
 }
+
+var JsonNorTrue = errors.New("json not true")
 
 func (g *Gameinfo) jvmflagadd(v string, l *launcher1155) {
 	flag := g.Jvmflagrelace(v, l)

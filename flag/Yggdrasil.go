@@ -1,6 +1,7 @@
 package flag
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/xmdhs/gomclauncher/auth"
@@ -15,7 +16,7 @@ func (f Flag) Authlib() {
 	}
 	api, err := auth.Getauthlibapi(f.Yggdrasil)
 	if err != nil {
-		if err.Error() == "json not true" {
+		if errors.Is(err, auth.JsonNotTrue) {
 			panic("外置登录地址错误")
 		} else {
 			fmt.Println("或许是网络问题")

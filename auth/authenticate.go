@@ -10,6 +10,11 @@ import (
 
 var Name string
 
+var (
+	NotOk      = errors.New("not ok")
+	NoProfiles = errors.New("无可用角色")
+)
+
 //Authenticate return accessToken, err
 func Authenticate(username, password, clientToken string) (Auth, error) {
 	a := AuthenticatePayload{
@@ -29,10 +34,10 @@ func Authenticate(username, password, clientToken string) (Auth, error) {
 	}
 	b, err, i := post("authenticate", b)
 	if err != nil {
-		return Auth, err
+		return Auth, fmt.Errorf("Authenticate: %w", err)
 	}
 	if i != http.StatusOK {
-		return Auth, errors.New("not ok")
+		return Auth, NotOk
 	}
 	auth := &AuthenticateResponse{}
 	if err = json.Unmarshal(b, auth); err != nil {
@@ -41,14 +46,14 @@ func Authenticate(username, password, clientToken string) (Auth, error) {
 	Auth.AccessToken = auth.AccessToken
 	Auth.ClientToken = auth.ClientToken
 	if len(auth.AvailableProfiles) == 0 {
-		return Auth, errors.New("无可用角色")
+		return Auth, NoProfiles
 	}
 	if auth.SelectedProfile.Name == "" {
 		a := selectProfile(auth.AvailableProfiles)
 		Auth.selectedProfile = a
 		err := Refresh(&Auth)
 		if err != nil {
-			return Auth, err
+			return Auth, fmt.Errorf("Authenticate: %w", err)
 		}
 	} else {
 		Auth.ID = auth.SelectedProfile.ID
