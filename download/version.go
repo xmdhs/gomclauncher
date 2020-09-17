@@ -26,13 +26,13 @@ func Getversionlist(atype string) (*Version, error) {
 				defer rep.Body.Close()
 			}
 			if err != nil {
-				fmt.Println("获取版本列表失败，重试", fmt.Errorf("Getversionlist: %w", err))
+				fmt.Println("获取版本列表失败，重试", fmt.Errorf("Getversionlist: %w", err), source(`https://launchermeta.mojang.com/mc/game/version_manifest.json`, f))
 				f = fail(f)
 				return nil
 			}
 			b, err = ioutil.ReadAll(rep.Body)
 			if err != nil {
-				fmt.Println("获取版本列表失败，重试", fmt.Errorf("Getversionlist: %w", err))
+				fmt.Println("获取版本列表失败，重试", fmt.Errorf("Getversionlist: %w", err), source(`https://launchermeta.mojang.com/mc/game/version_manifest.json`, f))
 				f = fail(f)
 				return nil
 			}

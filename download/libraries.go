@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
-	"math/rand"
 	"net/http"
 	"os"
 	"strings"
@@ -160,12 +159,6 @@ func source(url, types string) string {
 		url = strings.ReplaceAll(url, `libraries.minecraft.net`, `download.mcbbs.net/maven`)
 		url = strings.ReplaceAll(url, `files.minecraftforge.net/maven`, `download.mcbbs.net/maven`)
 	}
-	if strings.Contains(types, "|") {
-		sou := rand.NewSource(time.Now().UnixNano())
-		r := rand.New(sou)
-		i := r.Intn(len(ttypes))
-		return source(url, ttypes[i])
-	}
 	return url
 }
 
@@ -197,12 +190,12 @@ func assetsjson(url, path, typee, sha1 string) error {
 		err = get(source(url, f), path)
 		if err != nil {
 			f = fail(f)
-			fmt.Println("下载失败，重试", fmt.Errorf("assetsjson: %w", err))
+			fmt.Println("下载失败，重试", fmt.Errorf("assetsjson: %w", err), url)
 			continue
 		}
 		if !ver(path, sha1) {
 			f = fail(f)
-			fmt.Println("文件效验失败，重试", fmt.Errorf("assetsjson: %w", err))
+			fmt.Println("文件效验失败，重试", url)
 			continue
 		}
 		break

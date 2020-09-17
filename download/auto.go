@@ -29,7 +29,6 @@ func fail(typee string) string {
 var (
 	typeweight sync.Map
 	one        sync.Once
-	ttypes     []string
 	r          arand
 )
 
@@ -49,8 +48,7 @@ func auto(typee string) string {
 			typeweight.Store("mcbbs", 9)
 		} else {
 			s := strings.Split(typee, "|")
-			ttypes = s
-			for _, v := range ttypes {
+			for _, v := range s {
 				typeweight.Store(v, 5)
 			}
 		}

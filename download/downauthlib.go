@@ -25,12 +25,12 @@ func Downauthlib() error {
 		}
 		err := get(url, path)
 		if err != nil {
-			fmt.Println("authlib 下载失败，重试", fmt.Errorf("Downauthlib: %w", err))
+			fmt.Println("authlib 下载失败，重试", fmt.Errorf("Downauthlib: %w", err), url)
 			url = randurl(url)
 			continue
 		}
 		if !ver(path, auth.Authlibsha1) {
-			fmt.Println("authlib 效验出错，重试")
+			fmt.Println("authlib 效验出错，重试", url)
 			url = randurl(url)
 			continue
 		}
