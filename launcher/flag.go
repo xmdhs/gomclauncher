@@ -95,7 +95,7 @@ func (g *Gameinfo) Modjson() (*launcher1155, error) {
 		b, err := ioutil.ReadFile(g.Minecraftpath + `/versions/` + mod.InheritsFrom + "/" + mod.InheritsFrom + ".json")
 		if err != nil {
 			if os.IsNotExist(err) {
-				return nil, err
+				return nil, fmt.Errorf("Modjson: %w", err)
 			}
 			panic(err)
 		}
