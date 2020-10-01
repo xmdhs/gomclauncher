@@ -14,7 +14,10 @@ type launcher1155 struct {
 	*Gameinfo
 }
 
-var Log bool
+var (
+	Log      bool
+	JavePath string = "java"
+)
 
 func NewLauncher1155(json LauncherjsonX115) *launcher1155 {
 	flag := make([]string, 0)
@@ -25,7 +28,7 @@ func (l launcher1155) Launcher115() {
 	fmt.Println(l.flag)
 	var cmd *exec.Cmd
 	if Log {
-		cmd = exec.Command("java", l.flag...)
+		cmd = exec.Command(JavePath, l.flag...)
 		cmd.Stdout = os.Stdout
 		cmd.Dir = l.Gamedir
 		err := cmd.Run()
@@ -33,11 +36,11 @@ func (l launcher1155) Launcher115() {
 			panic(err)
 		}
 	} else {
-		if runtime.GOOS == "windows" {
+		if runtime.GOOS == "windows" && JavePath == "java" {
 			cmd = exec.Command("javaw", l.flag...)
 		} else {
 			l.flag = append(l.flag, "&")
-			cmd = exec.Command("java", l.flag...)
+			cmd = exec.Command(JavePath, l.flag...)
 		}
 		cmd.Dir = l.Gamedir
 		err := cmd.Start()

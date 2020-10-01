@@ -120,6 +120,7 @@ func init() {
 	flag.StringVar(&yggdrasilname, "yggdrasilname", "", "外置登录选择的角色名")
 	flag.BoolVar(&list, "list", false, "查看所有保存的正版/外置登录账号")
 	flag.BoolVar(&remove, "remove", false, "删除保存的账号")
+	flag.StringVar(&launcher.JavePath, "javapath", "java", "设置使用指定的 java 路径，一般无需设置此项")
 	flag.Parse()
 }
 
