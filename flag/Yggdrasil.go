@@ -14,7 +14,7 @@ func (f Flag) Authlib() {
 		fmt.Println("authlib-injector 下载失败")
 		panic(err)
 	}
-	api, err := auth.Getauthlibapi(f.Yggdrasil)
+	api, err := auth.Getauthlibapi(f.ApiAddress)
 	if err != nil {
 		if errors.Is(err, auth.JsonNotTrue) {
 			panic("外置登录地址错误")
@@ -23,5 +23,5 @@ func (f Flag) Authlib() {
 			panic(err)
 		}
 	}
-	auth.ApiAddress = api
+	f.ApiAddress = api
 }

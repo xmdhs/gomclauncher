@@ -8,21 +8,22 @@ import (
 	"os"
 )
 
-var Name string
-
 var (
 	NotOk      = errors.New("not ok")
 	NoProfiles = errors.New("无可用角色")
 )
 
 //Authenticate return accessToken, err
-func Authenticate(username, password, clientToken string) (Auth, error) {
+func Authenticate(ApiAddress, username, email, password, clientToken string) (Auth, error) {
+	if ApiAddress == "" {
+		ApiAddress = "https://authserver.mojang.com"
+	}
 	a := AuthenticatePayload{
 		Agent: AuthenticateAgent{
 			Name:    "Minecraft",
 			Version: 1,
 		},
-		Username:    username,
+		Username:    email,
 		Password:    password,
 		RequestUser: true,
 		ClientToken: clientToken,
@@ -32,7 +33,7 @@ func Authenticate(username, password, clientToken string) (Auth, error) {
 	if err != nil {
 		panic(err)
 	}
-	b, err, i := post("authenticate", b)
+	b, err, i := post(ApiAddress, "authenticate", b)
 	if err != nil {
 		return Auth, fmt.Errorf("Authenticate: %w", err)
 	}
@@ -49,7 +50,7 @@ func Authenticate(username, password, clientToken string) (Auth, error) {
 		return Auth, NoProfiles
 	}
 	if auth.SelectedProfile.Name == "" {
-		a := selectProfile(auth.AvailableProfiles)
+		a := selectProfile(auth.AvailableProfiles, username)
 		Auth.selectedProfile = a
 		err := Refresh(&Auth)
 		if err != nil {
@@ -59,12 +60,13 @@ func Authenticate(username, password, clientToken string) (Auth, error) {
 		Auth.ID = auth.SelectedProfile.ID
 		Auth.Username = auth.SelectedProfile.Name
 	}
+	Auth.ApiAddress = ApiAddress
 	return Auth, nil
 }
 
-func selectProfile(a []AuthenticateResponseAvailableProfile) SElectedProfile {
-	if Name == "" {
-		fmt.Println("请选择一个角色，通过设置 -yggdrasilname 参数指定")
+func selectProfile(a []AuthenticateResponseAvailableProfile, username string) SElectedProfile {
+	if username == "" {
+		fmt.Println("请选择一个角色，通过设置 -username 参数指定")
 		for _, p := range a {
 			fmt.Println(p.Name)
 		}
@@ -72,7 +74,7 @@ func selectProfile(a []AuthenticateResponseAvailableProfile) SElectedProfile {
 	}
 	var selectedProfile AuthenticateResponseAvailableProfile
 	for _, p := range a {
-		if p.Name == Name {
+		if p.Name == username {
 			selectedProfile = p
 		}
 	}
@@ -93,6 +95,7 @@ type Auth struct {
 	ID              string
 	AccessToken     string
 	selectedProfile SElectedProfile
+	ApiAddress      string
 }
 
 type AuthenticatePayload struct {

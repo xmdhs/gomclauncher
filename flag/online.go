@@ -15,19 +15,19 @@ func (f *Flag) Aonline() {
 		fmt.Println("比如 -email xxx@xxx.xx")
 		os.Exit(0)
 	}
-	if gmlconfig[auth.ApiAddress] == nil {
-		gmlconfig[auth.ApiAddress] = make(map[string]Config)
+	if gmlconfig[f.ApiAddress] == nil {
+		gmlconfig[f.ApiAddress] = make(map[string]Config)
 	}
-	err := gmlconfig[auth.ApiAddress][f.Email].setonline(f.Email, f.Password)
+	err := gmlconfig[f.ApiAddress][f.Email].setonline(f.ApiAddress, f.Name, f.Email, f.Password)
 	if err != nil {
 		if errors.Is(err, HaveProfiles) {
 			a := auth.Auth{
-				AccessToken: gmlconfig[auth.ApiAddress][f.Email].AccessToken,
-				ClientToken: gmlconfig[auth.ApiAddress][f.Email].ClientToken,
+				AccessToken: gmlconfig[f.ApiAddress][f.Email].AccessToken,
+				ClientToken: gmlconfig[f.ApiAddress][f.Email].ClientToken,
 			}
 
 			atime := time.Now().Unix()
-			if atime-gmlconfig[auth.ApiAddress][f.Email].Time > 1200 {
+			if atime-gmlconfig[f.ApiAddress][f.Email].Time > 1200 {
 				if err := auth.Validate(a); err != nil {
 					err = auth.Refresh(&a)
 					if err != nil {
@@ -39,13 +39,13 @@ func (f *Flag) Aonline() {
 							panic(err)
 						}
 					}
-					aconfig := gmlconfig[auth.ApiAddress][f.Email]
+					aconfig := gmlconfig[f.ApiAddress][f.Email]
 					aconfig.Name = a.Username
 					aconfig.UUID = a.ID
 					aconfig.AccessToken = a.AccessToken
 					aconfig.Time = time.Now().Unix()
 					aconfig.ClientToken = a.ClientToken
-					gmlconfig[auth.ApiAddress][f.Email] = aconfig
+					gmlconfig[f.ApiAddress][f.Email] = aconfig
 					saveconfig()
 				}
 			}
@@ -56,12 +56,12 @@ func (f *Flag) Aonline() {
 			panic(err)
 		}
 	}
-	if gmlconfig[auth.ApiAddress][f.Email].Name == "" {
+	if gmlconfig[f.ApiAddress][f.Email].Name == "" {
 		panic("请创建角色")
 	}
-	f.AccessToken = gmlconfig[auth.ApiAddress][f.Email].AccessToken
-	f.Name = gmlconfig[auth.ApiAddress][f.Email].Name
-	f.UUID = gmlconfig[auth.ApiAddress][f.Email].UUID
+	f.AccessToken = gmlconfig[f.ApiAddress][f.Email].AccessToken
+	f.Name = gmlconfig[f.ApiAddress][f.Email].Name
+	f.UUID = gmlconfig[f.ApiAddress][f.Email].UUID
 }
 
 func Listname() {

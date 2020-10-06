@@ -18,7 +18,7 @@ func TestPost(t *testing.T) {
 		"clientToken": "客户端标识符",          
 		"requestUser": true                   
 	}`
-	b, err, i := post("", []byte(j))
+	b, err, i := post("https://authserver.mojang.com", "", []byte(j))
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -14,7 +14,6 @@ type Flag struct {
 	launcher.Gameinfo
 	Atype       string
 	Downint     int
-	Username    string
 	Password    string
 	Email       string
 	Download    string
@@ -26,7 +25,6 @@ type Flag struct {
 	Proxy       string
 	Independent bool
 	Outmsg      bool
-	Yggdrasil   string
 }
 
 func (f Flag) D() {

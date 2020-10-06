@@ -6,7 +6,7 @@ import (
 )
 
 func TestRefresh(t *testing.T) {
-	a, err := Authenticate("xmdhss@gmail.com", "K8JxiNtCFhG6R2n", "test")
+	a, err := Authenticate("https://authserver.mojang.com", "", "xmdhss@gmail.com", "K8JxiNtCFhG6R2n", "test")
 	if !errors.Is(err, NotOk) {
 		t.Fatal(err)
 	}
@@ -17,7 +17,7 @@ func TestRefresh(t *testing.T) {
 }
 
 func TestValidate(t *testing.T) {
-	a, err := Authenticate("xmdhss@gmail.com", "K8JxiNtCFhG6R2n", "test")
+	a, err := Authenticate("https://authserver.mojang.com", "", "xmdhss@gmail.com", "K8JxiNtCFhG6R2n", "test")
 	if !errors.Is(err, NotOk) {
 		t.Fatal(err)
 	}

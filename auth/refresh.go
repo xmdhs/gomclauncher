@@ -19,7 +19,7 @@ func Refresh(a *Auth) error {
 	if err != nil {
 		return fmt.Errorf("Refresh: %w", err)
 	}
-	b, err, i := post("refresh", b)
+	b, err, i := post(a.ApiAddress, "refresh", b)
 	if err != nil {
 		return fmt.Errorf("Refresh: %w", err)
 	}
@@ -56,7 +56,7 @@ func Validate(a Auth) error {
 	if err != nil {
 		return fmt.Errorf("Validate: %w", err)
 	}
-	_, err, i := post("validate", b)
+	_, err, i := post(a.ApiAddress, "validate", b)
 	if err != nil {
 		return fmt.Errorf("Validate: %w", err)
 	}

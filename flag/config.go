@@ -50,14 +50,14 @@ func saveconfig() {
 
 var HaveProfiles = errors.New("have")
 
-func (c Config) setonline(email, pass string) error {
-	if _, ok := gmlconfig[auth.ApiAddress][email]; ok && pass == "" {
+func (c Config) setonline(ApiAddress, username, email, pass string) error {
+	if _, ok := gmlconfig[ApiAddress][email]; ok && pass == "" {
 		return HaveProfiles
 	}
 	if c.ClientToken == "" {
 		c.ClientToken = UUIDgen(email)
 	}
-	a, err := auth.Authenticate(email, pass, c.ClientToken)
+	a, err := auth.Authenticate(ApiAddress, username, email, pass, c.ClientToken)
 	if err != nil {
 		return fmt.Errorf("setonline: %w", err)
 	}
@@ -66,7 +66,7 @@ func (c Config) setonline(email, pass string) error {
 	aconfig.Name = a.Username
 	aconfig.UUID = a.ID
 	aconfig.AccessToken = a.AccessToken
-	gmlconfig[auth.ApiAddress][email] = aconfig
+	gmlconfig[ApiAddress][email] = aconfig
 	saveconfig()
 	return nil
 }

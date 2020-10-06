@@ -24,9 +24,7 @@ func init() {
 	}
 }
 
-var ApiAddress string = "https://authserver.mojang.com"
-
-func post(endpoint string, Payload []byte) ([]byte, error, int) {
+func post(ApiAddress, endpoint string, Payload []byte) ([]byte, error, int) {
 	var api string
 	if ApiAddress != "https://authserver.mojang.com" {
 		api = ApiAddress + "/authserver"

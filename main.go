@@ -49,11 +49,10 @@ func main() {
 	if list {
 		aflag.Listname()
 	}
-	if yggdrasilname != "" {
-		auth.Name = yggdrasilname
-	}
-	if f.Yggdrasil != "" {
+	if f.ApiAddress != "" {
 		f.Authlib()
+	} else {
+		f.ApiAddress = "https://authserver.mojang.com"
 	}
 	if remove {
 		f.Remove()
@@ -61,8 +60,7 @@ func main() {
 	if f.Email != "" {
 		f.Aonline()
 	} else {
-		f.Username = f.Name
-		f.UUID = aflag.UUIDgen(f.Username)
+		f.UUID = aflag.UUIDgen(f.Name)
 		f.AccessToken = f.UUID
 	}
 	if f.Runflag != "" {
@@ -110,14 +108,13 @@ func init() {
 	flag.StringVar(&f.RAM, "ram", "2048", `分配启动游戏的内存大小(mb)`)
 	flag.StringVar(&f.Runflag, "flag", "", "自定的启动参数，比如 -XX:+AggressiveOpts -XX:+UseCompressedOops")
 	flag.StringVar(&f.Proxy, `proxy`, "", `设置下载用的代理(http)`)
-	flag.StringVar(&f.Atype, "type", "", `设置下载源。可选 vanilla bmclapi tss 和 mcbbs，不设置此项则使用将自动的为每一个文件选择下载源。可以使用 "bmclapi|vanilla" 的形式来负载均衡的使用多个下载源。`)
+	flag.StringVar(&f.Atype, "type", "", `设置下载源。可选 vanilla bmclapi 和 mcbbs，不设置此项则使用将自动的为每一个文件选择下载源。可以使用 "bmclapi|vanilla" 的形式来负载均衡的使用多个下载源。`)
 	flag.BoolVar(&f.Independent, "independent", true, "是否开启版本隔离")
 	flag.BoolVar(&f.Outmsg, "test", true, "启动游戏前是否效验文件的完整和正确性")
 	flag.BoolVar(&credit, "credits", false, "使用项目")
 	flag.BoolVar(&update, "update", true, "是否检测更新")
 	flag.BoolVar(&f.Log, "log", false, "是否输出游戏日志")
-	flag.StringVar(&f.Yggdrasil, "yggdrasil", "", "外置登录地址。(authlib-injector)")
-	flag.StringVar(&yggdrasilname, "yggdrasilname", "", "外置登录选择的角色名")
+	flag.StringVar(&f.ApiAddress, "yggdrasil", "", "外置登录地址。(authlib-injector)")
 	flag.BoolVar(&list, "list", false, "查看所有保存的正版/外置登录账号")
 	flag.BoolVar(&remove, "remove", false, "删除保存的账号")
 	flag.StringVar(&f.JavePath, "javapath", "java", "设置使用指定的 java 路径，一般无需设置此项")

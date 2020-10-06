@@ -34,6 +34,8 @@ type Gameinfo struct {
 	Userproperties string
 	Log            bool
 	JavePath       string
+	ApiAddress     string
+	authlibpath    string
 }
 
 func (g *Gameinfo) Run115() error {
@@ -49,9 +51,9 @@ func (g *Gameinfo) Run115() error {
 	l.flag = append(l.flag, `-XX:-OmitStackTraceInFastThrow`)
 	l.flag = append(l.flag, `-Dfml.ignoreInvalidMinecraftCertificates=true`)
 	l.flag = append(l.flag, `-Dfml.ignorePatchDiscrepancies=true`)
-	if auth.ApiAddress != "https://authserver.mojang.com" {
+	if g.ApiAddress != "https://authserver.mojang.com" {
 		l.flag = append(l.flag, `-Dauthlibinjector.side=client`)
-		l.flag = append(l.flag, `-javaagent:`+authlibpath+`=`+auth.ApiAddress)
+		l.flag = append(l.flag, `-javaagent:`+g.authlibpath+`=`+g.ApiAddress)
 	}
 	if g.Flag != nil {
 		l.flag = append(l.flag, g.Flag...)
@@ -66,10 +68,8 @@ func (g *Gameinfo) Run115() error {
 	return nil
 }
 
-var authlibpath string
-
 func creatlauncherprofiles(g *Gameinfo) {
-	authlibpath = g.Minecraftpath + `/libraries/` + `moe/yushi/authlibinjector/` + "authlib-injector/" + auth.Authlibversion + "/authlib-injector-" + auth.Authlibversion + ".jar"
+	g.authlibpath = g.Minecraftpath + `/libraries/` + `moe/yushi/authlibinjector/` + "authlib-injector/" + auth.Authlibversion + "/authlib-injector-" + auth.Authlibversion + ".jar"
 	path := g.Minecraftpath + "/launcher_profiles.json"
 	_, err := os.Stat(path)
 	if err != nil && os.IsNotExist(err) {
