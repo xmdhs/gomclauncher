@@ -24,8 +24,8 @@ func (f *Flag) Aonline() {
 			a := auth.Auth{
 				AccessToken: gmlconfig[f.ApiAddress][f.Email].AccessToken,
 				ClientToken: gmlconfig[f.ApiAddress][f.Email].ClientToken,
+				ApiAddress:  f.ApiAddress,
 			}
-
 			atime := time.Now().Unix()
 			if atime-gmlconfig[f.ApiAddress][f.Email].Time > 1200 {
 				if err := auth.Validate(a); err != nil {
