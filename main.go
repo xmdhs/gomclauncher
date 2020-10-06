@@ -115,12 +115,12 @@ func init() {
 	flag.BoolVar(&f.Outmsg, "test", true, "启动游戏前是否效验文件的完整和正确性")
 	flag.BoolVar(&credit, "credits", false, "使用项目")
 	flag.BoolVar(&update, "update", true, "是否检测更新")
-	flag.BoolVar(&launcher.Log, "log", false, "是否输出游戏日志")
+	flag.BoolVar(&f.Log, "log", false, "是否输出游戏日志")
 	flag.StringVar(&f.Yggdrasil, "yggdrasil", "", "外置登录地址。(authlib-injector)")
 	flag.StringVar(&yggdrasilname, "yggdrasilname", "", "外置登录选择的角色名")
 	flag.BoolVar(&list, "list", false, "查看所有保存的正版/外置登录账号")
 	flag.BoolVar(&remove, "remove", false, "删除保存的账号")
-	flag.StringVar(&launcher.JavePath, "javapath", "java", "设置使用指定的 java 路径，一般无需设置此项")
+	flag.StringVar(&f.JavePath, "javapath", "java", "设置使用指定的 java 路径，一般无需设置此项")
 	flag.Parse()
 }
 

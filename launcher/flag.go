@@ -32,6 +32,8 @@ type Gameinfo struct {
 	Flag     []string
 	//"{\"preferredLanguage\":[\"zh-cn\"],\"registrationCountry\":[\"CN\"]}"
 	Userproperties string
+	Log            bool
+	JavePath       string
 }
 
 func (g *Gameinfo) Run115() error {
