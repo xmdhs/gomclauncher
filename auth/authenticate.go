@@ -30,10 +30,11 @@ func Authenticate(ApiAddress, username, email, password, clientToken string) (Au
 	}
 	b, err := json.Marshal(a)
 	Auth := Auth{}
+	Auth.ApiAddress = ApiAddress
 	if err != nil {
 		panic(err)
 	}
-	b, err, i := post(ApiAddress, "authenticate", b)
+	b, err, i := post(Auth.ApiAddress, "authenticate", b)
 	if err != nil {
 		return Auth, fmt.Errorf("Authenticate: %w", err)
 	}
@@ -60,7 +61,6 @@ func Authenticate(ApiAddress, username, email, password, clientToken string) (Au
 		Auth.ID = auth.SelectedProfile.ID
 		Auth.Username = auth.SelectedProfile.Name
 	}
-	Auth.ApiAddress = ApiAddress
 	return Auth, nil
 }
 
