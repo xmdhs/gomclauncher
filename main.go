@@ -8,7 +8,6 @@ import (
 	"net/http"
 	"net/url"
 	"os"
-	"runtime"
 	"strings"
 
 	"github.com/xmdhs/gomclauncher/auth"
@@ -89,9 +88,6 @@ var (
 
 func init() {
 	str, err := os.Getwd()
-	if runtime.GOOS == "windows" {
-		launcher.Minecraft = `.minecraft`
-	}
 	str = strings.ReplaceAll(str, `\`, `/`)
 	if err != nil {
 		panic(err)

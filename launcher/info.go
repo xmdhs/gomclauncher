@@ -5,4 +5,4 @@ const (
 	Launcherversion string = "1.2.7"
 )
 
-var Minecraft string = "minecraft"
+const Minecraft string = ".minecraft"
