@@ -70,6 +70,7 @@ func Newlibraries(cxt context.Context, b []byte, typee string) (Libraries, error
 		librarie:   l,
 		assetIndex: a,
 		typee:      typee,
+		cxt:        cxt,
 	}, nil
 }
 
