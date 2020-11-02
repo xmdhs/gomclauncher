@@ -7,17 +7,17 @@ import (
 	"time"
 )
 
-func fail(typee string) string {
-	if v, ok := typeweight.Load(typee); ok {
+func (r *randurls) fail(typee string) string {
+	if v, ok := r.typeweight.Load(typee); ok {
 		i := v.(int)
 		i--
 		if i <= 0 {
-			typeweight.Store(typee, 0)
+			r.typeweight.Store(typee, 0)
 		} else {
-			typeweight.Store(typee, i)
+			r.typeweight.Store(typee, i)
 		}
 		for {
-			t := auto("")
+			t := r.auto("")
 			if t != typee {
 				return t
 			}
@@ -26,30 +26,30 @@ func fail(typee string) string {
 	return typee
 }
 
-var (
-	typeweight sync.Map
-	one        sync.Once
-	r          arand
-)
-
 type arand struct {
 	*rand.Rand
 	*sync.Mutex
 }
 
-func auto(typee string) string {
+type randurls struct {
+	typeweight sync.Map
+	one        sync.Once
+	arand
+}
+
+func (r *randurls) auto(typee string) string {
 	if typee != "" && !strings.Contains(typee, "|") {
 		return typee
 	}
-	one.Do(func() {
+	r.one.Do(func() {
 		if typee == "" {
-			typeweight.Store("vanilla", 5)
-			typeweight.Store("bmclapi", 6)
-			typeweight.Store("mcbbs", 9)
+			r.typeweight.Store("vanilla", 5)
+			r.typeweight.Store("bmclapi", 6)
+			r.typeweight.Store("mcbbs", 9)
 		} else {
 			s := strings.Split(typee, "|")
 			for _, v := range s {
-				typeweight.Store(v, 5)
+				r.typeweight.Store(v, 5)
 			}
 		}
 		r.Rand = rand.New(rand.NewSource(time.Now().Unix()))
@@ -58,7 +58,7 @@ func auto(typee string) string {
 	i := 0
 	t := make([]string, 0, 4)
 	b := make([]int, 0, 4)
-	typeweight.Range(
+	r.typeweight.Range(
 		func(k, v interface{}) bool {
 			if v.(int) != 0 {
 				t = append(t, k.(string))
@@ -80,10 +80,10 @@ func auto(typee string) string {
 
 }
 
-func add(typee string) {
-	if v, ok := typeweight.Load(typee); ok {
+func (r *randurls) add(typee string) {
+	if v, ok := r.typeweight.Load(typee); ok {
 		i := v.(int)
 		i++
-		typeweight.Store(typee, i)
+		r.typeweight.Store(typee, i)
 	}
 }

@@ -23,14 +23,15 @@ func (l Libraries) Downassets(i int, c chan int) error {
 			ok := ver(launcher.Minecraft+`/assets/objects/`+v.Hash[:2]+`/`+v.Hash, v.Hash)
 			if !ok {
 				d := downinfo{
-					typee: l.typee,
-					url:   `https://resources.download.minecraft.net/` + v.Hash[:2] + `/` + v.Hash,
-					path:  launcher.Minecraft + `/assets/objects/` + v.Hash[:2] + `/` + v.Hash,
-					e:     e,
-					Sha1:  v.Hash,
-					done:  done,
-					ch:    ch,
-					cxt:   cxt,
+					typee:    l.typee,
+					url:      `https://resources.download.minecraft.net/` + v.Hash[:2] + `/` + v.Hash,
+					path:     launcher.Minecraft + `/assets/objects/` + v.Hash[:2] + `/` + v.Hash,
+					e:        e,
+					Sha1:     v.Hash,
+					done:     done,
+					ch:       ch,
+					cxt:      cxt,
+					randurls: l.randurls,
 				}
 				select {
 				case ch <- struct{}{}:
@@ -102,14 +103,15 @@ func (l Libraries) Downlibrarie(i int, c chan int) error {
 			}
 			if !ver(path, v.Downloads.Artifact.Sha1) {
 				d := downinfo{
-					typee: l.typee,
-					url:   v.Downloads.Artifact.URL,
-					path:  path,
-					e:     e,
-					Sha1:  v.Downloads.Artifact.Sha1,
-					done:  done,
-					ch:    ch,
-					cxt:   cxt,
+					typee:    l.typee,
+					url:      v.Downloads.Artifact.URL,
+					path:     path,
+					e:        e,
+					Sha1:     v.Downloads.Artifact.Sha1,
+					done:     done,
+					ch:       ch,
+					cxt:      cxt,
+					randurls: l.randurls,
 				}
 				select {
 				case ch <- struct{}{}:
@@ -149,7 +151,7 @@ func (l Libraries) Downjar(version string) error {
 	if ver(path, l.librarie.Downloads.Client.Sha1) {
 		return nil
 	}
-	t := auto(l.typee)
+	t := l.auto(l.typee)
 	for i := 0; i < 4; i++ {
 		if i == 3 {
 			return FileDownLoadFail
@@ -157,12 +159,12 @@ func (l Libraries) Downjar(version string) error {
 		err := get(l.cxt, source(l.librarie.Downloads.Client.URL, t), path)
 		if err != nil {
 			fmt.Println("似乎是网络问题，重试", source(l.librarie.Downloads.Client.URL, t), fmt.Errorf("Downjar: %w", err))
-			t = fail(t)
+			t = l.fail(t)
 			continue
 		}
 		if !ver(path, l.librarie.Downloads.Client.Sha1) {
 			fmt.Println("文件效验失败，重新下载", source(l.librarie.Downloads.Client.URL, t))
-			t = fail(t)
+			t = l.fail(t)
 			continue
 		}
 		break
@@ -179,10 +181,11 @@ type downinfo struct {
 	done  chan struct{}
 	ch    chan struct{}
 	cxt   context.Context
+	*randurls
 }
 
 func (d downinfo) down() {
-	f := auto(d.typee)
+	f := d.auto(d.typee)
 	for i := 0; i < 7; i++ {
 		if i == 6 {
 			select {
@@ -194,18 +197,18 @@ func (d downinfo) down() {
 		err := get(d.cxt, source(d.url, f), d.path)
 		if err != nil {
 			fmt.Println("似乎是网络问题，重试", source(d.url, f), err)
-			f = fail(f)
+			f = d.fail(f)
 			continue
 		}
 		if !ver(d.path, d.Sha1) {
 			fmt.Println("文件效验失败，重新下载", source(d.url, f))
-			f = fail(f)
+			f = d.fail(f)
 			continue
 		}
 		select {
 		case d.done <- struct{}{}:
 			<-d.ch
-			add(f)
+			d.add(f)
 		case <-d.cxt.Done():
 			return
 		}

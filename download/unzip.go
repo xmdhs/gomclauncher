@@ -35,14 +35,15 @@ func (l Libraries) Unzip(i int) error {
 			}
 			if launcher.Ifallow(v) && !ver(path, sha1) {
 				d := downinfo{
-					typee: l.typee,
-					url:   url,
-					path:  path,
-					e:     e,
-					Sha1:  sha1,
-					done:  done,
-					ch:    ch,
-					cxt:   cxt,
+					typee:    l.typee,
+					url:      url,
+					path:     path,
+					e:        e,
+					Sha1:     sha1,
+					done:     done,
+					ch:       ch,
+					cxt:      cxt,
+					randurls: l.randurls,
 				}
 				select {
 				case ch <- struct{}{}:

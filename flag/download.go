@@ -29,9 +29,10 @@ type Flag struct {
 }
 
 func (f Flag) D() {
-	l, err := download.Getversionlist(context.Background(), f.Atype)
+	cxt := context.Background()
+	l, err := download.Getversionlist(cxt, f.Atype)
 	errr(err)
-	err = l.Downjson(context.Background(), f.Download)
+	err = l.Downjson(cxt, f.Download)
 	if !(f.Run != "" && err != nil && errors.Is(err, download.NoSuch)) {
 		errr(err)
 	}
@@ -44,7 +45,7 @@ func (f Flag) D() {
 	if err != nil {
 		panic(err)
 	}
-	dl, err := download.Newlibraries(context.Background(), b, f.Atype)
+	dl, err := download.Newlibraries(cxt, b, f.Atype)
 	errr(err)
 	if f.Outmsg {
 		fmt.Println("正在验证游戏核心")

@@ -21,6 +21,7 @@ type Libraries struct {
 	assetIndex assets
 	typee      string
 	cxt        context.Context
+	*randurls
 }
 
 func Newlibraries(cxt context.Context, b []byte, typee string) (Libraries, error) {
@@ -28,6 +29,7 @@ func Newlibraries(cxt context.Context, b []byte, typee string) (Libraries, error
 	var url, id string
 	l := launcher.LauncherjsonX115{}
 	err := json.Unmarshal(b, &mod)
+	r := &randurls{}
 	if err != nil {
 		return Libraries{}, fmt.Errorf("Newlibraries: %w", err)
 	}
@@ -52,7 +54,7 @@ func Newlibraries(cxt context.Context, b []byte, typee string) (Libraries, error
 	id = l.AssetIndex.ID
 	path := launcher.Minecraft + "/assets/indexes/" + id + ".json"
 	if !ver(path, l.AssetIndex.Sha1) {
-		err := assetsjson(cxt, url, path, typee, l.AssetIndex.Sha1)
+		err := assetsjson(cxt, r, url, path, typee, l.AssetIndex.Sha1)
 		if err != nil {
 			return Libraries{}, fmt.Errorf("Newlibraries: %w", err)
 		}
@@ -71,6 +73,7 @@ func Newlibraries(cxt context.Context, b []byte, typee string) (Libraries, error
 		assetIndex: a,
 		typee:      typee,
 		cxt:        cxt,
+		randurls:   r,
 	}, nil
 }
 
@@ -182,21 +185,21 @@ func Aget(cxt context.Context, aurl string) (*http.Response, *time.Timer, error)
 	return reps, timer, nil
 }
 
-func assetsjson(cxt context.Context, url, path, typee, sha1 string) error {
+func assetsjson(cxt context.Context, r *randurls, url, path, typee, sha1 string) error {
 	var err error
-	f := auto(typee)
+	f := r.auto(typee)
 	for i := 0; i < 4; i++ {
 		if i == 3 {
 			return err
 		}
 		err = get(cxt, source(url, f), path)
 		if err != nil {
-			f = fail(f)
+			f = r.fail(f)
 			fmt.Println("下载失败，重试", fmt.Errorf("assetsjson: %w", err), url)
 			continue
 		}
 		if !ver(path, sha1) {
-			f = fail(f)
+			f = r.fail(f)
 			fmt.Println("文件效验失败，重试", url)
 			continue
 		}
