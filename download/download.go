@@ -185,7 +185,10 @@ func (d downinfo) down() {
 	f := auto(d.typee)
 	for i := 0; i < 7; i++ {
 		if i == 6 {
-			d.e <- FileDownLoadFail
+			select {
+			case d.e <- FileDownLoadFail:
+			case <-d.cxt.Done():
+			}
 			break
 		}
 		err := get(d.cxt, source(d.url, f), d.path)

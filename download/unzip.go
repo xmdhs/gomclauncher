@@ -2,6 +2,7 @@ package download
 
 import (
 	"archive/zip"
+	"context"
 	"fmt"
 	"io"
 	"os"
@@ -16,6 +17,8 @@ func (l Libraries) Unzip(i int) error {
 	e, done, ch := creatch(len(l.librarie.Libraries), i)
 	natives := make([]string, 0)
 	m := sync.Mutex{}
+	cxt, cancel := context.WithCancel(l.cxt)
+	defer cancel()
 	go func() {
 		for _, v := range l.librarie.Libraries {
 			v := v
@@ -39,11 +42,20 @@ func (l Libraries) Unzip(i int) error {
 					Sha1:  sha1,
 					done:  done,
 					ch:    ch,
+					cxt:   cxt,
 				}
-				ch <- struct{}{}
-				go d.down()
+				select {
+				case ch <- struct{}{}:
+					go d.down()
+				case <-cxt.Done():
+					return
+				}
 			} else {
-				done <- struct{}{}
+				select {
+				case done <- struct{}{}:
+				case <-cxt.Done():
+					return
+				}
 			}
 
 		}
@@ -67,6 +79,8 @@ func (l Libraries) Unzip(i int) error {
 func (l Libraries) unzipnative(n []string) error {
 	e := make(chan error, len(n))
 	done := make(chan bool, len(n))
+	cxt, cancel := context.WithCancel(l.cxt)
+	defer cancel()
 	p := launcher.Minecraft + `/versions/` + l.librarie.ID + `/natives/`
 	err := os.MkdirAll(p, 0777)
 	if err != nil {
@@ -75,13 +89,24 @@ func (l Libraries) unzipnative(n []string) error {
 	go func() {
 		for _, v := range n {
 			v := v
-			go func() {
-				err := DeCompress(v, p)
-				if err != nil {
-					e <- err
-				}
-				done <- true
-			}()
+			select {
+			case <-cxt.Done():
+				return
+			default:
+				go func() {
+					err := DeCompress(v, p)
+					if err != nil {
+						select {
+						case e <- err:
+						case <-cxt.Done():
+						}
+					}
+					select {
+					case done <- true:
+					case <-cxt.Done():
+					}
+				}()
+			}
 		}
 	}()
 	i := 0
