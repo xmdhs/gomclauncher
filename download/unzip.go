@@ -100,6 +100,7 @@ func (l Libraries) unzipnative(n []string) error {
 						case e <- err:
 						case <-cxt.Done():
 						}
+						return
 					}
 					select {
 					case done <- true:
