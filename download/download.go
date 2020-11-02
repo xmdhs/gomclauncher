@@ -1,6 +1,7 @@
 package download
 
 import (
+	"context"
 	"crypto/sha1"
 	"encoding/hex"
 	"errors"
@@ -14,6 +15,8 @@ import (
 
 func (l Libraries) Downassets(i int, c chan int) error {
 	e, done, ch := creatch(len(l.assetIndex.Objects), i)
+	cxt, cancel := context.WithCancel(l.cxt)
+	defer cancel()
 	go func() {
 		for _, v := range l.assetIndex.Objects {
 			v := v
@@ -27,11 +30,20 @@ func (l Libraries) Downassets(i int, c chan int) error {
 					Sha1:  v.Hash,
 					done:  done,
 					ch:    ch,
+					cxt:   cxt,
 				}
-				ch <- struct{}{}
-				go d.down()
+				select {
+				case ch <- struct{}{}:
+					go d.down()
+				case <-cxt.Done():
+					return
+				}
 			} else {
-				done <- struct{}{}
+				select {
+				case done <- struct{}{}:
+				case <-cxt.Done():
+					return
+				}
 			}
 		}
 	}()
@@ -78,6 +90,8 @@ func ver(path, hash string) bool {
 
 func (l Libraries) Downlibrarie(i int, c chan int) error {
 	e, done, ch := creatch(len(l.librarie.Libraries), i)
+	cxt, cancel := context.WithCancel(l.cxt)
+	defer cancel()
 	go func() {
 		for _, v := range l.librarie.Libraries {
 			v := v
@@ -95,11 +109,20 @@ func (l Libraries) Downlibrarie(i int, c chan int) error {
 					Sha1:  v.Downloads.Artifact.Sha1,
 					done:  done,
 					ch:    ch,
+					cxt:   cxt,
 				}
-				ch <- struct{}{}
-				go d.down()
+				select {
+				case ch <- struct{}{}:
+					go d.down()
+				case <-cxt.Done():
+					return
+				}
 			} else {
-				done <- struct{}{}
+				select {
+				case done <- struct{}{}:
+				case <-cxt.Done():
+					return
+				}
 			}
 		}
 	}()
@@ -131,7 +154,7 @@ func (l Libraries) Downjar(version string) error {
 		if i == 3 {
 			return FileDownLoadFail
 		}
-		err := get(source(l.librarie.Downloads.Client.URL, t), path)
+		err := get(l.cxt, source(l.librarie.Downloads.Client.URL, t), path)
 		if err != nil {
 			fmt.Println("似乎是网络问题，重试", source(l.librarie.Downloads.Client.URL, t), fmt.Errorf("Downjar: %w", err))
 			t = fail(t)
@@ -155,6 +178,7 @@ type downinfo struct {
 	Sha1  string
 	done  chan struct{}
 	ch    chan struct{}
+	cxt   context.Context
 }
 
 func (d downinfo) down() {
@@ -164,7 +188,7 @@ func (d downinfo) down() {
 			d.e <- FileDownLoadFail
 			break
 		}
-		err := get(source(d.url, f), d.path)
+		err := get(d.cxt, source(d.url, f), d.path)
 		if err != nil {
 			fmt.Println("似乎是网络问题，重试", source(d.url, f), err)
 			f = fail(f)
@@ -175,9 +199,13 @@ func (d downinfo) down() {
 			f = fail(f)
 			continue
 		}
-		d.done <- struct{}{}
-		<-d.ch
-		add(f)
+		select {
+		case d.done <- struct{}{}:
+			<-d.ch
+			add(f)
+		case <-d.cxt.Done():
+			return
+		}
 		break
 	}
 

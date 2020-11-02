@@ -1,6 +1,7 @@
 package download
 
 import (
+	"context"
 	"fmt"
 	"math/rand"
 	"runtime"
@@ -9,7 +10,7 @@ import (
 	"github.com/xmdhs/gomclauncher/auth"
 )
 
-func Downauthlib() error {
+func Downauthlib(cxt context.Context) error {
 	minecraft := "minecraft"
 	if runtime.GOOS == "windows" {
 		minecraft = `.minecraft`
@@ -23,7 +24,7 @@ func Downauthlib() error {
 		if i == 3 {
 			return FileDownLoadFail
 		}
-		err := get(url, path)
+		err := get(cxt, url, path)
 		if err != nil {
 			fmt.Println("authlib 下载失败，重试", fmt.Errorf("Downauthlib: %w", err), url)
 			url = randurl(url)

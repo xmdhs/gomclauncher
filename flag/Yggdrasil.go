@@ -1,6 +1,7 @@
 package flag
 
 import (
+	"context"
 	"errors"
 	"fmt"
 
@@ -9,7 +10,7 @@ import (
 )
 
 func (f Flag) Authlib() {
-	err := download.Downauthlib()
+	err := download.Downauthlib(context.Background())
 	if err != nil {
 		fmt.Println("authlib-injector 下载失败")
 		panic(err)

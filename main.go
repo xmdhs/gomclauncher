@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"flag"
 	"fmt"
@@ -128,7 +129,7 @@ type up struct {
 }
 
 func check() {
-	reps, _, err := download.Aget(`https://api.github.com/repos/xmdhs/gomclauncher/releases/latest`)
+	reps, _, err := download.Aget(context.Background(), `https://api.github.com/repos/xmdhs/gomclauncher/releases/latest`)
 	if reps != nil {
 		defer reps.Body.Close()
 	}

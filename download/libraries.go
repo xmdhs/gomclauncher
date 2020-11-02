@@ -20,9 +20,10 @@ type Libraries struct {
 	librarie   launcher.LauncherjsonX115
 	assetIndex assets
 	typee      string
+	cxt        context.Context
 }
 
-func Newlibraries(b []byte, typee string) (Libraries, error) {
+func Newlibraries(cxt context.Context, b []byte, typee string) (Libraries, error) {
 	mod := launcher.Modsjson{}
 	var url, id string
 	l := launcher.LauncherjsonX115{}
@@ -51,7 +52,7 @@ func Newlibraries(b []byte, typee string) (Libraries, error) {
 	id = l.AssetIndex.ID
 	path := launcher.Minecraft + "/assets/indexes/" + id + ".json"
 	if !ver(path, l.AssetIndex.Sha1) {
-		err := assetsjson(url, path, typee, l.AssetIndex.Sha1)
+		err := assetsjson(cxt, url, path, typee, l.AssetIndex.Sha1)
 		if err != nil {
 			return Libraries{}, fmt.Errorf("Newlibraries: %w", err)
 		}
@@ -80,8 +81,8 @@ type asset struct {
 	Hash string `json:"hash"`
 }
 
-func get(u, path string) error {
-	reps, timer, err := Aget(u)
+func get(cxt context.Context, u, path string) error {
+	reps, timer, err := Aget(cxt, u)
 	if reps != nil {
 		defer reps.Body.Close()
 	}
@@ -162,8 +163,8 @@ func source(url, types string) string {
 	return url
 }
 
-func Aget(aurl string) (*http.Response, *time.Timer, error) {
-	ctx, cancel := context.WithCancel(context.TODO())
+func Aget(cxt context.Context, aurl string) (*http.Response, *time.Timer, error) {
+	ctx, cancel := context.WithCancel(cxt)
 	rep, err := http.NewRequestWithContext(ctx, "GET", aurl, nil)
 	timer := time.AfterFunc(5*time.Second, func() {
 		cancel()
@@ -180,14 +181,14 @@ func Aget(aurl string) (*http.Response, *time.Timer, error) {
 	return reps, timer, nil
 }
 
-func assetsjson(url, path, typee, sha1 string) error {
+func assetsjson(cxt context.Context, url, path, typee, sha1 string) error {
 	var err error
 	f := auto(typee)
 	for i := 0; i < 4; i++ {
 		if i == 3 {
 			return err
 		}
-		err = get(source(url, f), path)
+		err = get(cxt, source(url, f), path)
 		if err != nil {
 			f = fail(f)
 			fmt.Println("下载失败，重试", fmt.Errorf("assetsjson: %w", err), url)

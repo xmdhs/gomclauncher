@@ -1,13 +1,14 @@
 package flag
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/xmdhs/gomclauncher/download"
 )
 
 func (f Flag) Arunlist() {
-	l, err := download.Getversionlist(f.Atype)
+	l, err := download.Getversionlist(context.Background(), f.Atype)
 	errr(err)
 	m := make(map[string]bool)
 	for _, v := range l.Versions {

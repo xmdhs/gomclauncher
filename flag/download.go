@@ -1,6 +1,7 @@
 package flag
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"io/ioutil"
@@ -28,9 +29,9 @@ type Flag struct {
 }
 
 func (f Flag) D() {
-	l, err := download.Getversionlist(f.Atype)
+	l, err := download.Getversionlist(context.Background(), f.Atype)
 	errr(err)
-	err = l.Downjson(f.Download)
+	err = l.Downjson(context.Background(), f.Download)
 	if !(f.Run != "" && err != nil && errors.Is(err, download.NoSuch)) {
 		errr(err)
 	}
@@ -43,7 +44,7 @@ func (f Flag) D() {
 	if err != nil {
 		panic(err)
 	}
-	dl, err := download.Newlibraries(b, f.Atype)
+	dl, err := download.Newlibraries(context.Background(), b, f.Atype)
 	errr(err)
 	if f.Outmsg {
 		fmt.Println("正在验证游戏核心")

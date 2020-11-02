@@ -1,6 +1,7 @@
 package download
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -11,7 +12,7 @@ import (
 	"github.com/xmdhs/gomclauncher/launcher"
 )
 
-func Getversionlist(atype string) (*Version, error) {
+func Getversionlist(cxt context.Context, atype string) (*Version, error) {
 	var rep *http.Response
 	var err error
 	var b []byte
@@ -21,7 +22,7 @@ func Getversionlist(atype string) (*Version, error) {
 			if i == 3 {
 				return fmt.Errorf("Getversionlist: %w", err)
 			}
-			rep, _, err = Aget(source(`https://launchermeta.mojang.com/mc/game/version_manifest.json`, f))
+			rep, _, err = Aget(cxt, source(`https://launchermeta.mojang.com/mc/game/version_manifest.json`, f))
 			if rep != nil {
 				defer rep.Body.Close()
 			}
@@ -73,7 +74,7 @@ type VersionVersion struct {
 	URL         string `json:"url"`
 }
 
-func (v Version) Downjson(version string) error {
+func (v Version) Downjson(cxt context.Context, version string) error {
 	f := auto(v.atype)
 	for _, vv := range v.Versions {
 		if vv.ID == version {
@@ -86,7 +87,7 @@ func (v Version) Downjson(version string) error {
 				if i == 3 {
 					return FileDownLoadFail
 				}
-				err := get(source(vv.URL, f), path)
+				err := get(cxt, source(vv.URL, f), path)
 				if err != nil {
 					fmt.Println("似乎是网络问题，重试", source(vv.URL, f), fmt.Errorf("Downjson: %w", err))
 					f = fail(f)
