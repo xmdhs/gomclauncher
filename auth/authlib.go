@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"strings"
+	"net/url"
 	"time"
 )
 
@@ -21,8 +21,13 @@ var Authliburls = []string{
 }
 
 func Getauthlibapi(api string) (apiaddress string, err error) {
-	if !strings.Contains(strings.ToTitle(api), strings.ToTitle("http")) {
-		api = `https://` + api
+	u, err := url.Parse(api)
+	if err != nil {
+		return "", fmt.Errorf("Getauthlibapi: %w", err)
+	}
+	if u.Scheme == "" {
+		u.Scheme = "https"
+		api = u.String()
 	}
 	c := &http.Client{
 		Timeout:   5 * time.Second,
@@ -48,7 +53,11 @@ func Getauthlibapi(api string) (apiaddress string, err error) {
 	if header == "" {
 		return api, nil
 	}
-	if !strings.Contains(strings.ToTitle(header), strings.ToTitle("http")) {
+	hurl, err := url.Parse(header)
+	if err != nil {
+		return "", fmt.Errorf("Getauthlibapi: %w", err)
+	}
+	if hurl.Scheme == "" {
 		api = "https://" + reps.Request.URL.Host + "/" + header
 	} else {
 		return header, nil

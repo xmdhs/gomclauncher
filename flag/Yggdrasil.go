@@ -9,7 +9,7 @@ import (
 	"github.com/xmdhs/gomclauncher/download"
 )
 
-func (f Flag) Authlib() {
+func (f *Flag) Authlib() {
 	err := download.Downauthlib(context.Background())
 	if err != nil {
 		fmt.Println("authlib-injector 下载失败")
