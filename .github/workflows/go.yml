@@ -25,9 +25,9 @@ jobs:
 
     - name: Build
       run: |
-        CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o gml-${{ github.run_id	}}-windows.exe -trimpath -ldflags "-w -s" main.go
-        CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o gml-${{ github.run_id	 }}-linux -trimpath -ldflags "-w -s" main.go
-        CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o gml-${{ github.run_id }}-darwin -trimpath -ldflags "-w -s" main.go
+        CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o gml-${{ github.run_number }}-windows.exe -trimpath -ldflags "-w -s" main.go
+        CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o gml-${{ github.run_number }}-linux -trimpath -ldflags "-w -s" main.go
+        CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o gml-${{ github.run_number }}-darwin -trimpath -ldflags "-w -s" main.go
         gzip gml-*
 
     - name: Test
@@ -38,4 +38,4 @@ jobs:
       with:
        # A file, directory or wildcard pattern that describes what to upload
        path: ./gml*
-       name:  ${{ github.run_number }} - ${{ github.run_id }}
+       name:  ${{ github.run_number }}
