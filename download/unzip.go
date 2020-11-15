@@ -168,6 +168,9 @@ func DeCompress(zipFile, dest string) error {
 	defer reader.Close()
 	for _, file := range reader.File {
 		if !strings.Contains(strings.ToTitle(file.Name), strings.ToTitle("META-INF")) && (strings.HasSuffix(strings.ToTitle(file.Name), strings.ToTitle("dll")) || strings.HasSuffix(strings.ToTitle(file.Name), strings.ToTitle("dylib")) || strings.HasSuffix(strings.ToTitle(file.Name), strings.ToTitle("so"))) {
+			if strings.Contains(file.Name, "..") {
+				continue
+			}
 			rc, err := file.Open()
 			if err != nil {
 				return fmt.Errorf("DeCompress: %w", err)
