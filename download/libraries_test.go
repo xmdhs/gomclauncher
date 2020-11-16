@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
+	"os"
 	"testing"
 
 	"github.com/xmdhs/gomclauncher/auth"
@@ -38,4 +39,6 @@ func TestAssets(t *testing.T) {
 
 func TestMain(m *testing.M) {
 	auth.Transport = http.DefaultTransport.(*http.Transport).Clone()
+	code := m.Run()
+	os.Exit(code)
 }
