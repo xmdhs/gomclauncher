@@ -4,25 +4,11 @@ import (
 	"bytes"
 	"fmt"
 	"io/ioutil"
-	"net"
 	"net/http"
 	"time"
 )
 
-var Transport = http.DefaultTransport.(*http.Transport).Clone()
-
-var HttpClient *http.Client
-
-func init() {
-	Transport.DialContext = (&net.Dialer{
-		Timeout:   5 * time.Second,
-		KeepAlive: 30 * time.Second,
-		DualStack: true,
-	}).DialContext
-	HttpClient = &http.Client{
-		Transport: Transport,
-	}
-}
+var Transport *http.Transport
 
 func post(ApiAddress, endpoint string, Payload []byte) ([]byte, error, int) {
 	var api string
