@@ -27,6 +27,15 @@ type Flag struct {
 	Independent bool
 	Outmsg      bool
 	Gmlconfig   Gmlconfig
+	Saveconfig  func(gmlconfig Gmlconfig)
+}
+
+func NewFlag() *Flag {
+	Gmlconfig := make(Gmlconfig)
+	return &Flag{
+		Gmlconfig:  Gmlconfig,
+		Saveconfig: saveconfig,
+	}
 }
 
 func (f Flag) D() {

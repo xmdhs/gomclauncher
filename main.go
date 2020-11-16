@@ -77,7 +77,7 @@ func main() {
 	}
 }
 
-var f aflag.Flag
+var f *aflag.Flag = aflag.NewFlag()
 
 func init() {
 	f.Gmlconfig = make(aflag.Gmlconfig)
