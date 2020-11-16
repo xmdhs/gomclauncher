@@ -15,19 +15,19 @@ func (f *Flag) Aonline() {
 		fmt.Println("比如 -email xxx@xxx.xx")
 		os.Exit(0)
 	}
-	if gmlconfig[f.ApiAddress] == nil {
-		gmlconfig[f.ApiAddress] = make(map[string]Config)
+	if f.Gmlconfig[f.ApiAddress] == nil {
+		f.Gmlconfig[f.ApiAddress] = make(map[string]Config)
 	}
-	err := gmlconfig[f.ApiAddress][f.Email].setonline(f.ApiAddress, f.Name, f.Email, f.Password)
+	err := f.Gmlconfig[f.ApiAddress][f.Email].setonline(&f.Gmlconfig, f)
 	if err != nil {
 		if errors.Is(err, HaveProfiles) {
 			a := auth.Auth{
-				AccessToken: gmlconfig[f.ApiAddress][f.Email].AccessToken,
-				ClientToken: gmlconfig[f.ApiAddress][f.Email].ClientToken,
+				AccessToken: f.Gmlconfig[f.ApiAddress][f.Email].AccessToken,
+				ClientToken: f.Gmlconfig[f.ApiAddress][f.Email].ClientToken,
 				ApiAddress:  f.ApiAddress,
 			}
 			atime := time.Now().Unix()
-			if atime-gmlconfig[f.ApiAddress][f.Email].Time > 1200 {
+			if atime-f.Gmlconfig[f.ApiAddress][f.Email].Time > 1200 {
 				if err := auth.Validate(a); err != nil {
 					err = auth.Refresh(&a)
 					if err != nil {
@@ -39,14 +39,14 @@ func (f *Flag) Aonline() {
 							panic(err)
 						}
 					}
-					aconfig := gmlconfig[f.ApiAddress][f.Email]
+					aconfig := f.Gmlconfig[f.ApiAddress][f.Email]
 					aconfig.Name = a.Username
 					aconfig.UUID = a.ID
 					aconfig.AccessToken = a.AccessToken
 					aconfig.Time = time.Now().Unix()
 					aconfig.ClientToken = a.ClientToken
-					gmlconfig[f.ApiAddress][f.Email] = aconfig
-					saveconfig()
+					f.Gmlconfig[f.ApiAddress][f.Email] = aconfig
+					saveconfig(f.Gmlconfig)
 				}
 			}
 		} else if errors.Is(err, auth.NotOk) {
@@ -56,17 +56,17 @@ func (f *Flag) Aonline() {
 			panic(err)
 		}
 	}
-	if gmlconfig[f.ApiAddress][f.Email].Name == "" {
+	if f.Gmlconfig[f.ApiAddress][f.Email].Name == "" {
 		panic("请创建角色")
 	}
-	f.AccessToken = gmlconfig[f.ApiAddress][f.Email].AccessToken
-	f.Name = gmlconfig[f.ApiAddress][f.Email].Name
-	f.UUID = gmlconfig[f.ApiAddress][f.Email].UUID
+	f.AccessToken = f.Gmlconfig[f.ApiAddress][f.Email].AccessToken
+	f.Name = f.Gmlconfig[f.ApiAddress][f.Email].Name
+	f.UUID = f.Gmlconfig[f.ApiAddress][f.Email].UUID
 }
 
-func Listname() {
+func (f *Flag) Listname() {
 	fmt.Println("-----------------")
-	for k, v := range gmlconfig {
+	for k, v := range f.Gmlconfig {
 		if k == "https://authserver.mojang.com" {
 			fmt.Println("正版登录")
 		} else {

@@ -26,6 +26,7 @@ type Flag struct {
 	Proxy       string
 	Independent bool
 	Outmsg      bool
+	Gmlconfig   Gmlconfig
 }
 
 func (f Flag) D() {

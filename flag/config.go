@@ -10,25 +10,7 @@ import (
 	"github.com/xmdhs/gomclauncher/auth"
 )
 
-var gmlconfig Gmlconfig
-
-func init() {
-	gmlconfig = make(Gmlconfig)
-	b, err := ioutil.ReadFile("gml.json")
-	if err != nil {
-		if os.IsNotExist(err) {
-			return
-		}
-		panic(err)
-	}
-	err = json.Unmarshal(b, &gmlconfig)
-	if err != nil {
-		fmt.Println("json 损坏，可尝试删除 gml.json")
-		panic(err)
-	}
-}
-
-func saveconfig() {
+func saveconfig(gmlconfig Gmlconfig) {
 	b, err := ioutil.ReadFile("gml.json")
 	if err != nil && !os.IsNotExist(err) {
 		panic(err)
@@ -50,14 +32,14 @@ func saveconfig() {
 
 var HaveProfiles = errors.New("have")
 
-func (c Config) setonline(ApiAddress, username, email, pass string) error {
-	if _, ok := gmlconfig[ApiAddress][email]; ok && pass == "" {
+func (c Config) setonline(gmlconfig *Gmlconfig, f *Flag) error {
+	if _, ok := (*gmlconfig)[f.ApiAddress][f.Email]; ok && f.Password == "" {
 		return HaveProfiles
 	}
 	if c.ClientToken == "" {
-		c.ClientToken = UUIDgen(email)
+		c.ClientToken = UUIDgen(f.Email)
 	}
-	a, err := auth.Authenticate(ApiAddress, username, email, pass, c.ClientToken)
+	a, err := auth.Authenticate(f.ApiAddress, f.Name, f.Email, f.Password, c.ClientToken)
 	if err != nil {
 		return fmt.Errorf("setonline: %w", err)
 	}
@@ -66,8 +48,8 @@ func (c Config) setonline(ApiAddress, username, email, pass string) error {
 	aconfig.Name = a.Username
 	aconfig.UUID = a.ID
 	aconfig.AccessToken = a.AccessToken
-	gmlconfig[ApiAddress][email] = aconfig
-	saveconfig()
+	(*gmlconfig)[f.ApiAddress][f.Email] = aconfig
+	saveconfig(*gmlconfig)
 	return nil
 }
 

@@ -47,7 +47,7 @@ func main() {
 		f.D()
 	}
 	if list {
-		aflag.Listname()
+		f.Listname()
 	}
 	if f.ApiAddress != "" {
 		f.Authlib()
@@ -78,6 +78,22 @@ func main() {
 }
 
 var f aflag.Flag
+
+func init() {
+	f.Gmlconfig = make(aflag.Gmlconfig)
+	b, err := ioutil.ReadFile("gml.json")
+	if err != nil {
+		if os.IsNotExist(err) {
+			return
+		}
+		panic(err)
+	}
+	err = json.Unmarshal(b, &f.Gmlconfig)
+	if err != nil {
+		fmt.Println("json 损坏，可尝试删除 gml.json")
+		panic(err)
+	}
+}
 
 var (
 	credit        bool
