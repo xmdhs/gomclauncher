@@ -4,7 +4,10 @@ import (
 	"context"
 	"encoding/json"
 	"io/ioutil"
+	"net/http"
 	"testing"
+
+	"github.com/xmdhs/gomclauncher/auth"
 )
 
 func TestNewlibrarie(t *testing.T) {
@@ -31,4 +34,8 @@ func TestAssets(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+}
+
+func TestMain(m *testing.M) {
+	auth.Transport = http.DefaultTransport.(*http.Transport).Clone()
 }

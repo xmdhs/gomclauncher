@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"net/http"
 	"testing"
 )
 
@@ -25,4 +26,8 @@ func TestPost(t *testing.T) {
 	a := string(b)
 	t.Log(i)
 	t.Log(a)
+}
+
+func TestMain(m *testing.M) {
+	Transport = http.DefaultTransport.(*http.Transport).Clone()
 }
