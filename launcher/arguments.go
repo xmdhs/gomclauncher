@@ -36,13 +36,13 @@ func (g *Gameinfo) argumentsjvm(l *launcher1155) error {
 var JsonNorTrue = errors.New("json not true")
 
 func (g *Gameinfo) jvmflagadd(v string, l *launcher1155) {
-	flag := g.Jvmflagrelace(v, l)
+	flag := g.jvmflagrelace(v, l)
 	if v != "" {
 		l.flag = append(l.flag, flag)
 	}
 }
 
-func (g *Gameinfo) Jvmflagrelace(s string, l *launcher1155) string {
+func (g *Gameinfo) jvmflagrelace(s string, l *launcher1155) string {
 	s = strings.ReplaceAll(s, "${natives_directory}", g.Minecraftpath+`/versions/`+g.Version+`/natives`)
 	s = strings.ReplaceAll(s, "${launcher_name}", Launcherbrand)
 	s = strings.ReplaceAll(s, "${launcher_version}", Launcherversion)

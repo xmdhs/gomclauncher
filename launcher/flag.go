@@ -40,7 +40,7 @@ type Gameinfo struct {
 
 func (g *Gameinfo) Run115() error {
 	creatlauncherprofiles(g)
-	l, err := g.Modjson()
+	l, err := g.modjson()
 	if err != nil {
 		return fmt.Errorf("Run115: %w", err)
 	}
@@ -84,7 +84,7 @@ func creatlauncherprofiles(g *Gameinfo) {
 
 var JsonErr = errors.New("json err")
 
-func (g *Gameinfo) Modjson() (*launcher1155, error) {
+func (g *Gameinfo) modjson() (*launcher1155, error) {
 	g.flag = make(map[string]string)
 	j := LauncherjsonX115{}
 	mod := Modsjson{}
@@ -106,7 +106,7 @@ func (g *Gameinfo) Modjson() (*launcher1155, error) {
 			return nil, JsonErr
 		}
 		for _, v := range mod.Libraries {
-			l := g.Libraries2LibraryX115(v)
+			l := g.libraries2LibraryX115(v)
 			j.Libraries = append(j.Libraries, l)
 		}
 		g.Version = mod.ID
@@ -153,7 +153,7 @@ func minecraftArguments2jvm(m string) []interface{} {
 	return i
 }
 
-func (g *Gameinfo) Libraries2LibraryX115(l Librarie) LibraryX115 {
+func (g *Gameinfo) libraries2LibraryX115(l Librarie) LibraryX115 {
 	p := Name2path(l.Name)
 	g.flag[p[0]] = p[2]
 	return LibraryX115{
