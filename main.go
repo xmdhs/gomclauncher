@@ -23,7 +23,7 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
-		Transport.Proxy = http.ProxyURL(proxy)
+		auth.Transport.Proxy = http.ProxyURL(proxy)
 	}
 	if update {
 		check()
@@ -173,12 +173,4 @@ func check() {
 		fmt.Println("更新内容：")
 		fmt.Println(u.Body)
 	}
-}
-
-var (
-	Transport = http.DefaultTransport.(*http.Transport).Clone()
-)
-
-func init() {
-	auth.Transport = Transport
 }

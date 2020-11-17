@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-var Transport *http.Transport
+var Transport = http.DefaultTransport.(*http.Transport).Clone()
 
 func post(ApiAddress, endpoint string, Payload []byte) ([]byte, error, int) {
 	var api string
