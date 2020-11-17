@@ -125,7 +125,7 @@ func init() {
 	flag.BoolVar(&f.Independent, "independent", true, "是否开启版本隔离")
 	flag.BoolVar(&f.Outmsg, "test", true, "启动游戏前是否效验文件的完整和正确性")
 	flag.BoolVar(&credit, "credits", false, "使用项目")
-	flag.BoolVar(&update, "update", true, "是否检测更新")
+	flag.BoolVar(&update, "update", false, "是否检测更新")
 	flag.BoolVar(&f.Log, "log", false, "是否输出游戏日志")
 	flag.StringVar(&f.ApiAddress, "yggdrasil", "", "外置登录地址。(authlib-injector)")
 	flag.BoolVar(&list, "list", false, "查看所有保存的正版/外置登录账号")
