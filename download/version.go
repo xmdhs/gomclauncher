@@ -12,7 +12,7 @@ import (
 	"github.com/xmdhs/gomclauncher/launcher"
 )
 
-func Getversionlist(cxt context.Context, atype string) (*Version, error) {
+func Getversionlist(cxt context.Context, atype string) (*version, error) {
 	var rep *http.Response
 	var err error
 	var b []byte
@@ -47,7 +47,7 @@ func Getversionlist(cxt context.Context, atype string) (*Version, error) {
 			}
 		}
 	}
-	v := Version{}
+	v := version{}
 	err = json.Unmarshal(b, &v)
 	v.atype = atype
 	if err != nil {
@@ -56,18 +56,18 @@ func Getversionlist(cxt context.Context, atype string) (*Version, error) {
 	return &v, nil
 }
 
-type Version struct {
-	Latest   VersionLatest    `json:"latest"`
-	Versions []VersionVersion `json:"versions"`
+type version struct {
+	Latest   versionLatest    `json:"latest"`
+	Versions []versionVersion `json:"versions"`
 	atype    string
 }
 
-type VersionLatest struct {
+type versionLatest struct {
 	Release  string `json:"release"`
 	Snapshot string `json:"snapshot"`
 }
 
-type VersionVersion struct {
+type versionVersion struct {
 	ID          string `json:"id"`
 	ReleaseTime string `json:"releaseTime"`
 	Time        string `json:"time"`
@@ -75,7 +75,7 @@ type VersionVersion struct {
 	URL         string `json:"url"`
 }
 
-func (v Version) Downjson(cxt context.Context, version string) error {
+func (v version) Downjson(cxt context.Context, version string) error {
 	r := newrandurls(v.atype)
 	f := r.auto()
 	for _, vv := range v.Versions {

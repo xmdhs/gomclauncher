@@ -115,7 +115,7 @@ func (g *Gameinfo) Modjson() (*launcher1155, error) {
 			j.Arguments.Game = append(j.Arguments.Game, mod.Arguments.Game...)
 		}
 		if mod.MinecraftArguments != "" {
-			j.Arguments.Game = append(j.Arguments.Game, MinecraftArguments2jvm(mod.MinecraftArguments)...)
+			j.Arguments.Game = append(j.Arguments.Game, minecraftArguments2jvm(mod.MinecraftArguments)...)
 			j.Arguments.Jvm = append(j.Arguments.Jvm, getjvm()...)
 		}
 
@@ -125,7 +125,7 @@ func (g *Gameinfo) Modjson() (*launcher1155, error) {
 			return nil, JsonErr
 		}
 		if j.MinecraftArguments != "" {
-			j.Arguments.Game = append(j.Arguments.Game, MinecraftArguments2jvm(j.MinecraftArguments)...)
+			j.Arguments.Game = append(j.Arguments.Game, minecraftArguments2jvm(j.MinecraftArguments)...)
 			j.Arguments.Jvm = append(j.Arguments.Jvm, getjvm()...)
 		}
 		g.Version = j.ID
@@ -144,7 +144,7 @@ func getjvm() []interface{} {
 	return i
 }
 
-func MinecraftArguments2jvm(m string) []interface{} {
+func minecraftArguments2jvm(m string) []interface{} {
 	l := strings.Split(m, " ")
 	i := make([]interface{}, 0)
 	for _, v := range l {
@@ -157,8 +157,8 @@ func (g *Gameinfo) Libraries2LibraryX115(l Librarie) LibraryX115 {
 	p := Name2path(l.Name)
 	g.flag[p[0]] = p[2]
 	return LibraryX115{
-		Downloads: DownloadsX115{
-			Artifact: ArtifactX115{
+		Downloads: downloadsX115{
+			Artifact: artifactX115{
 				//<package>/<name>/<version>/<name>-<version>.jar
 				Path: strings.ReplaceAll(p[0], ".", "/") + "/" + p[1] + "/" + p[2] + "/" + p[1] + "-" + p[2] + ".jar",
 			},
@@ -178,7 +178,7 @@ type Modsjson struct {
 	MainClass          string        `json:"mainClass"`
 	ID                 string        `json:"id"`
 	Libraries          []Librarie    `json:"libraries"`
-	Arguments          ArgumentsX115 `json:"arguments"`
+	Arguments          argumentsX115 `json:"arguments"`
 }
 
 type Librarie struct {
@@ -186,5 +186,5 @@ type Librarie struct {
 	Url       string        `json:"url"`
 	Clientreq bool          `json:"clientreq"`
 	Serverreq bool          `json:"serverreq"`
-	Downloads DownloadsX115 `json:"downloads"`
+	Downloads downloadsX115 `json:"downloads"`
 }

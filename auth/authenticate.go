@@ -18,8 +18,8 @@ func Authenticate(ApiAddress, username, email, password, clientToken string) (Au
 	if ApiAddress == "" {
 		ApiAddress = "https://authserver.mojang.com"
 	}
-	a := AuthenticatePayload{
-		Agent: AuthenticateAgent{
+	a := authenticatePayload{
+		Agent: authenticateAgent{
 			Name:    "Minecraft",
 			Version: 1,
 		},
@@ -41,7 +41,7 @@ func Authenticate(ApiAddress, username, email, password, clientToken string) (Au
 	if i != http.StatusOK {
 		return Auth, NotOk
 	}
-	auth := &AuthenticateResponse{}
+	auth := &authenticateResponse{}
 	if err = json.Unmarshal(b, auth); err != nil {
 		panic(err)
 	}
@@ -64,7 +64,7 @@ func Authenticate(ApiAddress, username, email, password, clientToken string) (Au
 	return Auth, nil
 }
 
-func selectProfile(a []AuthenticateResponseAvailableProfile, username string) SElectedProfile {
+func selectProfile(a []authenticateResponseAvailableProfile, username string) sElectedProfile {
 	if username == "" {
 		fmt.Println("请选择一个角色，通过设置 -username 参数指定")
 		for _, p := range a {
@@ -72,7 +72,7 @@ func selectProfile(a []AuthenticateResponseAvailableProfile, username string) SE
 		}
 		os.Exit(0)
 	}
-	var selectedProfile AuthenticateResponseAvailableProfile
+	var selectedProfile authenticateResponseAvailableProfile
 	for _, p := range a {
 		if p.Name == username {
 			selectedProfile = p
@@ -82,7 +82,7 @@ func selectProfile(a []AuthenticateResponseAvailableProfile, username string) SE
 		fmt.Println("没有这个角色")
 		os.Exit(0)
 	}
-	s := SElectedProfile{
+	s := sElectedProfile{
 		Name: selectedProfile.Name,
 		ID:   selectedProfile.ID,
 	}
@@ -94,32 +94,32 @@ type Auth struct {
 	ClientToken     string
 	ID              string
 	AccessToken     string
-	selectedProfile SElectedProfile
+	selectedProfile sElectedProfile
 	ApiAddress      string
 }
 
-type AuthenticatePayload struct {
-	Agent       AuthenticateAgent `json:"agent"`
+type authenticatePayload struct {
+	Agent       authenticateAgent `json:"agent"`
 	ClientToken string            `json:"clientToken"`
 	Password    string            `json:"password"`
 	RequestUser bool              `json:"requestUser"`
 	Username    string            `json:"username"`
 }
 
-type AuthenticateAgent struct {
+type authenticateAgent struct {
 	Name    string `json:"name"`
 	Version int    `json:"version"`
 }
 
-type AuthenticateResponse struct {
+type authenticateResponse struct {
 	AccessToken       string                                 `json:"accessToken"`
-	AvailableProfiles []AuthenticateResponseAvailableProfile `json:"availableProfiles"`
+	AvailableProfiles []authenticateResponseAvailableProfile `json:"availableProfiles"`
 	ClientToken       string                                 `json:"clientToken"`
-	SelectedProfile   AuthenticateResponseSelectedProfile    `json:"selectedProfile"`
-	User              AuthenticateResponseUser               `json:"user"`
+	SelectedProfile   authenticateResponseSelectedProfile    `json:"selectedProfile"`
+	User              authenticateResponseUser               `json:"user"`
 }
 
-type AuthenticateResponseAvailableProfile struct {
+type authenticateResponseAvailableProfile struct {
 	Agent         string  `json:"agent"`
 	CreatedAt     float64 `json:"createdAt"`
 	ID            string  `json:"id"`
@@ -132,7 +132,7 @@ type AuthenticateResponseAvailableProfile struct {
 	UserID        string  `json:"userId"`
 }
 
-type AuthenticateResponseSelectedProfile struct {
+type authenticateResponseSelectedProfile struct {
 	CreatedAt     float64 `json:"createdAt"`
 	ID            string  `json:"id"`
 	Legacy        bool    `json:"legacy"`
@@ -144,7 +144,7 @@ type AuthenticateResponseSelectedProfile struct {
 	UserID        string  `json:"userId"`
 }
 
-type AuthenticateResponseUser struct {
+type authenticateResponseUser struct {
 	Blocked           bool                               `json:"blocked"`
 	DateOfBirth       float64                            `json:"dateOfBirth"`
 	Email             string                             `json:"email"`
@@ -155,7 +155,7 @@ type AuthenticateResponseUser struct {
 	MigratedAt        float64                            `json:"migratedAt"`
 	MigratedFrom      string                             `json:"migratedFrom"`
 	PasswordChangedAt float64                            `json:"passwordChangedAt"`
-	Properties        []AuthenticateResponseUserProperty `json:"properties"`
+	Properties        []authenticateResponseUserProperty `json:"properties"`
 	RegisterIP        string                             `json:"registerIp"`
 	RegisteredAt      float64                            `json:"registeredAt"`
 	Secured           bool                               `json:"secured"`
@@ -164,7 +164,7 @@ type AuthenticateResponseUser struct {
 	VerifiedByParent  bool                               `json:"verifiedByParent"`
 }
 
-type AuthenticateResponseUserProperty struct {
+type authenticateResponseUserProperty struct {
 	Name  string `json:"name"`
 	Value string `json:"value"`
 }

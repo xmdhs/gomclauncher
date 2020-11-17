@@ -65,7 +65,7 @@ func Getauthlibapi(api string) (apiaddress string, err error) {
 	return api, nil
 }
 
-type Yggdrasil struct {
+type yggdrasil struct {
 	SignaturePublickey string `json:"signaturePublickey"`
 }
 
@@ -91,7 +91,7 @@ func checkapi(url string) error {
 	if err != nil {
 		return fmt.Errorf("checkapi: %w", err)
 	}
-	var y Yggdrasil
+	var y yggdrasil
 	err = json.Unmarshal(b, &y)
 	if err != nil {
 		return fmt.Errorf("checkapi: %w", err)

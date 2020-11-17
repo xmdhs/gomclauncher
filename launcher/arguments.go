@@ -17,8 +17,8 @@ func (g *Gameinfo) argumentsjvm(l *launcher1155) error {
 	for _, v := range j {
 		switch v := v.(type) {
 		case map[string]interface{}:
-			Jvm := Rule(v)
-			flags := Jvmarguments(Jvm)
+			Jvm := rule(v)
+			flags := jvmarguments(Jvm)
 			if flags != nil {
 				for _, v := range flags {
 					g.jvmflagadd(v, l)
@@ -50,8 +50,8 @@ func (g *Gameinfo) Jvmflagrelace(s string, l *launcher1155) string {
 	return s
 }
 
-func Rule(v map[string]interface{}) Jvm {
-	jvm := Jvm{}
+func rule(v map[string]interface{}) ajvm {
+	jvm := ajvm{}
 	var values []interface{}
 	switch vv := v["value"].(type) {
 	case []interface{}:
@@ -66,9 +66,9 @@ func Rule(v map[string]interface{}) Jvm {
 	jvm.Value = value
 	rules := v["rules"]
 	r := rules.([]interface{})
-	rule := make([]JvmRule, 0)
+	rule := make([]jvmRule, 0)
 	for _, rr := range r {
-		jvmrule := JvmRule{}
+		jvmrule := jvmRule{}
 		r := rr.(map[string]interface{})
 		action, ok := r["action"].(string)
 		if ok {
@@ -88,7 +88,7 @@ func Rule(v map[string]interface{}) Jvm {
 	return jvm
 }
 
-func Jvmarguments(j Jvm) []string {
+func jvmarguments(j ajvm) []string {
 	var allow bool
 	for _, v := range j.Rules {
 		if v.Action == "disallow" && osbool(v.Os) {
@@ -104,12 +104,12 @@ func Jvmarguments(j Jvm) []string {
 	return nil
 }
 
-type Jvm struct {
-	Rules []JvmRule
+type ajvm struct {
+	Rules []jvmRule
 	Value []string
 }
 
-type JvmRule struct {
+type jvmRule struct {
 	Action string
 	Os     string
 	arch   string

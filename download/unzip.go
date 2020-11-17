@@ -94,7 +94,7 @@ func (l Libraries) unzipnative(n []string) error {
 				return
 			default:
 				go func() {
-					err := DeCompress(v, p)
+					err := deCompress(v, p)
 					if err != nil {
 						select {
 						case e <- err:
@@ -159,7 +159,7 @@ func swichnatives(l launcher.LibraryX115) (path, sha1, url string) {
 	return
 }
 
-func DeCompress(zipFile, dest string) error {
+func deCompress(zipFile, dest string) error {
 	reader, err := zip.OpenReader(zipFile)
 	if err != nil {
 		return fmt.Errorf("DeCompress: %w", err)

@@ -8,7 +8,7 @@ import (
 )
 
 func Refresh(a *Auth) error {
-	r := Refreshs{
+	r := refreshs{
 		AccessToken: a.AccessToken,
 		ClientToken: a.ClientToken,
 	}
@@ -36,19 +36,19 @@ func Refresh(a *Auth) error {
 	return nil
 }
 
-type Refreshs struct {
+type refreshs struct {
 	AccessToken     string          `json:"accessToken"`
 	ClientToken     string          `json:"clientToken"`
-	SelectedProfile SElectedProfile `json:"selectedProfile"`
+	SelectedProfile sElectedProfile `json:"selectedProfile"`
 }
 
-type SElectedProfile struct {
+type sElectedProfile struct {
 	Name string `json:"name"`
 	ID   string `json:"id"`
 }
 
 func Validate(a Auth) error {
-	r := Refreshs{
+	r := refreshs{
 		AccessToken: a.AccessToken,
 		ClientToken: a.ClientToken,
 	}
