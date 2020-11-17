@@ -14,7 +14,7 @@ type launcher1155 struct {
 	*Gameinfo
 }
 
-func NewLauncher1155(json LauncherjsonX115) *launcher1155 {
+func newlauncher1155(json LauncherjsonX115) *launcher1155 {
 	flag := make([]string, 0)
 	return &launcher1155{json: json, flag: flag}
 }

@@ -130,7 +130,7 @@ func (g *Gameinfo) Modjson() (*launcher1155, error) {
 		}
 		g.Version = j.ID
 	}
-	l := NewLauncher1155(j)
+	l := newlauncher1155(j)
 	l.Gameinfo = g
 	return l, nil
 }
