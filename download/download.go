@@ -23,7 +23,6 @@ func (l Libraries) Downassets(i int, c chan int) error {
 			ok := ver(launcher.Minecraft+`/assets/objects/`+v.Hash[:2]+`/`+v.Hash, v.Hash)
 			if !ok {
 				d := downinfo{
-					typee:    l.typee,
 					url:      `https://resources.download.minecraft.net/` + v.Hash[:2] + `/` + v.Hash,
 					path:     launcher.Minecraft + `/assets/objects/` + v.Hash[:2] + `/` + v.Hash,
 					e:        e,
@@ -103,7 +102,6 @@ func (l Libraries) Downlibrarie(i int, c chan int) error {
 			}
 			if !ver(path, v.Downloads.Artifact.Sha1) {
 				d := downinfo{
-					typee:    l.typee,
 					url:      v.Downloads.Artifact.URL,
 					path:     path,
 					e:        e,
@@ -151,7 +149,7 @@ func (l Libraries) Downjar(version string) error {
 	if ver(path, l.librarie.Downloads.Client.Sha1) {
 		return nil
 	}
-	t := l.auto(l.typee)
+	t := l.auto()
 	for i := 0; i < 4; i++ {
 		if i == 3 {
 			return FileDownLoadFail
@@ -173,19 +171,18 @@ func (l Libraries) Downjar(version string) error {
 }
 
 type downinfo struct {
-	typee string
-	url   string
-	path  string
-	e     chan error
-	Sha1  string
-	done  chan struct{}
-	ch    chan struct{}
-	cxt   context.Context
+	url  string
+	path string
+	e    chan error
+	Sha1 string
+	done chan struct{}
+	ch   chan struct{}
+	cxt  context.Context
 	*randurls
 }
 
 func (d downinfo) down() {
-	f := d.auto(d.typee)
+	f := d.auto()
 	for i := 0; i < 7; i++ {
 		if i == 6 {
 			select {

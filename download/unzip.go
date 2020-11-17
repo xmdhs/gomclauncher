@@ -35,7 +35,6 @@ func (l Libraries) Unzip(i int) error {
 			}
 			if launcher.Ifallow(v) && !ver(path, sha1) {
 				d := downinfo{
-					typee:    l.typee,
 					url:      url,
 					path:     path,
 					e:        e,

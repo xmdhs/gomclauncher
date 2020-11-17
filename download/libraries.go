@@ -29,7 +29,7 @@ func Newlibraries(cxt context.Context, b []byte, typee string) (Libraries, error
 	var url, id string
 	l := launcher.LauncherjsonX115{}
 	err := json.Unmarshal(b, &mod)
-	r := &randurls{}
+	r := newrandurls(typee)
 	if err != nil {
 		return Libraries{}, fmt.Errorf("Newlibraries: %w", err)
 	}
@@ -61,7 +61,7 @@ func Newlibraries(cxt context.Context, b []byte, typee string) (Libraries, error
 	}
 	bb, err := ioutil.ReadFile(path)
 	if err != nil {
-		panic(err)
+		return Libraries{}, fmt.Errorf("Newlibraries: %w", err)
 	}
 	a := assets{}
 	err = json.Unmarshal(bb, &a)
@@ -100,7 +100,7 @@ func get(cxt context.Context, u, path string) error {
 		ss := strings.ReplaceAll(path, s[len(s)-1], "")
 		err := os.MkdirAll(ss, 0777)
 		if err != nil {
-			panic(err)
+			return fmt.Errorf("get: %w", err)
 		}
 	}
 	f, err := os.Create(path)
@@ -190,7 +190,7 @@ func Aget(cxt context.Context, aurl string) (*http.Response, *time.Timer, error)
 
 func assetsjson(cxt context.Context, r *randurls, url, path, typee, sha1 string) error {
 	var err error
-	f := r.auto(typee)
+	f := r.auto()
 	for i := 0; i < 4; i++ {
 		if i == 3 {
 			return err

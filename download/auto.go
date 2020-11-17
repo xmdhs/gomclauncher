@@ -17,7 +17,7 @@ func (r *randurls) fail(typee string) string {
 			r.typeweight.Store(typee, i)
 		}
 		for {
-			t := r.auto("")
+			t := r.auto()
 			if t != typee {
 				return t
 			}
@@ -33,28 +33,32 @@ type arand struct {
 
 type randurls struct {
 	typeweight sync.Map
-	one        sync.Once
 	arand
+	atype string
 }
 
-func (r *randurls) auto(typee string) string {
-	if typee != "" && !strings.Contains(typee, "|") {
-		return typee
-	}
-	r.one.Do(func() {
-		if typee == "" {
-			r.typeweight.Store("vanilla", 5)
-			r.typeweight.Store("bmclapi", 6)
-			r.typeweight.Store("mcbbs", 9)
-		} else {
-			s := strings.Split(typee, "|")
-			for _, v := range s {
-				r.typeweight.Store(v, 5)
-			}
+func newrandurls(typee string) *randurls {
+	r := &randurls{}
+	if typee == "" {
+		r.typeweight.Store("vanilla", 5)
+		r.typeweight.Store("bmclapi", 6)
+		r.typeweight.Store("mcbbs", 9)
+	} else {
+		s := strings.Split(typee, "|")
+		for _, v := range s {
+			r.typeweight.Store(v, 5)
 		}
-		r.Rand = rand.New(rand.NewSource(time.Now().Unix()))
-		r.Mutex = &sync.Mutex{}
-	})
+	}
+	r.Rand = rand.New(rand.NewSource(time.Now().Unix()))
+	r.Mutex = &sync.Mutex{}
+	r.atype = typee
+	return r
+}
+
+func (r *randurls) auto() string {
+	if r.atype != "" && !strings.Contains(r.atype, "|") {
+		return r.atype
+	}
 	i := 0
 	t := make([]string, 0, 4)
 	b := make([]int, 0, 4)

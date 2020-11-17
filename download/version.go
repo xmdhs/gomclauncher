@@ -16,8 +16,8 @@ func Getversionlist(cxt context.Context, atype string) (*Version, error) {
 	var rep *http.Response
 	var err error
 	var b []byte
-	r := &randurls{}
-	f := r.auto(atype)
+	r := newrandurls(atype)
+	f := r.auto()
 	for i := 0; i < 4; i++ {
 		if err := func() error {
 			if i == 3 {
@@ -76,8 +76,8 @@ type VersionVersion struct {
 }
 
 func (v Version) Downjson(cxt context.Context, version string) error {
-	r := &randurls{}
-	f := r.auto(v.atype)
+	r := newrandurls(v.atype)
+	f := r.auto()
 	for _, vv := range v.Versions {
 		if vv.ID == version {
 			s := strings.Split(vv.URL, "/")
