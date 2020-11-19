@@ -78,7 +78,10 @@ func creatlauncherprofiles(g *Gameinfo) {
 		if err != nil {
 			panic(err)
 		}
-		f.WriteString(`{"selectedProfile": "(Default)","profiles": {"(Default)": {"name": "(Default)"}},"clientToken": "88888888-8888-8888-8888-888888888888"}`)
+		_, err = f.WriteString(`{"selectedProfile": "(Default)","profiles": {"(Default)": {"name": "(Default)"}},"clientToken": "88888888-8888-8888-8888-888888888888"}`)
+		if err != nil {
+			panic(err)
+		}
 	}
 }
 
