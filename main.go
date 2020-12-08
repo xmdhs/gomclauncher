@@ -58,7 +58,7 @@ func main() {
 		f.Remove()
 	}
 	if ms {
-
+		f.MsLogin()
 	}
 	if f.Email != "" {
 		f.Aonline()
