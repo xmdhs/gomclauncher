@@ -69,6 +69,8 @@ func (f *Flag) Listname() {
 	for k, v := range f.Gmlconfig {
 		if k == "https://authserver.mojang.com" {
 			fmt.Println("正版登录")
+		} else if k == "ms" {
+			fmt.Println("微软账号登录")
 		} else {
 			fmt.Println("外置登录，api 地址", k)
 		}
