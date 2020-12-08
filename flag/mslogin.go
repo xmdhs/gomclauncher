@@ -36,13 +36,13 @@ func (f *Flag) MsLogin() {
 			msLogincheakErr(err)
 		}
 	}
-	aconfig := f.Gmlconfig[f.ApiAddress][f.Email]
+	aconfig := f.Gmlconfig["ms"][f.Email]
 	aconfig.Name = p.Name
 	aconfig.UUID = p.ID
 	aconfig.AccessToken = p.AccessToken
 	aconfig.Time = time.Now().Unix()
 	aconfig.ClientToken = ""
-	f.Gmlconfig[f.ApiAddress][f.Email] = aconfig
+	f.Gmlconfig["ms"][f.Email] = aconfig
 	saveconfig(f.Gmlconfig)
 
 	f.Name = p.Name
