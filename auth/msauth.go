@@ -15,8 +15,11 @@ import (
 )
 
 const (
-	oauth20Token    = `https://login.live.com/oauth20_token.srf`
-	authenticateURL = `https://user.auth.xboxlive.com/user/authenticate`
+	oauth20Token            = `https://login.live.com/oauth20_token.srf`
+	authenticateURL         = `https://user.auth.xboxlive.com/user/authenticate`
+	authenticatewithXSTSURL = `https://xsts.auth.xboxlive.com/xsts/authorize`
+	loginWithXboxURL        = `https://api.minecraftservices.com/authentication/login_with_xbox`
+	getTheprofileURL        = `https://api.minecraftservices.com/minecraft/profile`
 )
 
 func getCode() (string, error) {
@@ -25,6 +28,32 @@ func getCode() (string, error) {
 		return "", fmt.Errorf("getCode: %w", err)
 	}
 	return code, nil
+}
+
+func MsLogin() (*Profile, error) {
+	code, err := getCode()
+	if err != nil {
+		return nil, fmt.Errorf("MsLogin: %w", err)
+	}
+	token, err := getToken(code)
+	if err != nil {
+		return nil, fmt.Errorf("MsLogin: %w", err)
+	}
+	xbltoken, uhs, err := getXbltoken(token)
+	if err != nil {
+		return nil, fmt.Errorf("MsLogin: %w", err)
+	}
+	xststoken, err := getXSTStoken(xbltoken)
+	if err != nil {
+		return nil, fmt.Errorf("MsLogin: %w", err)
+	}
+	AccessToken, err := loginWithXbox(uhs, xststoken)
+	p, err := GetProfile(AccessToken)
+	if err != nil {
+		return nil, fmt.Errorf("MsLogin: %w", err)
+	}
+	p.AccessToken = AccessToken
+	return p, nil
 }
 
 func getToken(code string) (string, error) {
@@ -73,7 +102,7 @@ func getXSTStoken(Xbltoken string) (string, error) {
 		"RelyingParty": "rp://api.minecraftservices.com/",
 		"TokenType": "JWT"
 	 }`
-	b, err := httPost(authenticateURL, msg, `application/json`)
+	b, err := httPost(authenticatewithXSTSURL, msg, `application/json`)
 	if err != nil {
 		return "", fmt.Errorf("getXSTStoken: %w", err)
 	}
@@ -87,7 +116,7 @@ func getXSTStoken(Xbltoken string) (string, error) {
 
 func loginWithXbox(uhs string, xstsToken string) (string, error) {
 	msg := `{"identityToken": "XBL3.0 x=` + jsonEscape(uhs) + `;` + jsonEscape(xstsToken) + `"}`
-	b, err := httPost(authenticateURL, msg, `application/json`)
+	b, err := httPost(loginWithXboxURL, msg, `application/json`)
 	if err != nil {
 		return "", fmt.Errorf("loginWithXbox: %w", err)
 	}
@@ -97,6 +126,40 @@ func loginWithXbox(uhs string, xstsToken string) (string, error) {
 		return "", fmt.Errorf("loginWithXbox: %w", err)
 	}
 	return t.AccessToken, nil
+}
+
+func GetProfile(Authorization string) (*Profile, error) {
+	reqs, err := http.NewRequest("GET", getTheprofileURL, nil)
+	if err != nil {
+		return nil, fmt.Errorf("getProfile: %w", err)
+	}
+	reqs.Header.Set("Authorization", "Bearer "+Authorization)
+	rep, err := c.Do(reqs)
+	if rep != nil {
+		defer rep.Body.Close()
+	}
+	if err != nil {
+		return nil, fmt.Errorf("getProfile: %w", err)
+	}
+	b, err := ioutil.ReadAll(rep.Body)
+	if err != nil {
+		return nil, fmt.Errorf("getProfile: %w", err)
+	}
+	p := Profile{}
+	err = json.Unmarshal(b, &p)
+	if err != nil {
+		return nil, fmt.Errorf("getProfile: %w", err)
+	}
+	if p.ID == "" {
+		return nil, ErrProfile
+	}
+	return &p, nil
+}
+
+type Profile struct {
+	ID          string `json:"id"`
+	Name        string `json:"name"`
+	AccessToken string
 }
 
 type msauth struct {
@@ -118,8 +181,9 @@ type token struct {
 }
 
 var (
-	ErrCode  = errors.New("code invalid")
-	ErrToken = errors.New("Token invalid")
+	ErrCode    = errors.New("code invalid")
+	ErrToken   = errors.New("Token invalid")
+	ErrProfile = errors.New("DO NOT HAVE GAME")
 )
 
 func httPost(url, msg, ContentType string) ([]byte, error) {
@@ -130,10 +194,6 @@ func httPost(url, msg, ContentType string) ([]byte, error) {
 	reqs.Header.Set("Content-Type", ContentType)
 	reqs.Header.Set("Accept", "*/*")
 	reqs.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36")
-	c := &http.Client{
-		Timeout:   10 * time.Second,
-		Transport: Transport,
-	}
 	rep, err := c.Do(reqs)
 	if rep != nil {
 		defer rep.Body.Close()
@@ -146,6 +206,11 @@ func httPost(url, msg, ContentType string) ([]byte, error) {
 		return nil, fmt.Errorf("httPost: %w", err)
 	}
 	return b, nil
+}
+
+var c = &http.Client{
+	Timeout:   10 * time.Second,
+	Transport: Transport,
 }
 
 func jsonEscape(s string) string {

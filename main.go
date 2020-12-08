@@ -57,6 +57,9 @@ func main() {
 	if remove {
 		f.Remove()
 	}
+	if ms {
+
+	}
 	if f.Email != "" {
 		f.Aonline()
 	} else {
@@ -101,6 +104,7 @@ var (
 	list          bool
 	yggdrasilname string
 	remove        bool
+	ms            bool
 )
 
 func init() {
@@ -131,6 +135,7 @@ func init() {
 	flag.BoolVar(&list, "list", false, "查看所有保存的正版/外置登录账号")
 	flag.BoolVar(&remove, "remove", false, "删除保存的账号")
 	flag.StringVar(&f.JavePath, "javapath", "java", "设置使用指定的 java 路径，一般无需设置此项")
+	flag.BoolVar(&ms, "ms", false, "使用微软账号登录")
 	flag.Parse()
 }
 
