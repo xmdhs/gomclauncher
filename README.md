@@ -16,6 +16,8 @@
 
 第二次 `./gml-linux -run 1.16.1 -email example@example.com` 启动器不会保存你的密码，而是保存 accessToken 用于下次免密登录。
 
+使用微软账号登录 `./gml-linux -run 1.16.1 -email example@example.com -ms`
+
 首次外置登录 `./gml-linux -run 1.16.1 -email example@example.com -password example -yggdrasil example.com` 无需完整的 api 地址，启动器会按照协议自动补全。
 
 第二次 `./gml-linux -run 1.16.1 -email example@example.com -yggdrasil example.com` 
