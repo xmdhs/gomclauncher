@@ -227,10 +227,10 @@ func jsonEscape(s string) string {
 	if len(r) == 0 {
 		return ""
 	}
-	if r[0] == rune('"') {
+	if r[0] == '"' {
 		r = r[1:]
 	}
-	if r[len(r)-1] == rune('"') {
+	if r[len(r)-1] == '"' {
 		r = r[:len(r)-1]
 	}
 	return string(r)
