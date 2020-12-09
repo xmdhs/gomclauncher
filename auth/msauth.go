@@ -1,7 +1,6 @@
 package auth
 
 import (
-	"bytes"
 	"crypto/tls"
 	"encoding/json"
 	"errors"
@@ -224,6 +223,15 @@ func jsonEscape(s string) string {
 	if err != nil {
 		panic(err)
 	}
-	b = bytes.Trim(b, `"`)
-	return string(b)
+	r := []rune(string(b))
+	if len(r) == 0 {
+		return ""
+	}
+	if r[0] == rune('"') {
+		r = r[1:]
+	}
+	if r[len(r)-1] == rune('"') {
+		r = r[:len(r)-1]
+	}
+	return string(r)
 }

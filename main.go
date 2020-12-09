@@ -55,7 +55,7 @@ func main() {
 		f.ApiAddress = "https://authserver.mojang.com"
 	}
 	if remove {
-		f.Remove()
+		f.Remove(ms)
 	}
 	if ms {
 		f.MsLogin()

@@ -24,7 +24,11 @@
 
 查看所有保存的正版/外置登录账号 `./gml-linux -list`
 
-删除保存的正版/外置登录账号 `./gml-linux -email example@example.com -yggdrasil example.com -remove` 
+删除保存的外置登录账号 `./gml-linux -email example@example.com -yggdrasil example.com -remove` 
+
+删除保存的正版登录账号 `./gml-linux -email example@example.com -remove` 
+
+删除保存的正版微软登录账号 `./gml-linux -email example@example.com -ms -remove` 
 
 自定义启动 jvm 参数 `./gml-linux -run 1.16.1 -username xmdhs -flag "-XX:+AggressiveOpts -XX:+UseCompressedOops"`
 

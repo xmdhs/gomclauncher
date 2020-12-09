@@ -5,18 +5,22 @@ import (
 	"os"
 )
 
-func (f Flag) Remove() {
+func (f Flag) Remove(ms bool) {
+	ApiAddress := f.ApiAddress
+	if ms {
+		ApiAddress = "ms"
+	}
 	if f.Email == "" {
 		fmt.Println("请设置 -email 参数来选择要删除的保存的账号")
 		os.Exit(0)
 	}
-	if _, ok := f.Gmlconfig[f.ApiAddress][f.Email]; !ok {
-		fmt.Println(f.ApiAddress, f.Email, "不存在")
+	if _, ok := f.Gmlconfig[ApiAddress][f.Email]; !ok {
+		fmt.Println(ApiAddress, f.Email, "不存在")
 	} else {
-		delete(f.Gmlconfig[f.ApiAddress], f.Email)
-		fmt.Println("成功删除", f.ApiAddress, f.Email)
-		if len(f.Gmlconfig[f.ApiAddress]) == 0 {
-			delete(f.Gmlconfig, f.ApiAddress)
+		delete(f.Gmlconfig[ApiAddress], f.Email)
+		fmt.Println("成功删除", ApiAddress, f.Email)
+		if len(f.Gmlconfig[ApiAddress]) == 0 {
+			delete(f.Gmlconfig, ApiAddress)
 		}
 		saveconfig(f.Gmlconfig)
 	}
