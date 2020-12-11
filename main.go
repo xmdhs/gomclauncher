@@ -58,6 +58,7 @@ func main() {
 		f.Remove(ms)
 	}
 	if ms {
+		fmt.Println("使用微软登录需要安装 chrome，若未安装，会尝试下载 chromium 到 tmp 文件夹，但不一定可用，最好还是先安装上 chrome，https://www.google.cn/intl/zh-CN/chrome/")
 		f.MsLogin()
 	}
 	if f.Email != "" {

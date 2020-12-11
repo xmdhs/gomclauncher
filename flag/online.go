@@ -3,6 +3,7 @@ package flag
 import (
 	"errors"
 	"fmt"
+	"log"
 	"os"
 	"time"
 
@@ -36,7 +37,8 @@ func (f *Flag) Aonline() {
 							os.Exit(0)
 						} else {
 							fmt.Println("登录失败，可能是网络问题，可再次尝试")
-							panic(err)
+							log.Println(err)
+							os.Exit(0)
 						}
 					}
 					aconfig := f.Gmlconfig[f.ApiAddress][f.Email]
