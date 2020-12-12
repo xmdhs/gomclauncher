@@ -62,6 +62,7 @@ func msLogincheakErr(err error) {
 		fmt.Println("你好像还没买游戏，或者还没迁移账号呢")
 	case errors.Is(err, msauth.ErrNotInstallChrome):
 		fmt.Println("请安装 chrome，可来这里下载 https://www.google.cn/intl/zh-CN/chrome/")
+		fmt.Println("当然，chromium 也是可以的")
 	default:
 		panic(err)
 	}
