@@ -142,6 +142,7 @@ func init() {
 func credits() {
 	fmt.Println(`使用了 bmclapi 作为镜像下载源，地址 https://bmclapidoc.bangbang93.com/`)
 	fmt.Println(`使用了 authlib-injector，地址 https://github.com/yushijinhun/authlib-injector`)
+	fmt.Println(`所使用的开源项目以及开源协议见 https://github.com/xmdhs/gomclauncher/blob/master/go.sum`)
 }
 
 type up struct {
