@@ -1,9 +1,6 @@
 github.com/gorilla/websocket v1.4.2 h1:+/TMaTYc4QFitKJxsQ7Yye35DkWvkdLcvGKqM+x0Ufc=
 github.com/gorilla/websocket v1.4.2/go.mod h1:YR8l580nyteQvAITg2hZ9XVh4b55+EU/adAjf1fMHhE=
-github.com/xmdhs/lorca v0.1.10-0.20201212043045-4b364697df48 h1:IyJcTg2Qbd56O5E3No54qnWz1Mm7l/kdnvkyI/HhL9I=
-github.com/xmdhs/lorca v0.1.10-0.20201212043045-4b364697df48/go.mod h1:zH138i4DmU1v0tUhXIv3iVxZDxLQddo4XYw202NxtdQ=
-github.com/xmdhs/msauth v0.1.2 h1:9WvT0HxAPtm5lJnfjd39l7C+8UW0d30T2TnOfUkB2a4=
-github.com/xmdhs/msauth v0.1.2/go.mod h1:3f/KXZD82cn14PDgXq+rOFnEtG3JYB8YqdJQ8zx++4Y=
-github.com/ysmood/leakless v0.6.7 h1:nJNIwECon6vskFI4fgPPlFHEXZKUqKfdKijiopUdReE=
-github.com/ysmood/leakless v0.6.7/go.mod h1:eOWmPkwrQgyJ+JivIgpu5EoJXRN04Wf+wENtR9CUKyE=
-golang.org/x/sys v0.0.0-20200828194041-157a740278f4/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
+github.com/xmdhs/lorca v0.1.10-0.20201212091025-517a7c2f19b7 h1:BsTQ2Cf+vZSkwOganNIXUA3meyC1X4WEc5OXaCLWZfQ=
+github.com/xmdhs/lorca v0.1.10-0.20201212091025-517a7c2f19b7/go.mod h1:9pAZxYwwD+g+BionehMLWNm1/Wh4RAhFVfcpJKU3/uk=
+github.com/xmdhs/msauth v0.1.3 h1:l5gB0AteTyS/bL9j40WTh1OpWj7ezPsh+0y7+zPjNgU=
+github.com/xmdhs/msauth v0.1.3/go.mod h1:Un+1xr7gStRPul1gWQIZsvN6drmrcXewqXBvE4NQG7o=
