@@ -1,6 +1,6 @@
 github.com/gorilla/websocket v1.4.2 h1:+/TMaTYc4QFitKJxsQ7Yye35DkWvkdLcvGKqM+x0Ufc=
 github.com/gorilla/websocket v1.4.2/go.mod h1:YR8l580nyteQvAITg2hZ9XVh4b55+EU/adAjf1fMHhE=
-github.com/xmdhs/lorca v0.1.10-0.20201212091025-517a7c2f19b7 h1:BsTQ2Cf+vZSkwOganNIXUA3meyC1X4WEc5OXaCLWZfQ=
-github.com/xmdhs/lorca v0.1.10-0.20201212091025-517a7c2f19b7/go.mod h1:9pAZxYwwD+g+BionehMLWNm1/Wh4RAhFVfcpJKU3/uk=
-github.com/xmdhs/msauth v0.1.3 h1:l5gB0AteTyS/bL9j40WTh1OpWj7ezPsh+0y7+zPjNgU=
-github.com/xmdhs/msauth v0.1.3/go.mod h1:Un+1xr7gStRPul1gWQIZsvN6drmrcXewqXBvE4NQG7o=
+github.com/xmdhs/lorca v0.1.10-0.20201214073240-7e3c5659c372 h1:OXndePvB0Gx5CSREQ9wbrgi57SfcTKxDaaQO4odjSkU=
+github.com/xmdhs/lorca v0.1.10-0.20201214073240-7e3c5659c372/go.mod h1:9pAZxYwwD+g+BionehMLWNm1/Wh4RAhFVfcpJKU3/uk=
+github.com/xmdhs/msauth v0.1.4 h1:KUFO3GyawZwHale4KlKi5SWRcB2qtZWVmEaSRQKKGl8=
+github.com/xmdhs/msauth v0.1.4/go.mod h1:1DgpAr4Ea3TmlklbpZaODhKUrHnBq3ZWYUnRHelMY7o=
