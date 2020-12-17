@@ -18,6 +18,9 @@ import (
 )
 
 func main() {
+	if v {
+		version()
+	}
 	if f.Proxy != "" {
 		proxy, err := url.Parse(f.Proxy)
 		if err != nil {
@@ -105,6 +108,9 @@ var (
 	yggdrasilname string
 	remove        bool
 	ms            bool
+	v             bool
+	gitHash       string
+	buildDate     string
 )
 
 func init() {
@@ -136,6 +142,7 @@ func init() {
 	flag.BoolVar(&remove, "remove", false, "删除保存的账号")
 	flag.StringVar(&f.JavePath, "javapath", "java", "设置使用指定的 java 路径，一般无需设置此项")
 	flag.BoolVar(&ms, "ms", false, "使用微软账号登录")
+	flag.BoolVar(&v, "v", false, "查看启动器版本")
 	flag.Parse()
 }
 
@@ -179,4 +186,11 @@ func check() {
 		fmt.Println("更新内容：")
 		fmt.Println(u.Body)
 	}
+}
+
+func version() {
+	fmt.Println("gomclauncher " + launcher.Launcherversion + " " + gitHash)
+	fmt.Println("build date " + buildDate)
+	fmt.Println("https://github.com/xmdhs/gomclauncher")
+	os.Exit(0)
 }
