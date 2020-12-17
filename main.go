@@ -111,6 +111,7 @@ var (
 	v             bool
 	gitHash       string
 	buildDate     string
+	buildOn       string
 )
 
 func init() {
@@ -189,8 +190,9 @@ func check() {
 }
 
 func version() {
-	fmt.Println("gomclauncher " + launcher.Launcherversion + " " + gitHash)
-	fmt.Println("build date " + buildDate)
-	fmt.Println("https://github.com/xmdhs/gomclauncher")
+	fmt.Println("gomclauncher-" + launcher.Launcherversion + "-" + gitHash)
+	fmt.Println("Build date: " + buildDate)
+	fmt.Println("Build on: " + buildOn)
+	fmt.Println("Repository: https://github.com/xmdhs/gomclauncher")
 	os.Exit(0)
 }

@@ -1,4 +1,4 @@
-LDFLAGS="-w -s -X main.buildDate=`date` -X main.gitHash=`git rev-parse HEAD && git rev-parse --abbrev-ref HEAD`"
+LDFLAGS="-X 'main.buildDate=$(date)' -X 'main.gitHash=$(git rev-parse HEAD) -X 'main.buildOn=$(go version)' -w -s "
 
 CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o gml-windows.exe -trimpath -ldflags "${LDFLAGS}" main.go
 CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o gml-linux -trimpath -ldflags "${LDFLAGS}" main.go
