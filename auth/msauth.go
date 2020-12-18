@@ -1,7 +1,6 @@
 package auth
 
 import (
-	"crypto/tls"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -211,14 +210,6 @@ func httPost(url, msg, ContentType string) ([]byte, error) {
 var c = &http.Client{
 	Timeout:   15 * time.Second,
 	Transport: Transport,
-}
-
-func init() {
-	t := c.Transport.(*http.Transport).Clone()
-	t.TLSClientConfig = &tls.Config{
-		Renegotiation: tls.RenegotiateOnceAsClient,
-	}
-	c.Transport = t
 }
 
 func jsonEscape(s string) string {

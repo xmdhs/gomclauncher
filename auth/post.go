@@ -2,6 +2,7 @@ package auth
 
 import (
 	"bytes"
+	"crypto/tls"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -9,6 +10,13 @@ import (
 )
 
 var Transport = http.DefaultTransport.(*http.Transport).Clone()
+
+func init() {
+	Transport.TLSClientConfig = &tls.Config{
+		Renegotiation: tls.RenegotiateOnceAsClient,
+	}
+	//microsoft auth neet this
+}
 
 func post(ApiAddress, endpoint string, Payload []byte) ([]byte, error, int) {
 	var api string
