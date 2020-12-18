@@ -194,11 +194,6 @@ func httPost(url, msg, ContentType string) ([]byte, error) {
 	reqs.Header.Set("Content-Type", ContentType)
 	reqs.Header.Set("Accept", "*/*")
 	reqs.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36")
-	t := c.Transport.(*http.Transport).Clone()
-	t.TLSClientConfig = &tls.Config{
-		Renegotiation: tls.RenegotiateOnceAsClient,
-	}
-	c.Transport = t
 	rep, err := c.Do(reqs)
 	if rep != nil {
 		defer rep.Body.Close()
@@ -214,8 +209,16 @@ func httPost(url, msg, ContentType string) ([]byte, error) {
 }
 
 var c = &http.Client{
-	Timeout:   10 * time.Second,
+	Timeout:   15 * time.Second,
 	Transport: Transport,
+}
+
+func init() {
+	t := c.Transport.(*http.Transport).Clone()
+	t.TLSClientConfig = &tls.Config{
+		Renegotiation: tls.RenegotiateOnceAsClient,
+	}
+	c.Transport = t
 }
 
 func jsonEscape(s string) string {
