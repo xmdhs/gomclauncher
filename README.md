@@ -39,6 +39,8 @@
 查看所有可以下载的正式版本 `./gml-linux -verlist release`， `release` 为版本类型，可通过下面的命令获取。
 
 查看其他可选的版本类型 `./gml-linux -verlist ?`
+
+查看启动器版本 `./gml-linux -v`
 ## 截图
 ![image.png](https://i.loli.net/2020/07/02/E7ZcBCGfo1v46kI.png)
 
