@@ -28,9 +28,6 @@ func main() {
 		}
 		auth.Transport.Proxy = http.ProxyURL(proxy)
 	}
-	if update {
-		check()
-	}
 	if credit {
 		credits()
 	}
@@ -77,9 +74,12 @@ func main() {
 	if f.Run != "" {
 		if f.Name == "" && f.Email == "" {
 			fmt.Println("需要设置 username")
-			os.Exit(0)
+		} else {
+			f.Arun()
 		}
-		f.Arun()
+	}
+	if update {
+		check()
 	}
 }
 
@@ -194,5 +194,4 @@ func version() {
 	fmt.Println("Build date: " + buildDate)
 	fmt.Println("Build on: " + buildOn)
 	fmt.Println("Repository: https://github.com/xmdhs/gomclauncher")
-	os.Exit(0)
 }
