@@ -47,6 +47,7 @@ func (g *Gameinfo) Run115() error {
 	l.flag = append(l.flag, `-Dminecraft.client.jar=`+g.Minecraftpath+`/versions/`+l.json.ID+`/`+l.json.ID+`.jar`)
 	l.flag = append(l.flag, `-XX:+UseG1GC`)
 	l.flag = append(l.flag, `-Xmx`+g.RAM+`m`)
+	l.flag = append(l.flag, `-Xms`+g.RAM+`m`)
 	l.flag = append(l.flag, `-XX:-UseAdaptiveSizePolicy`)
 	l.flag = append(l.flag, `-XX:-OmitStackTraceInFastThrow`)
 	l.flag = append(l.flag, `-Dfml.ignoreInvalidMinecraftCertificates=true`)
