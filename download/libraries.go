@@ -190,7 +190,7 @@ func Aget(cxt context.Context, aurl string) (*http.Response, *time.Timer, error)
 
 func assetsjson(cxt context.Context, r *randurls, url, path, typee, sha1 string) error {
 	var err error
-	f := r.auto()
+	_, f := r.auto()
 	for i := 0; i < 4; i++ {
 		if i == 3 {
 			return err

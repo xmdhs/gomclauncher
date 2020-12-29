@@ -153,7 +153,7 @@ func (l Libraries) Downjar(version string) error {
 	if ver(path, l.librarie.Downloads.Client.Sha1) {
 		return nil
 	}
-	t := l.auto()
+	_, t := l.auto()
 	for i := 0; i < 4; i++ {
 		if i == 3 {
 			return FileDownLoadFail
@@ -186,7 +186,7 @@ type downinfo struct {
 }
 
 func (d downinfo) down() {
-	f := d.auto()
+	_, f := d.auto()
 	for i := 0; i < 7; i++ {
 		if i == 6 {
 			select {

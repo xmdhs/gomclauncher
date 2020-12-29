@@ -168,10 +168,9 @@ func (g *Gameinfo) legacy(l *launcher1155) {
 	fileerr := func(err error) {
 		if err != nil {
 			if os.IsNotExist(err) {
-				fmt.Println("文件不存在，请开启文件效验")
-				os.Exit(0)
+				panic(fmt.Errorf("legacy 文件不存在，请开启文件效验: %w", err))
 			} else {
-				panic(err)
+				panic(fmt.Errorf("legacy: %w", err))
 			}
 		}
 	}
@@ -180,7 +179,7 @@ func (g *Gameinfo) legacy(l *launcher1155) {
 	a := assets{}
 	err = json.Unmarshal(b, &a)
 	if err != nil {
-		panic(err)
+		panic(fmt.Errorf("legacy: %w", err))
 	}
 	var w sync.WaitGroup
 	for path, v := range a.Objects {
@@ -195,27 +194,27 @@ func (g *Gameinfo) legacy(l *launcher1155) {
 				err = os.MkdirAll(g.Gamedir+"/resources/"+ss, 0777)
 			}
 			if err != nil {
-				panic(err)
+				panic(fmt.Errorf("legacy: %w", err))
 			}
 			f, err := os.Open(g.Minecraftpath + "/assets/objects/" + v.Hash[0:2] + "/" + v.Hash)
 			fileerr(err)
 			if a.Virtual {
 				ff, err := os.Create(p + path)
 				if err != nil {
-					panic(err)
+					panic(fmt.Errorf("legacy: %w", err))
 				}
 				_, err = io.Copy(ff, f)
 				if err != nil {
-					panic(err)
+					panic(fmt.Errorf("legacy: %w", err))
 				}
 			} else {
 				fff, err := os.Create(g.Gamedir + "/resources/" + path)
 				if err != nil {
-					panic(err)
+					panic(fmt.Errorf("legacy: %w", err))
 				}
 				_, err = io.Copy(fff, f)
 				if err != nil {
-					panic(err)
+					panic(fmt.Errorf("legacy: %w", err))
 				}
 			}
 			w.Done()

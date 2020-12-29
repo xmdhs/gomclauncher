@@ -6,7 +6,7 @@ import (
 
 func Test_randurls_auto(t *testing.T) {
 	r := newrandurls("mcbbs")
-	m := r.auto()
+	_, m := r.auto()
 	if m != "mcbbs" {
 		t.Fail()
 	}

@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
-	"os"
 )
 
 var (
@@ -47,13 +46,17 @@ func Authenticate(ApiAddress, username, email, password, clientToken string) (Au
 	}
 	Auth.AccessToken = auth.AccessToken
 	Auth.ClientToken = auth.ClientToken
-	if len(auth.AvailableProfiles) == 0 {
+	Auth.availableProfiles = auth.AvailableProfiles
+	if len(Auth.availableProfiles) == 0 {
 		return Auth, NoProfiles
 	}
 	if auth.SelectedProfile.Name == "" {
-		a := selectProfile(auth.AvailableProfiles, username)
+		a, err := selectProfile(Auth.availableProfiles, username)
+		if err != nil {
+			return Auth, fmt.Errorf("Authenticate: %w", err)
+		}
 		Auth.selectedProfile = a
-		err := Refresh(&Auth)
+		err = Refresh(&Auth)
 		if err != nil {
 			return Auth, fmt.Errorf("Authenticate: %w", err)
 		}
@@ -64,13 +67,9 @@ func Authenticate(ApiAddress, username, email, password, clientToken string) (Au
 	return Auth, nil
 }
 
-func selectProfile(a []authenticateResponseAvailableProfile, username string) sElectedProfile {
+func selectProfile(a []authenticateResponseAvailableProfile, username string) (sElectedProfile, error) {
 	if username == "" {
-		fmt.Println("请选择一个角色，通过设置 -username 参数指定")
-		for _, p := range a {
-			fmt.Println(p.Name)
-		}
-		os.Exit(0)
+		return sElectedProfile{}, ErrNotSelctProFile
 	}
 	var selectedProfile authenticateResponseAvailableProfile
 	for _, p := range a {
@@ -80,22 +79,36 @@ func selectProfile(a []authenticateResponseAvailableProfile, username string) sE
 	}
 	if selectedProfile.Name == "" {
 		fmt.Println("没有这个角色")
-		os.Exit(0)
+		return sElectedProfile{}, ErrProFileNoExist
 	}
 	s := sElectedProfile{
 		Name: selectedProfile.Name,
 		ID:   selectedProfile.ID,
 	}
-	return s
+	return s, nil
 }
 
+func ListAvailableProfileName(a Auth) []string {
+	list := []string{}
+	for _, v := range a.availableProfiles {
+		list = append(list, v.Name)
+	}
+	return list
+}
+
+var (
+	ErrNotSelctProFile = errors.New("ErrNotSelctProFile")
+	ErrProFileNoExist  = errors.New("ErrProFileNoExist")
+)
+
 type Auth struct {
-	Username        string
-	ClientToken     string
-	ID              string
-	AccessToken     string
-	selectedProfile sElectedProfile
-	ApiAddress      string
+	Username          string
+	ClientToken       string
+	ID                string
+	AccessToken       string
+	selectedProfile   sElectedProfile
+	ApiAddress        string
+	availableProfiles []authenticateResponseAvailableProfile
 }
 
 type authenticatePayload struct {

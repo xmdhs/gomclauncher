@@ -38,7 +38,7 @@ type Gameinfo struct {
 	authlibpath    string
 }
 
-func (g *Gameinfo) Run115() error {
+func (g *Gameinfo) Run115() (err error) {
 	creatlauncherprofiles(g)
 	l, err := g.modjson()
 	if err != nil {
@@ -64,6 +64,12 @@ func (g *Gameinfo) Run115() error {
 		return fmt.Errorf("Run115: %w", err)
 	}
 	l.flag = append(l.flag, l.json.MainClass)
+	defer func() {
+		e := recover()
+		if e != nil {
+			err = e.(error)
+		}
+	}()
 	g.argumentsGame(l)
 	l.Launcher115()
 	return nil
