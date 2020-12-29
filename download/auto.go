@@ -16,8 +16,11 @@ func (r *randurls) fail(typee string) string {
 		} else {
 			r.typeweight.Store(typee, i)
 		}
-		for i := 0; i < 10; i++ {
-			t := r.auto()
+		for {
+			lenmap, t := r.auto()
+			if lenmap == 1 {
+				break
+			}
 			if t != typee {
 				return t
 			}
@@ -55,15 +58,17 @@ func newrandurls(typee string) *randurls {
 	return r
 }
 
-func (r *randurls) auto() string {
+func (r *randurls) auto() (int, string) {
 	if r.atype != "" && !strings.Contains(r.atype, "|") {
-		return r.atype
+		return 1, r.atype
 	}
 	i := 0
+	lenmap := 0
 	t := make([]string, 0, 4)
 	b := make([]int, 0, 4)
 	r.typeweight.Range(
 		func(k, v interface{}) bool {
+			lenmap++
 			if v.(int) != 0 {
 				t = append(t, k.(string))
 				b = append(b, v.(int))
@@ -77,11 +82,10 @@ func (r *randurls) auto() string {
 	for i, v := range b {
 		a = a - v
 		if a <= 0 {
-			return t[i]
+			return lenmap, t[i]
 		}
 	}
 	panic(a)
-
 }
 
 func (r *randurls) add(typee string) {
