@@ -16,7 +16,7 @@ func (r *randurls) fail(typee string) string {
 		} else {
 			r.typeweight.Store(typee, i)
 		}
-		for {
+		for i := 0; i < 10; i++ {
 			t := r.auto()
 			if t != typee {
 				return t

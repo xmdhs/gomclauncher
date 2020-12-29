@@ -97,7 +97,11 @@ func (l Libraries) Downlibrarie(i int, c chan int) error {
 			v := v
 			path := launcher.Minecraft + `/libraries/` + v.Downloads.Artifact.Path
 			if v.Downloads.Artifact.URL == "" {
-				done <- struct{}{}
+				select {
+				case done <- struct{}{}:
+				case <-cxt.Done():
+					return
+				}
 				continue
 			}
 			if !ver(path, v.Downloads.Artifact.Sha1) {
