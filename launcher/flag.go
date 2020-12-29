@@ -39,6 +39,12 @@ type Gameinfo struct {
 }
 
 func (g *Gameinfo) Run115() (err error) {
+	defer func() {
+		e := recover()
+		if e != nil {
+			err = e.(error)
+		}
+	}()
 	creatlauncherprofiles(g)
 	l, err := g.modjson()
 	if err != nil {
@@ -64,12 +70,6 @@ func (g *Gameinfo) Run115() (err error) {
 		return fmt.Errorf("Run115: %w", err)
 	}
 	l.flag = append(l.flag, l.json.MainClass)
-	defer func() {
-		e := recover()
-		if e != nil {
-			err = e.(error)
-		}
-	}()
 	g.argumentsGame(l)
 	l.Launcher115()
 	return nil
@@ -83,11 +83,11 @@ func creatlauncherprofiles(g *Gameinfo) {
 		f, err := os.Create(path)
 		defer f.Close()
 		if err != nil {
-			panic(err)
+			panic(fmt.Errorf("creatlauncherprofiles: %w", err))
 		}
 		_, err = f.WriteString(`{"selectedProfile": "(Default)","profiles": {"(Default)": {"name": "(Default)"}},"clientToken": "88888888-8888-8888-8888-888888888888"}`)
 		if err != nil {
-			panic(err)
+			panic(fmt.Errorf("creatlauncherprofiles: %w", err))
 		}
 	}
 }
@@ -107,9 +107,9 @@ func (g *Gameinfo) modjson() (*launcher1155, error) {
 		b, err := ioutil.ReadFile(g.Minecraftpath + `/versions/` + mod.InheritsFrom + "/" + mod.InheritsFrom + ".json")
 		if err != nil {
 			if os.IsNotExist(err) {
-				return nil, fmt.Errorf("Modjson: %w", err)
+				return nil, fmt.Errorf("Gameinfo.modjson: %w", err)
 			}
-			panic(err)
+			panic(fmt.Errorf("Gameinfo.modjson: %w", err))
 		}
 		err = json.Unmarshal(b, &j)
 		if err != nil {

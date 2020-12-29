@@ -31,7 +31,7 @@ func (l launcher1155) Launcher115() {
 		cmd.Dir = l.Gamedir
 		err := cmd.Run()
 		if err != nil {
-			panic(err)
+			panic(fmt.Errorf("launcher1155.Launcher115: %w", err))
 		}
 	} else {
 		if runtime.GOOS == "windows" && l.JavePath == "java" {
@@ -43,7 +43,7 @@ func (l launcher1155) Launcher115() {
 		cmd.Dir = l.Gamedir
 		err := cmd.Start()
 		if err != nil {
-			panic(err)
+			panic(fmt.Errorf("launcher1155.Launcher115: %w", err))
 		}
 	}
 }
