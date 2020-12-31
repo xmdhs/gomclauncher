@@ -78,7 +78,6 @@ func selectProfile(a []authenticateResponseAvailableProfile, username string) (s
 		}
 	}
 	if selectedProfile.Name == "" {
-		fmt.Println("没有这个角色")
 		return sElectedProfile{}, ErrProFileNoExist
 	}
 	s := sElectedProfile{

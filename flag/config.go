@@ -48,6 +48,9 @@ func (c Config) setonline(gmlconfig *Gmlconfig, f *Flag) error {
 				fmt.Println(p)
 			}
 			os.Exit(0)
+		} else if errors.Is(err, auth.ErrProFileNoExist) {
+			fmt.Println("没有这个角色")
+			os.Exit(0)
 		}
 		return fmt.Errorf("setonline: %w", err)
 	}
