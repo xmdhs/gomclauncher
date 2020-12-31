@@ -14,6 +14,7 @@ import (
 	"github.com/xmdhs/gomclauncher/auth"
 	"github.com/xmdhs/gomclauncher/download"
 	aflag "github.com/xmdhs/gomclauncher/flag"
+	"github.com/xmdhs/gomclauncher/lang"
 	"github.com/xmdhs/gomclauncher/launcher"
 )
 
@@ -73,7 +74,7 @@ func main() {
 	f.Gameinfo.RAM = f.RAM
 	if f.Run != "" {
 		if f.Name == "" && f.Email == "" {
-			fmt.Println("需要设置 username")
+			fmt.Println(lang.Lang("nousername"))
 		} else {
 			f.Arun()
 		}
@@ -96,7 +97,7 @@ func init() {
 	}
 	err = json.Unmarshal(b, &f.Gmlconfig)
 	if err != nil {
-		fmt.Println("json 损坏，可尝试删除 gml.json")
+		fmt.Println(lang.Lang("jsonBreak"))
 		panic(err)
 	}
 }
@@ -112,6 +113,7 @@ var (
 	gitHash       string
 	buildDate     string
 	buildOn       string
+	uselang       string
 )
 
 func init() {
@@ -121,36 +123,45 @@ func init() {
 		panic(err)
 	}
 	f.Minecraftpath = str + "/" + launcher.Minecraft
-	flag.StringVar(&f.Name, "username", "", `用户名`)
-	flag.StringVar(&f.Email, "email", "", `正版/外置登录帐号邮箱，需要正版/外置登录时设置此项，然后无需设置 username`)
-	flag.StringVar(&f.Password, "password", "", `正版/外置登录帐号密码，只需第一次设置，第二次无需使用此参数。`)
-	flag.StringVar(&f.Download, "downver", "", "尝试下载的版本")
-	flag.StringVar(&f.Verlist, "verlist", "", "显示所有可下载的版本，例如 release，使用 ? 可查看所有可选参数。")
-	flag.IntVar(&f.Downint, "int", 64, "下载文件时使用的协程数。")
-	flag.StringVar(&f.Run, "run", "", `尝试启动的版本`)
-	flag.BoolVar(&f.Runlist, "runlist", false, "显示所有可启动的版本")
-	flag.StringVar(&f.RAM, "ram", "2048", `分配启动游戏的内存大小(mb)`)
-	flag.StringVar(&f.Runflag, "flag", "", "自定的启动参数，比如 -XX:+AggressiveOpts -XX:+UseCompressedOops")
-	flag.StringVar(&f.Proxy, `proxy`, "", `设置下载用的代理(http)`)
-	flag.StringVar(&f.Atype, "type", "", `设置下载源。可选 vanilla bmclapi 和 mcbbs，不设置此项则使用将自动的为每一个文件选择下载源。可以使用 "bmclapi|vanilla" 的形式来负载均衡的使用多个下载源。`)
-	flag.BoolVar(&f.Independent, "independent", true, "是否开启版本隔离")
-	flag.BoolVar(&f.Outmsg, "test", true, "启动游戏前是否效验文件的完整和正确性")
-	flag.BoolVar(&credit, "credits", false, "使用项目")
-	flag.BoolVar(&update, "update", true, "是否检测更新")
-	flag.BoolVar(&f.Log, "log", false, "是否输出游戏日志")
-	flag.StringVar(&f.ApiAddress, "yggdrasil", "", "外置登录地址。(authlib-injector)")
-	flag.BoolVar(&list, "list", false, "查看所有保存的正版/外置登录账号")
-	flag.BoolVar(&remove, "remove", false, "删除保存的账号")
-	flag.StringVar(&f.JavePath, "javapath", "java", "设置使用指定的 java 路径，一般无需设置此项")
-	flag.BoolVar(&ms, "ms", false, "使用微软账号登录")
-	flag.BoolVar(&v, "v", false, "查看启动器版本")
+	flag.StringVar(&f.Name, "username", "", lang.Lang("username"))
+	flag.StringVar(&f.Email, "email", "", lang.Lang("emailusage"))
+	flag.StringVar(&f.Password, "password", "", lang.Lang("emailusage"))
+	flag.StringVar(&f.Download, "downver", "", lang.Lang("Downloadusage"))
+	flag.StringVar(&f.Verlist, "verlist", "", lang.Lang("verlistusage"))
+	flag.IntVar(&f.Downint, "int", 64, lang.Lang("intusage"))
+	flag.StringVar(&f.Run, "run", "", lang.Lang("runusage"))
+	flag.BoolVar(&f.Runlist, "runlist", false, lang.Lang("runlistusage"))
+	flag.StringVar(&f.RAM, "ram", "2048", lang.Lang("ramusage"))
+	flag.StringVar(&f.Runflag, "flag", "", lang.Lang("flagusage"))
+	flag.StringVar(&f.Proxy, `proxy`, "", lang.Lang("proxyusage"))
+	flag.StringVar(&f.Atype, "type", "", lang.Lang("typeusage"))
+	flag.BoolVar(&f.Independent, "independent", true, lang.Lang("Independentusage"))
+	flag.BoolVar(&f.Outmsg, "test", true, lang.Lang("testusage"))
+	flag.BoolVar(&credit, "credits", false, lang.Lang("creditsusage"))
+	flag.BoolVar(&update, "update", true, lang.Lang("updateusage"))
+	flag.BoolVar(&f.Log, "log", false, lang.Lang("logusage"))
+	flag.StringVar(&f.ApiAddress, "yggdrasil", "", lang.Lang("yggdrasilusage"))
+	flag.BoolVar(&list, "list", false, lang.Lang("listusage"))
+	flag.BoolVar(&remove, "remove", false, lang.Lang("removeusage"))
+	flag.StringVar(&f.JavePath, "javapath", "java", lang.Lang("javapathusage"))
+	flag.BoolVar(&ms, "ms", false, lang.Lang("msusage"))
+	flag.BoolVar(&v, "v", false, lang.Lang("vusage"))
+	flag.StringVar(&uselang, "", "lang", lang.Lang("javapathusage"))
 	flag.Parse()
+
+	if uselang != "" {
+		err := lang.Setlanguge(uselang)
+		if err != nil {
+			fmt.Println(lang.Lang("nofindLanguage"))
+			os.Exit(0)
+		}
+	}
 }
 
 func credits() {
-	fmt.Println(`使用了 bmclapi 作为镜像下载源，地址 https://bmclapidoc.bangbang93.com/`)
-	fmt.Println(`使用了 authlib-injector，地址 https://github.com/yushijinhun/authlib-injector`)
-	fmt.Println(`所使用的开源项目以及开源协议见 https://github.com/xmdhs/gomclauncher/blob/master/go.sum`)
+	fmt.Println(lang.Lang("bmclapiinfo"))
+	fmt.Println(lang.Lang("authlib-injectorinfo"))
+	fmt.Println(lang.Lang("useproject"))
 }
 
 type up struct {
@@ -164,27 +175,27 @@ func check() {
 		defer reps.Body.Close()
 	}
 	if err != nil {
-		fmt.Println("检测更新失败")
+		fmt.Println(lang.Lang("checkupdateerr"))
 		fmt.Println(err)
 		return
 	}
 	b, err := ioutil.ReadAll(reps.Body)
 	if err != nil {
-		fmt.Println("检测更新失败")
+		fmt.Println(lang.Lang("checkupdateerr"))
 		fmt.Println(err)
 		return
 	}
 	u := up{}
 	err = json.Unmarshal(b, &u)
 	if err != nil {
-		fmt.Println("检测更新失败")
+		fmt.Println(lang.Lang("checkupdateerr"))
 		fmt.Println(err)
 		return
 	}
 	if u.Tag != "v"+launcher.Launcherversion {
-		fmt.Println("检测到更新,新版本为", u.Tag)
-		fmt.Println("当前版本为", "v"+launcher.Launcherversion)
-		fmt.Println("更新内容：")
+		fmt.Println(lang.Lang("checkupdate"), u.Tag)
+		fmt.Println(lang.Lang("nowversion"), "v"+launcher.Launcherversion)
+		fmt.Println(lang.Lang("updateinfo"))
 		fmt.Println(u.Body)
 	}
 }
