@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/xmdhs/gomclauncher/download"
+	"github.com/xmdhs/gomclauncher/lang"
 )
 
 func (f Flag) Arunlist() {
@@ -27,7 +28,7 @@ func (f Flag) Arunlist() {
 			}
 		}
 	} else {
-		fmt.Println("可选: ")
+		fmt.Println(lang.Lang("runlist"))
 		for k := range m {
 			fmt.Println(k)
 		}

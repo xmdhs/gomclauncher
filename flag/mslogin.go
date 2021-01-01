@@ -7,12 +7,13 @@ import (
 	"time"
 
 	"github.com/xmdhs/gomclauncher/auth"
+	"github.com/xmdhs/gomclauncher/lang"
 	msauth "github.com/xmdhs/msauth/auth"
 )
 
 func (f *Flag) MsLogin() {
 	if f.Email == "" {
-		fmt.Println("虽然实际上不需要你输入邮箱，但是需要用邮箱来标记账号，以保存 accesstoken，当然，你也可以完全输入一个不是邮箱的字符串")
+		fmt.Println(lang.Lang("msemailnil"))
 		os.Exit(0)
 	}
 	if f.Gmlconfig["ms"] == nil {
@@ -55,14 +56,13 @@ func (f *Flag) MsLogin() {
 func msLogincheakErr(err error) {
 	switch {
 	case errors.Is(err, msauth.ErrHostname):
-		fmt.Println("忘记密码什么的就别在这操作啦。")
+		fmt.Println(lang.Lang("msauth.ErrHostname"))
 	case errors.Is(err, auth.ErrCode):
-		fmt.Println("尝试重新登录微软的账号")
+		fmt.Println(lang.Lang("auth.ErrCode"))
 	case errors.Is(err, auth.ErrProfile):
-		fmt.Println("你好像还没买游戏，或者还没迁移账号呢")
+		fmt.Println(lang.Lang("auth.ErrProfile"))
 	case errors.Is(err, msauth.ErrNotInstallChrome):
-		fmt.Println("请安装 chrome，可来这里下载 https://www.google.cn/intl/zh-CN/chrome/")
-		fmt.Println("当然，chromium 也是可以的")
+		fmt.Println(lang.Lang("msauth.ErrNotInstallChrome"))
 	default:
 		panic(err)
 	}

@@ -2,6 +2,8 @@ package flag
 
 import (
 	"fmt"
+
+	"github.com/xmdhs/gomclauncher/lang"
 )
 
 func (f Flag) Remove(ms bool) {
@@ -10,13 +12,13 @@ func (f Flag) Remove(ms bool) {
 		ApiAddress = "ms"
 	}
 	if f.Email == "" {
-		fmt.Println("请设置 -email 参数来选择要删除的保存的账号")
+		fmt.Println(lang.Lang("emailnil"))
 	}
 	if _, ok := f.Gmlconfig[ApiAddress][f.Email]; !ok {
-		fmt.Println(ApiAddress, f.Email, "不存在")
+		fmt.Println(ApiAddress, f.Email, lang.Lang("nofind"))
 	} else {
 		delete(f.Gmlconfig[ApiAddress], f.Email)
-		fmt.Println("成功删除", ApiAddress, f.Email)
+		fmt.Println(lang.Lang("removeok"), ApiAddress, f.Email)
 		if len(f.Gmlconfig[ApiAddress]) == 0 {
 			delete(f.Gmlconfig, ApiAddress)
 		}

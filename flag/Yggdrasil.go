@@ -7,20 +7,21 @@ import (
 
 	"github.com/xmdhs/gomclauncher/auth"
 	"github.com/xmdhs/gomclauncher/download"
+	"github.com/xmdhs/gomclauncher/lang"
 )
 
 func (f *Flag) Authlib() {
 	err := download.Downauthlib(context.Background())
 	if err != nil {
-		fmt.Println("authlib-injector 下载失败")
+		fmt.Println(lang.Lang("authlibdownloadfailed"))
 		panic(err)
 	}
 	api, err := auth.Getauthlibapi(f.ApiAddress)
 	if err != nil {
 		if errors.Is(err, auth.JsonNotTrue) {
-			panic("外置登录地址错误")
+			panic(lang.Lang("auth.JsonNotTrue"))
 		} else {
-			fmt.Println("或许是网络问题")
+			fmt.Println(lang.Lang("webfail"))
 			panic(err)
 		}
 	}

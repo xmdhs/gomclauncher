@@ -74,20 +74,20 @@ func (f Flag) D() {
 	f.dd(dl, false)
 	fmt.Println(lang.Lang("finish"))
 	if f.Outmsg {
-		fmt.Println("正在验证资源文件")
+		fmt.Println(lang.Lang("verifyassets"))
 	} else {
-		fmt.Println("正在下载资源文件")
+		fmt.Println(lang.Lang("downloadassets"))
 	}
 	f.dd(dl, true)
 	fmt.Println(lang.Lang("finish"))
 	if f.Outmsg {
-		fmt.Println("正在验证解压 natives 库")
+		fmt.Println(lang.Lang("verifynatives"))
 	} else {
-		fmt.Println("正在下载解压 natives 库")
+		fmt.Println(lang.Lang("downloadnatives"))
 	}
 	err = dl.Unzip(f.Downint)
 	if err != nil {
-		fmt.Println("下载失败")
+		fmt.Println(lang.Lang("downloadfail"))
 		panic(err)
 	}
 	fmt.Println(lang.Lang("finish"))
@@ -127,9 +127,9 @@ func errr(err error) {
 	if err != nil {
 		switch {
 		case errors.Is(err, download.NoSuch):
-			fmt.Println("没有这个版本")
+			fmt.Println(lang.Lang("download.NoSuch"))
 		case errors.Is(err, download.FileDownLoadFail):
-			fmt.Println("失败次数过多，尝试切换下载源或者重新尝试")
+			fmt.Println(lang.Lang("download.FileDownLoadFail"))
 		default:
 			panic(err)
 		}

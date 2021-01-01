@@ -8,6 +8,7 @@ import (
 
 var langmap = map[string]map[string]string{
 	"zh": zh,
+	"en": en,
 }
 
 var lang map[string]string

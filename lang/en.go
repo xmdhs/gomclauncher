@@ -1,6 +1,6 @@
 package lang
 
-var zh = map[string]string{
+var en = map[string]string{
 	"nousername":                 "需要设置 username",
 	"jsonBreak":                  "json 损坏，可尝试删除 gml.json",
 	"username":                   "用户名",

@@ -8,12 +8,12 @@ import (
 	"time"
 
 	"github.com/xmdhs/gomclauncher/auth"
+	"github.com/xmdhs/gomclauncher/lang"
 )
 
 func (f *Flag) Aonline() {
 	if f.Email == "" {
-		fmt.Println("请设置邮箱")
-		fmt.Println("比如 -email xxx@xxx.xx")
+		fmt.Println(lang.Lang("emailnil"))
 		os.Exit(0)
 	}
 	if f.Gmlconfig[f.ApiAddress] == nil {
@@ -33,10 +33,10 @@ func (f *Flag) Aonline() {
 					err = auth.Refresh(&a)
 					if err != nil {
 						if errors.Is(err, auth.NotOk) {
-							fmt.Println("请尝试重新登录帐号")
+							fmt.Println(lang.Lang("auth.NotOk-refresh"))
 							os.Exit(0)
 						} else {
-							fmt.Println("登录失败，可能是网络问题，可再次尝试")
+							fmt.Println(lang.Lang("Refresherr"))
 							log.Println(err)
 							os.Exit(0)
 						}
@@ -52,14 +52,15 @@ func (f *Flag) Aonline() {
 				}
 			}
 		} else if errors.Is(err, auth.NotOk) {
-			fmt.Println("账户名或密码错误")
+			fmt.Println(lang.Lang("auth.NotOk"))
 			os.Exit(0)
 		} else {
 			panic(err)
 		}
 	}
 	if f.Gmlconfig[f.ApiAddress][f.Email].Name == "" {
-		panic("请创建角色")
+		fmt.Println(lang.Lang("namenil"))
+		os.Exit(0)
 	}
 	f.AccessToken = f.Gmlconfig[f.ApiAddress][f.Email].AccessToken
 	f.Name = f.Gmlconfig[f.ApiAddress][f.Email].Name
@@ -70,15 +71,15 @@ func (f *Flag) Listname() {
 	fmt.Println("-----------------")
 	for k, v := range f.Gmlconfig {
 		if k == "https://authserver.mojang.com" {
-			fmt.Println("正版登录")
+			fmt.Println(lang.Lang("minecraftlogin"))
 		} else if k == "ms" {
-			fmt.Println("微软账号登录")
+			fmt.Println(lang.Lang("mslogin"))
 		} else {
-			fmt.Println("外置登录，api 地址", k)
+			fmt.Println(lang.Lang("authlib-injectorlogin"), k)
 		}
 		for k, v := range v {
-			fmt.Println("邮箱:", k)
-			fmt.Println("用户名:", v.Name)
+			fmt.Println(lang.Lang("email"), k)
+			fmt.Println(lang.Lang("name"), v.Name)
 		}
 		fmt.Println("-----------------")
 	}

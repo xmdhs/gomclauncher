@@ -10,6 +10,8 @@ import (
 	"runtime"
 	"strings"
 	"sync"
+
+	"github.com/xmdhs/gomclauncher/lang"
 )
 
 func (g *Gameinfo) argumentsjvm(l *launcher1155) error {
@@ -168,7 +170,7 @@ func (g *Gameinfo) legacy(l *launcher1155) {
 	fileerr := func(err error) {
 		if err != nil {
 			if os.IsNotExist(err) {
-				panic(fmt.Errorf("legacy 文件不存在，请开启文件效验: %w", err))
+				panic(fmt.Errorf(lang.Lang("legacynoexit"), err))
 			} else {
 				panic(fmt.Errorf("legacy: %w", err))
 			}
