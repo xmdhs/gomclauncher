@@ -9,7 +9,7 @@ import (
 
 var (
 	NotOk      = errors.New("not ok")
-	NoProfiles = errors.New("无可用角色")
+	NoProfiles = errors.New("No Available Profiles")
 )
 
 //Authenticate return accessToken, err

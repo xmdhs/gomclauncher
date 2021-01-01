@@ -8,6 +8,7 @@ import (
 	"os"
 
 	"github.com/xmdhs/gomclauncher/download"
+	"github.com/xmdhs/gomclauncher/lang"
 	"github.com/xmdhs/gomclauncher/launcher"
 )
 
@@ -58,27 +59,27 @@ func (f Flag) D() {
 	dl, err := download.Newlibraries(cxt, b, f.Atype)
 	errr(err)
 	if f.Outmsg {
-		fmt.Println("正在验证游戏核心")
+		fmt.Println(lang.Lang("verifygamejar"))
 	} else {
-		fmt.Println("正在下载游戏核心")
+		fmt.Println(lang.Lang("downloadgamejar"))
 	}
 	err = dl.Downjar(f.Download)
 	errr(err)
-	fmt.Println("完成")
+	fmt.Println(lang.Lang("finish"))
 	if f.Outmsg {
-		fmt.Println("正在验证库文件")
+		fmt.Println(lang.Lang("verifylibrarie"))
 	} else {
-		fmt.Println("正在下载库文件")
+		fmt.Println(lang.Lang("downloadlibrarie"))
 	}
 	f.dd(dl, false)
-	fmt.Println("完成")
+	fmt.Println(lang.Lang("finish"))
 	if f.Outmsg {
 		fmt.Println("正在验证资源文件")
 	} else {
 		fmt.Println("正在下载资源文件")
 	}
 	f.dd(dl, true)
-	fmt.Println("完成")
+	fmt.Println(lang.Lang("finish"))
 	if f.Outmsg {
 		fmt.Println("正在验证解压 natives 库")
 	} else {
@@ -89,7 +90,7 @@ func (f Flag) D() {
 		fmt.Println("下载失败")
 		panic(err)
 	}
-	fmt.Println("完成")
+	fmt.Println(lang.Lang("finish"))
 }
 
 func (f Flag) dd(l download.Libraries, a bool) {

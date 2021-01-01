@@ -1,11 +1,19 @@
 package lang
 
-import "github.com/cloudfoundry/jibber_jabber"
+import (
+	"github.com/Xuanwo/go-locale"
+)
 
 func init() {
-	l, err := jibber_jabber.DetectLanguage()
-	if _, ok := langmap[l]; !ok || err != nil {
-		l = "en"
+	tag, err := locale.Detect()
+	if err != nil {
+		Setlanguge("en")
+		return
 	}
-	lang = langmap[l]
+	l, _ := tag.Base()
+	err = Setlanguge(l.String())
+	if err != nil {
+		Setlanguge("en")
+		return
+	}
 }

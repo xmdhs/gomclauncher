@@ -13,6 +13,7 @@ import (
 	"time"
 
 	"github.com/xmdhs/gomclauncher/auth"
+	"github.com/xmdhs/gomclauncher/lang"
 	"github.com/xmdhs/gomclauncher/launcher"
 )
 
@@ -198,12 +199,12 @@ func assetsjson(cxt context.Context, r *randurls, url, path, typee, sha1 string)
 		err = get(cxt, source(url, f), path)
 		if err != nil {
 			f = r.fail(f)
-			fmt.Println("下载失败，重试", fmt.Errorf("assetsjson: %w", err), url)
+			fmt.Println(lang.Lang("weberr"), fmt.Errorf("assetsjson: %w", err), url)
 			continue
 		}
 		if !ver(path, sha1) {
 			f = r.fail(f)
-			fmt.Println("文件效验失败，重试", url)
+			fmt.Println(lang.Lang("filecheckerr"), url)
 			continue
 		}
 		break

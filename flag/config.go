@@ -8,6 +8,7 @@ import (
 	"os"
 
 	"github.com/xmdhs/gomclauncher/auth"
+	"github.com/xmdhs/gomclauncher/lang"
 )
 
 func saveconfig(gmlconfig Gmlconfig) {
@@ -42,14 +43,14 @@ func (c Config) setonline(gmlconfig *Gmlconfig, f *Flag) error {
 	a, err := auth.Authenticate(f.ApiAddress, f.Name, f.Email, f.Password, c.ClientToken)
 	if err != nil {
 		if errors.Is(err, auth.ErrNotSelctProFile) {
-			fmt.Println("请选择一个角色，通过设置 -username 参数指定")
+			fmt.Println(lang.Lang("ErrNotSelctProFile"))
 			list := auth.ListAvailableProfileName(a)
 			for _, p := range list {
 				fmt.Println(p)
 			}
 			os.Exit(0)
 		} else if errors.Is(err, auth.ErrProFileNoExist) {
-			fmt.Println("没有这个角色")
+			fmt.Println(lang.Lang("ErrProFileNoExist"))
 			os.Exit(0)
 		}
 		return fmt.Errorf("setonline: %w", err)

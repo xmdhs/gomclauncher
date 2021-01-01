@@ -1,6 +1,10 @@
 package lang
 
-import "errors"
+import (
+	"errors"
+
+	"golang.org/x/text/language"
+)
 
 var langmap = map[string]map[string]string{
 	"zh": zh,
@@ -9,10 +13,12 @@ var langmap = map[string]map[string]string{
 var lang map[string]string
 
 func Setlanguge(languge string) error {
-	if langmap[languge] == nil {
+	tag := language.Make(languge)
+	l, _ := tag.Base()
+	if langmap[l.String()] == nil {
 		return ErrNotFind
 	}
-	lang = langmap[languge]
+	lang = langmap[l.String()]
 	return nil
 }
 

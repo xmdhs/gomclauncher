@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/xmdhs/gomclauncher/lang"
 	"github.com/xmdhs/gomclauncher/launcher"
 )
 
@@ -28,13 +29,13 @@ func Getversionlist(cxt context.Context, atype string) (*version, error) {
 				defer rep.Body.Close()
 			}
 			if err != nil {
-				fmt.Println("获取版本列表失败，重试", fmt.Errorf("Getversionlist: %w", err), source(`https://launchermeta.mojang.com/mc/game/version_manifest.json`, f))
+				fmt.Println(lang.Lang("getversionlistfail"), fmt.Errorf("Getversionlist: %w", err), source(`https://launchermeta.mojang.com/mc/game/version_manifest.json`, f))
 				f = r.fail(f)
 				return nil
 			}
 			b, err = ioutil.ReadAll(rep.Body)
 			if err != nil {
-				fmt.Println("获取版本列表失败，重试", fmt.Errorf("Getversionlist: %w", err), source(`https://launchermeta.mojang.com/mc/game/version_manifest.json`, f))
+				fmt.Println(lang.Lang("getversionlistfail"), fmt.Errorf("Getversionlist: %w", err), source(`https://launchermeta.mojang.com/mc/game/version_manifest.json`, f))
 				f = r.fail(f)
 				return nil
 			}
@@ -91,12 +92,12 @@ func (v version) Downjson(cxt context.Context, version string) error {
 				}
 				err := get(cxt, source(vv.URL, f), path)
 				if err != nil {
-					fmt.Println("似乎是网络问题，重试", source(vv.URL, f), fmt.Errorf("Downjson: %w", err))
+					fmt.Println(lang.Lang("weberr"), source(vv.URL, f), fmt.Errorf("Downjson: %w", err))
 					f = r.fail(f)
 					continue
 				}
 				if !ver(path, s[len(s)-2]) {
-					fmt.Println("文件效验失败，重新下载", source(vv.URL, f))
+					fmt.Println(lang.Lang("filecheckerr"), source(vv.URL, f))
 					f = r.fail(f)
 					continue
 				}

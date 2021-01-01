@@ -10,6 +10,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/xmdhs/gomclauncher/lang"
 	"github.com/xmdhs/gomclauncher/launcher"
 )
 
@@ -160,12 +161,12 @@ func (l Libraries) Downjar(version string) error {
 		}
 		err := get(l.cxt, source(l.librarie.Downloads.Client.URL, t), path)
 		if err != nil {
-			fmt.Println("似乎是网络问题，重试", source(l.librarie.Downloads.Client.URL, t), fmt.Errorf("Downjar: %w", err))
+			fmt.Println(lang.Lang("weberr"), source(l.librarie.Downloads.Client.URL, t), fmt.Errorf("Downjar: %w", err))
 			t = l.fail(t)
 			continue
 		}
 		if !ver(path, l.librarie.Downloads.Client.Sha1) {
-			fmt.Println("文件效验失败，重新下载", source(l.librarie.Downloads.Client.URL, t))
+			fmt.Println(lang.Lang("filecheckerr"), source(l.librarie.Downloads.Client.URL, t))
 			t = l.fail(t)
 			continue
 		}
@@ -197,12 +198,12 @@ func (d downinfo) down() {
 		}
 		err := get(d.cxt, source(d.url, f), d.path)
 		if err != nil {
-			fmt.Println("似乎是网络问题，重试", source(d.url, f), err)
+			fmt.Println(lang.Lang("weberr"), source(d.url, f), err)
 			f = d.fail(f)
 			continue
 		}
 		if !ver(d.path, d.Sha1) {
-			fmt.Println("文件效验失败，重新下载", source(d.url, f))
+			fmt.Println(lang.Lang("filecheckerr"), source(d.url, f))
 			f = d.fail(f)
 			continue
 		}

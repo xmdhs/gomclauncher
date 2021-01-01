@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/xmdhs/gomclauncher/auth"
+	"github.com/xmdhs/gomclauncher/lang"
 )
 
 func Downauthlib(cxt context.Context) error {
@@ -26,12 +27,12 @@ func Downauthlib(cxt context.Context) error {
 		}
 		err := get(cxt, url, path)
 		if err != nil {
-			fmt.Println("authlib 下载失败，重试", fmt.Errorf("Downauthlib: %w", err), url)
+			fmt.Println(lang.Lang("authlibdownloadfail"), fmt.Errorf("Downauthlib: %w", err), url)
 			url = randurl(url)
 			continue
 		}
 		if !ver(path, auth.Authlibsha1) {
-			fmt.Println("authlib 效验出错，重试", url)
+			fmt.Println(lang.Lang("authlibcheckerr"), url)
 			url = randurl(url)
 			continue
 		}
