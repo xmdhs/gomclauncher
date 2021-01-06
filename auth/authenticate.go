@@ -31,7 +31,7 @@ func Authenticate(ApiAddress, username, email, password, clientToken string) (Au
 	Auth := Auth{}
 	Auth.ApiAddress = ApiAddress
 	if err != nil {
-		panic(err)
+		return Auth, fmt.Errorf("Authenticate: %w", err)
 	}
 	b, err, i := post(Auth.ApiAddress, "authenticate", b)
 	if err != nil {
@@ -42,7 +42,7 @@ func Authenticate(ApiAddress, username, email, password, clientToken string) (Au
 	}
 	auth := &authenticateResponse{}
 	if err = json.Unmarshal(b, auth); err != nil {
-		panic(err)
+		return Auth, fmt.Errorf("Authenticate: %w", err)
 	}
 	Auth.AccessToken = auth.AccessToken
 	Auth.ClientToken = auth.ClientToken
