@@ -3,10 +3,14 @@ package download
 import (
 	"context"
 	"io/ioutil"
+	"os"
 	"testing"
 )
 
 func TestNewlibraries(t *testing.T) {
+	t.Cleanup(func() {
+		os.RemoveAll(".minecraft")
+	})
 	b, err := ioutil.ReadFile("1.15.2.json")
 	if err != nil {
 		t.Fatal(err)
@@ -37,7 +41,6 @@ b:
 			break b
 		}
 	}
-
 }
 
 func TestDownassets(t *testing.T) {
