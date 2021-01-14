@@ -69,7 +69,7 @@ func (r *randurls) auto() (int, string) {
 	r.typeweight.Range(
 		func(k, v interface{}) bool {
 			lenmap++
-			if v.(int) != 0 {
+			if v.(int) > 0 {
 				t = append(t, k.(string))
 				b = append(b, v.(int))
 				i += v.(int)
