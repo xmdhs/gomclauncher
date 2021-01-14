@@ -12,13 +12,13 @@ func (r *randurls) fail(typee string) string {
 		i := v.(int)
 		i--
 		if i <= 0 {
-			r.typeweight.Store(typee, 0)
+			r.typeweight.Delete(typee)
 		} else {
 			r.typeweight.Store(typee, i)
 		}
 		for {
 			lenmap, t := r.auto()
-			if lenmap == 1 {
+			if lenmap <= 1 {
 				break
 			}
 			if t != typee {
@@ -43,9 +43,9 @@ type randurls struct {
 func newrandurls(typee string) *randurls {
 	r := &randurls{}
 	if typee == "" {
-		r.typeweight.Store("vanilla", 5)
-		r.typeweight.Store("bmclapi", 6)
-		r.typeweight.Store("mcbbs", 9)
+		r.typeweight.Store("vanilla", 10)
+		r.typeweight.Store("bmclapi", 12)
+		r.typeweight.Store("mcbbs", 18)
 	} else {
 		s := strings.Split(typee, "|")
 		for _, v := range s {
@@ -64,25 +64,26 @@ func (r *randurls) auto() (int, string) {
 	}
 	i := 0
 	lenmap := 0
-	t := make([]string, 0, 4)
-	b := make([]int, 0, 4)
+	typemap := make(map[string]int)
 	r.typeweight.Range(
 		func(k, v interface{}) bool {
-			lenmap++
 			if v.(int) > 0 {
-				t = append(t, k.(string))
-				b = append(b, v.(int))
+				lenmap++
+				typemap[k.(string)] = v.(int)
 				i += v.(int)
 			}
 			return true
 		})
+	if lenmap == 0 {
+		return 0, ""
+	}
 	r.Lock()
 	a := r.Intn(i) + 1
 	r.Unlock()
-	for i, v := range b {
+	for k, v := range typemap {
 		a = a - v
 		if a <= 0 {
-			return lenmap, t[i]
+			return lenmap, k
 		}
 	}
 	panic(a)
