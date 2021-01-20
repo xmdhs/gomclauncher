@@ -51,7 +51,6 @@ func (g *Gameinfo) Run115() (err error) {
 		return fmt.Errorf("Run115: %w", err)
 	}
 	l.flag = append(l.flag, `-Dminecraft.client.jar=`+g.Minecraftpath+`/versions/`+l.json.ID+`/`+l.json.ID+`.jar`)
-	l.flag = append(l.flag, `-XX:+UseG1GC`)
 	l.flag = append(l.flag, `-Xmx`+g.RAM+`m`)
 	l.flag = append(l.flag, `-Xms`+g.RAM+`m`)
 	l.flag = append(l.flag, `-XX:-UseAdaptiveSizePolicy`)
