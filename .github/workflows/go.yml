@@ -25,7 +25,7 @@ jobs:
           chmod +x build.sh
           ./build.sh
       - name: Test
-        run: go test -v ./...
+        run: go test -race -v ./...
 
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v2
