@@ -12,7 +12,7 @@ func (r *randurls) fail(typee string) string {
 		i := v.(int)
 		i--
 		if i <= 0 {
-			r.typeweight.Delete(typee)
+			r.typeweight.Store(typee, 0)
 		} else {
 			r.typeweight.Store(typee, i)
 		}
