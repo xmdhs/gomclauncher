@@ -60,12 +60,13 @@ func main() {
 	}
 	if ms {
 		f.MsLogin()
-	}
-	if f.Email != "" {
-		f.Aonline()
 	} else {
-		f.UUID = aflag.UUIDgen(f.Name)
-		f.AccessToken = f.UUID
+		if f.Email != "" {
+			f.Aonline()
+		} else {
+			f.UUID = aflag.UUIDgen(f.Name)
+			f.AccessToken = f.UUID
+		}
 	}
 	if f.Runflag != "" {
 		s := strings.Split(f.Runflag, " ")
