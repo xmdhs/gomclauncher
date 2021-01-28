@@ -2,7 +2,7 @@ package launcher
 
 const (
 	Launcherbrand   string = "GML"
-	Launcherversion string = "1.3.5"
+	Launcherversion string = "1.3.6"
 )
 
 const Minecraft string = ".minecraft"
