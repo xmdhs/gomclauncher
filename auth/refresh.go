@@ -9,8 +9,14 @@ import (
 
 func Refresh(a *Auth) error {
 	r := refreshs{
-		AccessToken: a.AccessToken,
-		ClientToken: a.ClientToken,
+		validate: validate{
+			AccessToken: a.AccessToken,
+			ClientToken: a.ClientToken,
+		},
+		SelectedProfile: sElectedProfile{
+			Name: a.Username,
+			ID:   a.ID,
+		},
 	}
 	if a.selectedProfile.Name != "" {
 		r.SelectedProfile = a.selectedProfile
@@ -37,8 +43,7 @@ func Refresh(a *Auth) error {
 }
 
 type refreshs struct {
-	AccessToken     string          `json:"accessToken"`
-	ClientToken     string          `json:"clientToken"`
+	validate
 	SelectedProfile sElectedProfile `json:"selectedProfile"`
 }
 
@@ -47,8 +52,13 @@ type sElectedProfile struct {
 	ID   string `json:"id"`
 }
 
+type validate struct {
+	AccessToken string `json:"accessToken"`
+	ClientToken string `json:"clientToken"`
+}
+
 func Validate(a Auth) error {
-	r := refreshs{
+	r := validate{
 		AccessToken: a.AccessToken,
 		ClientToken: a.ClientToken,
 	}

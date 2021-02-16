@@ -144,7 +144,9 @@ func GetProfile(Authorization string) (*Profile, error) {
 	if err != nil {
 		return nil, fmt.Errorf("getProfile: %w", err)
 	}
-	p := Profile{}
+	p := Profile{
+		AccessToken: Authorization,
+	}
 	err = json.Unmarshal(b, &p)
 	if err != nil {
 		return nil, fmt.Errorf("getProfile: %w", err)

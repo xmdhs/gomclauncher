@@ -26,6 +26,8 @@ func (f *Flag) Aonline() {
 				AccessToken: f.Gmlconfig[f.ApiAddress][f.Email].AccessToken,
 				ClientToken: f.Gmlconfig[f.ApiAddress][f.Email].ClientToken,
 				ApiAddress:  f.ApiAddress,
+				Username:    f.Gmlconfig[f.ApiAddress][f.Email].Name,
+				ID:          f.Gmlconfig[f.ApiAddress][f.Email].UUID,
 			}
 			atime := time.Now().Unix()
 			if atime-f.Gmlconfig[f.ApiAddress][f.Email].Time > 1200 {
