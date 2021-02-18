@@ -8,20 +8,21 @@ import (
 )
 
 func Refresh(a *Auth) error {
-	r := refreshs{
-		validate: validate{
-			AccessToken: a.AccessToken,
-			ClientToken: a.ClientToken,
-		},
-		SelectedProfile: sElectedProfile{
-			Name: a.Username,
-			ID:   a.ID,
-		},
+	v := validate{
+		AccessToken: a.AccessToken,
+		ClientToken: a.ClientToken,
 	}
+	var b []byte
+	var err error
 	if a.selectedProfile.Name != "" {
-		r.SelectedProfile = a.selectedProfile
+		r := refreshs{
+			validate:        v,
+			SelectedProfile: a.selectedProfile,
+		}
+		b, err = json.Marshal(r)
+	} else {
+		b, err = json.Marshal(v)
 	}
-	b, err := json.Marshal(r)
 	if err != nil {
 		return fmt.Errorf("Refresh: %w", err)
 	}
@@ -32,6 +33,7 @@ func Refresh(a *Auth) error {
 	if i != http.StatusOK {
 		return NotOk
 	}
+	r := refreshs{}
 	err = json.Unmarshal(b, &r)
 	a.AccessToken = r.AccessToken
 	a.Username = r.SelectedProfile.Name
