@@ -30,7 +30,7 @@ func (f *Flag) Aonline() {
 				ID:          f.Gmlconfig[f.ApiAddress][f.Email].UUID,
 			}
 			atime := time.Now().Unix()
-			if atime-f.Gmlconfig[f.ApiAddress][f.Email].Time > 1200 {
+			if atime-f.Gmlconfig[f.ApiAddress][f.Email].Time > 120 {
 				if err := auth.Validate(a); err != nil {
 					err = auth.Refresh(&a)
 					if err != nil {
