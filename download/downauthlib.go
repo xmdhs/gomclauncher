@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"math/rand"
-	"runtime"
 	"time"
 
 	"github.com/xmdhs/gomclauncher/auth"
@@ -12,12 +11,8 @@ import (
 )
 
 func Downauthlib(cxt context.Context) error {
-	minecraft := "minecraft"
-	if runtime.GOOS == "windows" {
-		minecraft = `.minecraft`
-	}
 	url := randurl("")
-	var path = minecraft + `/libraries/` + `moe/yushi/authlibinjector/` + "authlib-injector/" + auth.Authlibversion + "/authlib-injector-" + auth.Authlibversion + ".jar"
+	var path = ".minecraft" + `/libraries/` + `moe/yushi/authlibinjector/` + "authlib-injector/" + auth.Authlibversion + "/authlib-injector-" + auth.Authlibversion + ".jar"
 	if ver(path, auth.Authlibsha1) {
 		return nil
 	}
