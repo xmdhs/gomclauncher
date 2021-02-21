@@ -133,7 +133,7 @@ func init() {
 	flag.StringVar(&f.Run, "run", "", lang.Lang("runusage"))
 	flag.BoolVar(&f.Runlist, "runlist", false, lang.Lang("runlistusage"))
 	flag.StringVar(&f.RAM, "ram", "2048", lang.Lang("ramusage"))
-	flag.StringVar(&f.Runflag, "flag", "-XX:+UseG1GC -XX:-UseAdaptiveSizePolicy -XX:-OmitStackTraceInFastThrow", lang.Lang("flagusage"))
+	flag.StringVar(&f.Runflag, "flag", "-XX:+UseG1GC", lang.Lang("flagusage"))
 	flag.StringVar(&f.Proxy, `proxy`, "", lang.Lang("proxyusage"))
 	flag.StringVar(&f.Atype, "type", "", lang.Lang("typeusage"))
 	flag.BoolVar(&f.Independent, "independent", true, lang.Lang("Independentusage"))
