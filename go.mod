@@ -1,6 +1,6 @@
 module github.com/xmdhs/gomclauncher
 
-go 1.15
+go 1.16
 
 require (
 	github.com/Xuanwo/go-locale v1.0.0
