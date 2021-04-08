@@ -1,5 +1,6 @@
 # gomclauncher
-![Go](https://github.com/xmdhs/gomclauncher/workflows/Go/badge.svg) [![Go Report Card](https://goreportcard.com/badge/github.com/xmdhs/gomclauncher)](https://goreportcard.com/report/github.com/xmdhs/gomclauncher)  
+![Go](https://github.com/xmdhs/gomclauncher/workflows/Go/badge.svg) [![Go Report Card](https://goreportcard.com/badge/github.com/xmdhs/gomclauncher)](https://goreportcard.com/report/github.com/xmdhs/gomclauncher) [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fxmdhs%2Fgomclauncher.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fxmdhs%2Fgomclauncher?ref=badge_shield)
+ 
 一个简单的命令行下的 minecraft 启动器。支持自动下载补全和验证 minecraft 游戏文件以及正版登录，支持启动通过安装程序安装后的 fabric 和 forge，支持 linux windows 和 mac（mac 暂未测试）。
 ## 使用方法
 使用 `-h` 即可获得相关参数的使用说明。
@@ -47,3 +48,6 @@
 ## 使用项目
 BMCLAPI https://bmclapidoc.bangbang93.com/  
 authlib-injector https://github.com/yushijinhun/authlib-injector  
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fxmdhs%2Fgomclauncher.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fxmdhs%2Fgomclauncher?ref=badge_large)
