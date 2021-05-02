@@ -165,12 +165,12 @@ func credits() {
 }
 
 type up struct {
-	Tag  string `json:"tag_name"`
-	Body string `json:"body"`
+	Version string `json:"version"`
+	Msg     string `json:"msg"`
 }
 
 func check() {
-	reps, _, err := download.Aget(context.Background(), `https://api.github.com/repos/xmdhs/gomclauncher/releases/latest`)
+	reps, _, err := download.Aget(context.Background(), `https://cdn.jsdelivr.net/gh/xmdhs/gomclauncher@master/version.json`)
 	if reps != nil {
 		defer reps.Body.Close()
 	}
@@ -192,11 +192,11 @@ func check() {
 		fmt.Println(err)
 		return
 	}
-	if u.Tag != "v"+launcher.Launcherversion {
-		fmt.Println(lang.Lang("checkupdate"), u.Tag)
-		fmt.Println(lang.Lang("nowversion"), "v"+launcher.Launcherversion)
+	if u.Version != launcher.Launcherversion {
+		fmt.Println(lang.Lang("checkupdate"), u.Version)
+		fmt.Println(lang.Lang("nowversion"), launcher.Launcherversion)
 		fmt.Println(lang.Lang("updateinfo"))
-		fmt.Println(u.Body)
+		fmt.Println(u.Msg)
 	}
 }
 
