@@ -139,7 +139,7 @@ func init() {
 	flag.BoolVar(&f.Independent, "independent", true, lang.Lang("Independentusage"))
 	flag.BoolVar(&f.Outmsg, "test", true, lang.Lang("testusage"))
 	flag.BoolVar(&credit, "credits", false, lang.Lang("creditsusage"))
-	flag.BoolVar(&update, "update", true, lang.Lang("updateusage"))
+	flag.BoolVar(&update, "update", false, lang.Lang("updateusage"))
 	flag.BoolVar(&f.Log, "log", false, lang.Lang("logusage"))
 	flag.StringVar(&f.ApiAddress, "yggdrasil", "", lang.Lang("yggdrasilusage"))
 	flag.BoolVar(&list, "list", false, lang.Lang("listusage"))
@@ -165,12 +165,12 @@ func credits() {
 }
 
 type up struct {
-	Version string `json:"version"`
-	Msg     string `json:"msg"`
+	Tag  string `json:"tag_name"`
+	Body string `json:"body"`
 }
 
 func check() {
-	reps, _, err := download.Aget(context.Background(), `https://cdn.jsdelivr.net/gh/xmdhs/gomclauncher@master/version.json`)
+	reps, _, err := download.Aget(context.Background(), `https://api.github.com/repos/xmdhs/gomclauncher/releases/latest`)
 	if reps != nil {
 		defer reps.Body.Close()
 	}
@@ -192,11 +192,11 @@ func check() {
 		fmt.Println(err)
 		return
 	}
-	if u.Version != launcher.Launcherversion {
-		fmt.Println(lang.Lang("checkupdate"), u.Version)
-		fmt.Println(lang.Lang("nowversion"), launcher.Launcherversion)
+	if u.Tag != "v"+launcher.Launcherversion {
+		fmt.Println(lang.Lang("checkupdate"), u.Tag)
+		fmt.Println(lang.Lang("nowversion"), "v"+launcher.Launcherversion)
 		fmt.Println(lang.Lang("updateinfo"))
-		fmt.Println(u.Msg)
+		fmt.Println(u.Body)
 	}
 }
 
