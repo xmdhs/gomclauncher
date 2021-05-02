@@ -139,7 +139,7 @@ func init() {
 	flag.BoolVar(&f.Independent, "independent", true, lang.Lang("Independentusage"))
 	flag.BoolVar(&f.Outmsg, "test", true, lang.Lang("testusage"))
 	flag.BoolVar(&credit, "credits", false, lang.Lang("creditsusage"))
-	flag.BoolVar(&update, "update", false, lang.Lang("updateusage"))
+	flag.BoolVar(&update, "update", true, lang.Lang("updateusage"))
 	flag.BoolVar(&f.Log, "log", false, lang.Lang("logusage"))
 	flag.StringVar(&f.ApiAddress, "yggdrasil", "", lang.Lang("yggdrasilusage"))
 	flag.BoolVar(&list, "list", false, lang.Lang("listusage"))
