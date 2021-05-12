@@ -22,7 +22,7 @@ const (
 )
 
 func getCode() (string, error) {
-	code, err := auth.Getcode()
+	code, err := auth.Getcode(".chrome-data")
 	if err != nil {
 		return "", fmt.Errorf("getCode: %w", err)
 	}
@@ -47,6 +47,9 @@ func MsLogin() (*Profile, error) {
 		return nil, fmt.Errorf("MsLogin: %w", err)
 	}
 	AccessToken, err := loginWithXbox(uhs, xststoken)
+	if err != nil {
+		return nil, fmt.Errorf("MsLogin: %w", err)
+	}
 	p, err := GetProfile(AccessToken)
 	if err != nil {
 		return nil, fmt.Errorf("MsLogin: %w", err)
