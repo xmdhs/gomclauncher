@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"os"
 	"strings"
 	"time"
 
@@ -22,7 +23,11 @@ const (
 )
 
 func getCode() (string, error) {
-	code, err := auth.Getcode(".chrome-data")
+	dir, err := os.Getwd()
+	if err != nil {
+		panic(err)
+	}
+	code, err := auth.Getcode(dir + "/.data")
 	if err != nil {
 		return "", fmt.Errorf("getCode: %w", err)
 	}
