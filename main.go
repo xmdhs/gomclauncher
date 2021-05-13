@@ -3,9 +3,12 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"flag"
 	"fmt"
 	"io/ioutil"
+	"log"
+	"net"
 	"net/http"
 	"net/url"
 	"os"
@@ -170,6 +173,14 @@ type up struct {
 }
 
 func check() {
+	version, err := checkByDns()
+	if err != nil {
+		log.Println(err)
+	} else {
+		if version == launcher.Launcherversion {
+			return
+		}
+	}
 	reps, _, err := download.Aget(context.Background(), `https://api.github.com/repos/xmdhs/gomclauncher/releases/latest`)
 	if reps != nil {
 		defer reps.Body.Close()
@@ -198,6 +209,19 @@ func check() {
 		fmt.Println(lang.Lang("updateinfo"))
 		fmt.Println(u.Body)
 	}
+}
+
+var Errtxt = errors.New("LookupTXT err")
+
+func checkByDns() (string, error) {
+	l, err := net.LookupTXT("gml.xmdhs.top")
+	if err != nil {
+		return "", fmt.Errorf("checkByDns: %w", err)
+	}
+	if len(l) != 1 {
+		return "", fmt.Errorf("checkByDns: %w", Errtxt)
+	}
+	return l[0], nil
 }
 
 func version() {
