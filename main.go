@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"encoding/json"
 	"errors"
 	"flag"
@@ -15,7 +14,6 @@ import (
 	"strings"
 
 	"github.com/xmdhs/gomclauncher/auth"
-	"github.com/xmdhs/gomclauncher/download"
 	aflag "github.com/xmdhs/gomclauncher/flag"
 	"github.com/xmdhs/gomclauncher/lang"
 	"github.com/xmdhs/gomclauncher/launcher"
@@ -168,46 +166,28 @@ func credits() {
 }
 
 type up struct {
-	Tag  string `json:"tag_name"`
-	Body string `json:"body"`
+	Version string `json:"version"`
+	Msg     string `json:"msg"`
 }
 
 func check() {
 	version, err := checkByDns()
 	if err != nil {
 		log.Println(err)
-	} else {
-		if version == launcher.Launcherversion {
-			return
-		}
-	}
-	reps, _, err := download.Aget(context.Background(), `https://api.github.com/repos/xmdhs/gomclauncher/releases/latest`)
-	if reps != nil {
-		defer reps.Body.Close()
-	}
-	if err != nil {
-		fmt.Println(lang.Lang("checkupdateerr"))
-		fmt.Println(err)
-		return
-	}
-	b, err := ioutil.ReadAll(reps.Body)
-	if err != nil {
-		fmt.Println(lang.Lang("checkupdateerr"))
-		fmt.Println(err)
 		return
 	}
 	u := up{}
-	err = json.Unmarshal(b, &u)
+	err = json.Unmarshal([]byte(version), &u)
 	if err != nil {
 		fmt.Println(lang.Lang("checkupdateerr"))
 		fmt.Println(err)
 		return
 	}
-	if u.Tag != "v"+launcher.Launcherversion {
-		fmt.Println(lang.Lang("checkupdate"), u.Tag)
-		fmt.Println(lang.Lang("nowversion"), "v"+launcher.Launcherversion)
+	if u.Version != launcher.Launcherversion {
+		fmt.Println(lang.Lang("checkupdate"), u.Version)
+		fmt.Println(lang.Lang("nowversion"), launcher.Launcherversion)
 		fmt.Println(lang.Lang("updateinfo"))
-		fmt.Println(u.Body)
+		fmt.Println(u.Msg)
 	}
 }
 
