@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"flag"
@@ -176,8 +177,13 @@ func check() {
 		log.Println(err)
 		return
 	}
+	b, err := base64.StdEncoding.DecodeString(version)
+	if err != nil {
+		log.Println(err)
+		return
+	}
 	u := up{}
-	err = json.Unmarshal([]byte(version), &u)
+	err = json.Unmarshal(b, &u)
 	if err != nil {
 		fmt.Println(lang.Lang("checkupdateerr"))
 		fmt.Println(err)
