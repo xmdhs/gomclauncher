@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -97,9 +98,8 @@ func get(cxt context.Context, u, path string) error {
 	_, err = os.Stat(path)
 
 	if err != nil {
-		s := strings.Split(path, "/")
-		ss := strings.ReplaceAll(path, s[len(s)-1], "")
-		err := os.MkdirAll(ss, 0777)
+		dir, _ := filepath.Split(path)
+		err := os.MkdirAll(dir, 0777)
 		if err != nil {
 			return fmt.Errorf("get: %w", err)
 		}

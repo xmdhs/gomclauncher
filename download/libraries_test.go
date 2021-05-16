@@ -42,3 +42,17 @@ func TestMain(m *testing.M) {
 	code := m.Run()
 	os.Exit(code)
 }
+
+func Test_get(t *testing.T) {
+	err := get(context.Background(), "https://launchermeta.mojang.com/mc/game/version_manifest.json", "test/test/a.json")
+	if err != nil {
+		t.Fatal(err)
+		return
+	}
+	_, err = os.Stat("test/test/a.json")
+	if err != nil {
+		t.Fatal(err)
+		return
+	}
+	os.RemoveAll("test")
+}
