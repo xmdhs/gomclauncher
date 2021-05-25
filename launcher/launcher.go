@@ -28,6 +28,7 @@ func (l launcher1155) Launcher115() {
 	if l.Log {
 		cmd = exec.Command(l.JavePath, l.flag...)
 		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
 		cmd.Dir = l.Gamedir
 		err := cmd.Run()
 		if err != nil {
