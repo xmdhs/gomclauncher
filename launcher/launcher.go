@@ -59,11 +59,7 @@ func (l *launcher1155) cp() string {
 			add := func() {
 				b.WriteString(path)
 				b.WriteString(p.Downloads.Artifact.Path)
-				if runtime.GOOS == "windows" {
-					b.WriteString(";")
-				} else {
-					b.WriteString(":")
-				}
+				b.WriteByte(os.PathListSeparator)
 			}
 			if ok {
 				if v == pack[2] {
