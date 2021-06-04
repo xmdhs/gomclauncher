@@ -97,7 +97,7 @@ func checkapi(url string) error {
 		return fmt.Errorf("checkapi: %w", err)
 	}
 	if y.SignaturePublickey == "" {
-		return JsonNotTrue
+		return fmt.Errorf("checkapi: %w", JsonNotTrue)
 	}
 	return nil
 }
