@@ -2,6 +2,7 @@ package download
 
 import (
 	"context"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"testing"
@@ -15,7 +16,7 @@ func TestNewlibraries(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	l, err := Newlibraries(context.Background(), b, "")
+	l, err := Newlibraries(context.Background(), b, "", func(s string) { fmt.Println(s) })
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -48,7 +49,7 @@ func TestDownassets(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	l, err := Newlibraries(context.Background(), b, "")
+	l, err := Newlibraries(context.Background(), b, "", func(s string) { fmt.Println(s) })
 	if err != nil {
 		t.Fatal(err)
 	}

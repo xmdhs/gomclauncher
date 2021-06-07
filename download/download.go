@@ -32,6 +32,7 @@ func (l Libraries) Downassets(i int, c chan int) error {
 					ch:       ch,
 					cxt:      cxt,
 					randurls: l.randurls,
+					print:    l.print,
 				}
 				select {
 				case ch <- struct{}{}:
@@ -101,6 +102,7 @@ func (l Libraries) Downlibrarie(i int, c chan int) error {
 			}
 			if !ver(path, v.Downloads.Artifact.Sha1) {
 				d := downinfo{
+					print:    l.print,
 					url:      v.Downloads.Artifact.URL,
 					path:     path,
 					e:        e,
@@ -155,12 +157,12 @@ func (l Libraries) Downjar(version string) error {
 		}
 		err := get(l.cxt, source(l.librarie.Downloads.Client.URL, t), path)
 		if err != nil {
-			fmt.Println(lang.Lang("weberr"), source(l.librarie.Downloads.Client.URL, t), fmt.Errorf("Downjar: %w", err))
+			l.print(lang.Lang("weberr") + " " + source(l.librarie.Downloads.Client.URL, t) + " " + fmt.Errorf("Downjar: %w", err).Error())
 			t = l.fail(t)
 			continue
 		}
 		if !ver(path, l.librarie.Downloads.Client.Sha1) {
-			fmt.Println(lang.Lang("filecheckerr"), source(l.librarie.Downloads.Client.URL, t))
+			l.print(lang.Lang("filecheckerr") + " " + source(l.librarie.Downloads.Client.URL, t))
 			t = l.fail(t)
 			continue
 		}
@@ -170,13 +172,14 @@ func (l Libraries) Downjar(version string) error {
 }
 
 type downinfo struct {
-	url  string
-	path string
-	e    chan error
-	Sha1 string
-	done chan struct{}
-	ch   chan struct{}
-	cxt  context.Context
+	url   string
+	path  string
+	e     chan error
+	Sha1  string
+	done  chan struct{}
+	ch    chan struct{}
+	print func(string)
+	cxt   context.Context
 	*randurls
 }
 
@@ -192,12 +195,12 @@ func (d downinfo) down() {
 		}
 		err := get(d.cxt, source(d.url, f), d.path)
 		if err != nil {
-			fmt.Println(lang.Lang("weberr"), source(d.url, f), err)
+			d.print(lang.Lang("weberr") + " " + source(d.url, f) + " " + err.Error())
 			f = d.fail(f)
 			continue
 		}
 		if !ver(d.path, d.Sha1) {
-			fmt.Println(lang.Lang("filecheckerr"), source(d.url, f))
+			d.print(lang.Lang("filecheckerr") + " " + source(d.url, f))
 			f = d.fail(f)
 			continue
 		}

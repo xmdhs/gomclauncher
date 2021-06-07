@@ -41,9 +41,9 @@ func NewFlag() *Flag {
 
 func (f Flag) D() {
 	cxt := context.Background()
-	l, err := download.Getversionlist(cxt, f.Atype)
+	l, err := download.Getversionlist(cxt, f.Atype, func(s string) { fmt.Println(s) })
 	errr(err)
-	err = l.Downjson(cxt, f.Download)
+	err = l.Downjson(cxt, f.Download, func(s string) { fmt.Println(s) })
 	if !(f.Run != "" && err != nil && errors.Is(err, download.NoSuch)) {
 		errr(err)
 	}
@@ -56,7 +56,7 @@ func (f Flag) D() {
 	if err != nil {
 		panic(err)
 	}
-	dl, err := download.Newlibraries(cxt, b, f.Atype)
+	dl, err := download.Newlibraries(cxt, b, f.Atype, func(s string) { fmt.Println(s) })
 	errr(err)
 	if f.Outmsg {
 		fmt.Println(lang.Lang("verifygamejar"))

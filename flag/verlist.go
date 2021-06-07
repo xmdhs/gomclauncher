@@ -9,7 +9,7 @@ import (
 )
 
 func (f Flag) Arunlist() {
-	l, err := download.Getversionlist(context.Background(), f.Atype)
+	l, err := download.Getversionlist(context.Background(), f.Atype, func(s string) { fmt.Println(s) })
 	errr(err)
 	m := make(map[string]bool)
 	for _, v := range l.Versions {

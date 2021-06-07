@@ -13,7 +13,7 @@ import (
 	"github.com/xmdhs/gomclauncher/launcher"
 )
 
-func Getversionlist(cxt context.Context, atype string) (*version, error) {
+func Getversionlist(cxt context.Context, atype string, print func(string)) (*version, error) {
 	var rep *http.Response
 	var err error
 	var b []byte
@@ -29,13 +29,13 @@ func Getversionlist(cxt context.Context, atype string) (*version, error) {
 				defer rep.Body.Close()
 			}
 			if err != nil {
-				fmt.Println(lang.Lang("getversionlistfail"), fmt.Errorf("Getversionlist: %w", err), source(`https://launchermeta.mojang.com/mc/game/version_manifest.json`, f))
+				print(fmt.Sprint(lang.Lang("getversionlistfail"), fmt.Errorf("Getversionlist: %w", err), source(`https://launchermeta.mojang.com/mc/game/version_manifest.json`, f)))
 				f = r.fail(f)
 				return nil
 			}
 			b, err = ioutil.ReadAll(rep.Body)
 			if err != nil {
-				fmt.Println(lang.Lang("getversionlistfail"), fmt.Errorf("Getversionlist: %w", err), source(`https://launchermeta.mojang.com/mc/game/version_manifest.json`, f))
+				print(fmt.Sprint(lang.Lang("getversionlistfail"), fmt.Errorf("Getversionlist: %w", err), source(`https://launchermeta.mojang.com/mc/game/version_manifest.json`, f)))
 				f = r.fail(f)
 				return nil
 			}
@@ -76,7 +76,7 @@ type versionVersion struct {
 	URL         string `json:"url"`
 }
 
-func (v version) Downjson(cxt context.Context, version string) error {
+func (v version) Downjson(cxt context.Context, version string, print func(string)) error {
 	r := newrandurls(v.atype)
 	_, f := r.auto()
 	for _, vv := range v.Versions {
@@ -92,12 +92,12 @@ func (v version) Downjson(cxt context.Context, version string) error {
 				}
 				err := get(cxt, source(vv.URL, f), path)
 				if err != nil {
-					fmt.Println(lang.Lang("weberr"), source(vv.URL, f), fmt.Errorf("Downjson: %w", err))
+					print(fmt.Sprint(lang.Lang("weberr"), source(vv.URL, f), fmt.Errorf("Downjson: %w", err)))
 					f = r.fail(f)
 					continue
 				}
 				if !ver(path, s[len(s)-2]) {
-					fmt.Println(lang.Lang("filecheckerr"), source(vv.URL, f))
+					print(fmt.Sprint(lang.Lang("filecheckerr"), source(vv.URL, f)))
 					f = r.fail(f)
 					continue
 				}

@@ -23,10 +23,11 @@ type Libraries struct {
 	assetIndex assets
 	typee      string
 	cxt        context.Context
+	print      func(string)
 	*randurls
 }
 
-func Newlibraries(cxt context.Context, b []byte, typee string) (Libraries, error) {
+func Newlibraries(cxt context.Context, b []byte, typee string, print func(string)) (Libraries, error) {
 	mod := launcher.Modsjson{}
 	var url, id string
 	l := launcher.LauncherjsonX115{}
@@ -56,7 +57,7 @@ func Newlibraries(cxt context.Context, b []byte, typee string) (Libraries, error
 	id = l.AssetIndex.ID
 	path := launcher.Minecraft + "/assets/indexes/" + id + ".json"
 	if !ver(path, l.AssetIndex.Sha1) {
-		err := assetsjson(cxt, r, url, path, typee, l.AssetIndex.Sha1)
+		err := assetsjson(cxt, r, url, path, typee, l.AssetIndex.Sha1, print)
 		if err != nil {
 			return Libraries{}, fmt.Errorf("Newlibraries: %w", err)
 		}
@@ -71,6 +72,7 @@ func Newlibraries(cxt context.Context, b []byte, typee string) (Libraries, error
 		return Libraries{}, fmt.Errorf("Newlibraries: %w", err)
 	}
 	return Libraries{
+		print:      print,
 		librarie:   l,
 		assetIndex: a,
 		typee:      typee,
@@ -189,7 +191,7 @@ func Aget(cxt context.Context, aurl string) (*http.Response, *time.Timer, error)
 	return reps, timer, nil
 }
 
-func assetsjson(cxt context.Context, r *randurls, url, path, typee, sha1 string) error {
+func assetsjson(cxt context.Context, r *randurls, url, path, typee, sha1 string, print func(string)) error {
 	var err error
 	_, f := r.auto()
 	for i := 0; i < 4; i++ {
@@ -199,12 +201,12 @@ func assetsjson(cxt context.Context, r *randurls, url, path, typee, sha1 string)
 		err = get(cxt, source(url, f), path)
 		if err != nil {
 			f = r.fail(f)
-			fmt.Println(lang.Lang("weberr"), fmt.Errorf("assetsjson: %w", err), url)
+			print(lang.Lang("weberr") + " " + fmt.Errorf("assetsjson: %w", err).Error() + " " + url)
 			continue
 		}
 		if !ver(path, sha1) {
 			f = r.fail(f)
-			fmt.Println(lang.Lang("filecheckerr"), url)
+			print(lang.Lang("filecheckerr") + " " + url)
 			continue
 		}
 		break

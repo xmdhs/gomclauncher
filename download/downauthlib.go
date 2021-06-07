@@ -10,7 +10,7 @@ import (
 	"github.com/xmdhs/gomclauncher/lang"
 )
 
-func Downauthlib(cxt context.Context) error {
+func Downauthlib(cxt context.Context, print func(string)) error {
 	url := randurl("")
 	var path = ".minecraft" + `/libraries/` + `moe/yushi/authlibinjector/` + "authlib-injector/" + auth.Authlibversion + "/authlib-injector-" + auth.Authlibversion + ".jar"
 	if ver(path, auth.Authlibsha1) {
@@ -22,12 +22,12 @@ func Downauthlib(cxt context.Context) error {
 		}
 		err := get(cxt, url, path)
 		if err != nil {
-			fmt.Println(lang.Lang("authlibdownloadfail"), fmt.Errorf("Downauthlib: %w", err), url)
+			print(lang.Lang("authlibdownloadfail") + " " + fmt.Errorf("Downauthlib: %w", err).Error() + " " + url)
 			url = randurl(url)
 			continue
 		}
 		if !ver(path, auth.Authlibsha1) {
-			fmt.Println(lang.Lang("authlibcheckerr"), url)
+			print(lang.Lang("authlibcheckerr") + " " + url)
 			url = randurl(url)
 			continue
 		}

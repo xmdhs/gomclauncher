@@ -11,7 +11,7 @@ import (
 )
 
 func (f *Flag) Authlib() {
-	err := download.Downauthlib(context.Background())
+	err := download.Downauthlib(context.Background(), func(s string) { fmt.Println(s) })
 	if err != nil {
 		fmt.Println(lang.Lang("authlibdownloadfailed"))
 		panic(err)

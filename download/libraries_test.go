@@ -3,6 +3,7 @@ package download
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -16,7 +17,7 @@ func TestNewlibrarie(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	l, err := Newlibraries(context.Background(), b, "")
+	l, err := Newlibraries(context.Background(), b, "", func(s string) { fmt.Println(s) })
 	if err != nil {
 		t.Fatal(err)
 	}
