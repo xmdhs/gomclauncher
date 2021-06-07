@@ -39,6 +39,15 @@ type Gameinfo struct {
 }
 
 func (g *Gameinfo) Run115() (err error) {
+	l, _, err := g.GenLauncherCmdArgs()
+	if err != nil {
+		return fmt.Errorf("Run115: %w", err)
+	}
+	l.Launcher115()
+	return nil
+}
+
+func (g *Gameinfo) GenLauncherCmdArgs() (l *launcher1155, args []string, err error) {
 	defer func() {
 		e := recover()
 		if e != nil {
@@ -46,9 +55,9 @@ func (g *Gameinfo) Run115() (err error) {
 		}
 	}()
 	creatlauncherprofiles(g)
-	l, err := g.modjson()
+	l, err = g.modjson()
 	if err != nil {
-		return fmt.Errorf("Run115: %w", err)
+		return nil, nil, fmt.Errorf("Gameinfo.GenLauncherCmdArgs: %w", err)
 	}
 	l.flag = append(l.flag, `-Dminecraft.client.jar=`+g.Minecraftpath+`/versions/`+l.json.ID+`/`+l.json.ID+`.jar`)
 	l.flag = append(l.flag, `-Xmx`+g.RAM+`m`)
@@ -62,12 +71,11 @@ func (g *Gameinfo) Run115() (err error) {
 	}
 	err = g.argumentsjvm(l)
 	if err != nil {
-		return fmt.Errorf("Run115: %w", err)
+		return nil, nil, fmt.Errorf("Gameinfo.GenLauncherCmdArgs: %w", err)
 	}
 	l.flag = append(l.flag, l.json.MainClass)
 	g.argumentsGame(l)
-	l.Launcher115()
-	return nil
+	return l, l.flag, nil
 }
 
 func creatlauncherprofiles(g *Gameinfo) {
@@ -76,10 +84,10 @@ func creatlauncherprofiles(g *Gameinfo) {
 	_, err := os.Stat(path)
 	if err != nil && os.IsNotExist(err) {
 		f, err := os.Create(path)
-		defer f.Close()
 		if err != nil {
 			panic(fmt.Errorf("creatlauncherprofiles: %w", err))
 		}
+		defer f.Close()
 		_, err = f.WriteString(`{"selectedProfile": "(Default)","profiles": {"(Default)": {"name": "(Default)"}},"clientToken": "88888888-8888-8888-8888-888888888888"}`)
 		if err != nil {
 			panic(fmt.Errorf("creatlauncherprofiles: %w", err))

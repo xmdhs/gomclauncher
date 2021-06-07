@@ -17,14 +17,14 @@ func saveconfig(gmlconfig Gmlconfig) {
 		panic(err)
 	} else {
 		ff, err := os.Create("gml.json.bak")
-		defer ff.Close()
 		aerr(err)
+		defer ff.Close()
 		_, err = ff.Write(b)
 		aerr(err)
 	}
 	f, err := os.Create("gml.json")
-	defer f.Close()
 	aerr(err)
+	defer f.Close()
 	b, err = json.Marshal(gmlconfig)
 	aerr(err)
 	_, err = f.Write(b)

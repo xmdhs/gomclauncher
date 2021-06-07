@@ -1,9 +1,5 @@
 package launcher
 
-type launcherjson struct {
-	ID string `json:"id"`
-}
-
 type LauncherjsonX115 struct {
 	Hidden bool   `json:"hidden" example:"false"`
 	ID     string `json:"id" example:"1.15.2"`

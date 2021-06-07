@@ -67,25 +67,19 @@ func (l Libraries) Downassets(i int, c chan int) error {
 func ver(path, hash string) bool {
 	if hash != "" {
 		file, err := os.Open(path)
-		defer file.Close()
 		if err != nil {
 			return false
 		}
+		defer file.Close()
 		m := sha1.New()
 		if _, err := io.Copy(m, file); err != nil {
 			return false
 		}
 		h := hex.EncodeToString(m.Sum(nil))
-		if strings.ToTitle(h) == strings.ToTitle(hash) {
-			return true
-		}
-		return false
+		return strings.ToTitle(h) == strings.ToTitle(hash)
 	}
 	_, err := os.Stat(path)
-	if err != nil {
-		return false
-	}
-	return true
+	return err == nil
 
 }
 

@@ -21,10 +21,8 @@ func (g *Gameinfo) argumentsjvm(l *launcher1155) error {
 		case map[string]interface{}:
 			Jvm := rule(v)
 			flags := jvmarguments(Jvm)
-			if flags != nil {
-				for _, v := range flags {
-					g.jvmflagadd(v, l)
-				}
+			for _, v := range flags {
+				g.jvmflagadd(v, l)
 			}
 		case string:
 			g.jvmflagadd(v, l)

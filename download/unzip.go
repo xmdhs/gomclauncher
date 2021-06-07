@@ -124,14 +124,6 @@ func (l Libraries) unzipnative(n []string) error {
 	}
 }
 
-func osbool(os string) bool {
-	GOOS := runtime.GOOS
-	if GOOS == "darwin" {
-		GOOS = "osx"
-	}
-	return os == GOOS
-}
-
 func swichnatives(l launcher.LibraryX115) (path, sha1, url string) {
 	Os := runtime.GOOS
 	switch Os {
