@@ -6,6 +6,8 @@ import (
 	"io/ioutil"
 	"os"
 	"testing"
+
+	"github.com/xmdhs/gomclauncher/launcher"
 )
 
 func TestNewlibraries(t *testing.T) {
@@ -16,7 +18,7 @@ func TestNewlibraries(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	l, err := Newlibraries(context.Background(), b, "", func(s string) { fmt.Println(s) })
+	l, err := Newlibraries(context.Background(), b, "", func(s string) { fmt.Println(s) }, launcher.Minecraft)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -49,7 +51,7 @@ func TestDownassets(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	l, err := Newlibraries(context.Background(), b, "", func(s string) { fmt.Println(s) })
+	l, err := Newlibraries(context.Background(), b, "", func(s string) { fmt.Println(s) }, launcher.Minecraft)
 	if err != nil {
 		t.Fatal(err)
 	}

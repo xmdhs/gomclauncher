@@ -10,7 +10,6 @@ import (
 	"strings"
 
 	"github.com/xmdhs/gomclauncher/lang"
-	"github.com/xmdhs/gomclauncher/launcher"
 )
 
 func Getversionlist(cxt context.Context, atype string, print func(string)) (*version, error) {
@@ -76,13 +75,13 @@ type versionVersion struct {
 	URL         string `json:"url"`
 }
 
-func (v version) Downjson(cxt context.Context, version string, print func(string)) error {
+func (v version) Downjson(cxt context.Context, version, apath string, print func(string)) error {
 	r := newrandurls(v.atype)
 	_, f := r.auto()
 	for _, vv := range v.Versions {
 		if vv.ID == version {
 			s := strings.Split(vv.URL, "/")
-			path := launcher.Minecraft + `/versions/` + vv.ID + `/` + vv.ID + `.json`
+			path := apath + `/versions/` + vv.ID + `/` + vv.ID + `.json`
 			if ver(path, s[len(s)-2]) {
 				return nil
 			}

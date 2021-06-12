@@ -24,10 +24,11 @@ type Libraries struct {
 	typee      string
 	cxt        context.Context
 	print      func(string)
+	path       string
 	*randurls
 }
 
-func Newlibraries(cxt context.Context, b []byte, typee string, print func(string)) (Libraries, error) {
+func Newlibraries(cxt context.Context, b []byte, typee string, print func(string), apath string) (Libraries, error) {
 	mod := launcher.Modsjson{}
 	var url, id string
 	l := launcher.LauncherjsonX115{}
@@ -37,7 +38,7 @@ func Newlibraries(cxt context.Context, b []byte, typee string, print func(string
 		return Libraries{}, fmt.Errorf("Newlibraries: %w", err)
 	}
 	if mod.InheritsFrom != "" {
-		b, err := ioutil.ReadFile(launcher.Minecraft + `/versions/` + mod.InheritsFrom + "/" + mod.InheritsFrom + ".json")
+		b, err := ioutil.ReadFile(apath + `/versions/` + mod.InheritsFrom + "/" + mod.InheritsFrom + ".json")
 		if err != nil {
 			return Libraries{}, fmt.Errorf("Newlibraries: %w", err)
 		}
@@ -55,7 +56,7 @@ func Newlibraries(cxt context.Context, b []byte, typee string, print func(string
 	}
 	url = l.AssetIndex.URL
 	id = l.AssetIndex.ID
-	path := launcher.Minecraft + "/assets/indexes/" + id + ".json"
+	path := apath + "/assets/indexes/" + id + ".json"
 	if !ver(path, l.AssetIndex.Sha1) {
 		err := assetsjson(cxt, r, url, path, typee, l.AssetIndex.Sha1, print)
 		if err != nil {
@@ -78,6 +79,7 @@ func Newlibraries(cxt context.Context, b []byte, typee string, print func(string
 		typee:      typee,
 		cxt:        cxt,
 		randurls:   r,
+		path:       apath,
 	}, nil
 }
 

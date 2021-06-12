@@ -43,7 +43,7 @@ func (f Flag) D() {
 	cxt := context.Background()
 	l, err := download.Getversionlist(cxt, f.Atype, func(s string) { fmt.Println(s) })
 	errr(err)
-	err = l.Downjson(cxt, f.Download, func(s string) { fmt.Println(s) })
+	err = l.Downjson(cxt, f.Download, launcher.Minecraft, func(s string) { fmt.Println(s) })
 	if !(f.Run != "" && err != nil && errors.Is(err, download.NoSuch)) {
 		errr(err)
 	}
@@ -56,7 +56,7 @@ func (f Flag) D() {
 	if err != nil {
 		panic(err)
 	}
-	dl, err := download.Newlibraries(cxt, b, f.Atype, func(s string) { fmt.Println(s) })
+	dl, err := download.Newlibraries(cxt, b, f.Atype, func(s string) { fmt.Println(s) }, launcher.Minecraft)
 	errr(err)
 	if f.Outmsg {
 		fmt.Println(lang.Lang("verifygamejar"))

@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"testing"
+
+	"github.com/xmdhs/gomclauncher/launcher"
 )
 
 func TestUnzip(t *testing.T) {
@@ -12,7 +14,7 @@ func TestUnzip(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	l, err := Newlibraries(context.Background(), b, "", func(s string) { fmt.Println(s) })
+	l, err := Newlibraries(context.Background(), b, "", func(s string) { fmt.Println(s) }, launcher.Minecraft)
 	if err != nil {
 		t.Fatal(err)
 	}

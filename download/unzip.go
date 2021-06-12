@@ -23,7 +23,7 @@ func (l Libraries) Unzip(i int) error {
 		for _, v := range l.librarie.Libraries {
 			v := v
 			path, sha1, url := swichnatives(v)
-			path = launcher.Minecraft + `/libraries/` + path
+			path = l.path + `/libraries/` + path
 			if url == "" {
 				done <- struct{}{}
 				continue
@@ -81,7 +81,7 @@ func (l Libraries) unzipnative(n []string) error {
 	done := make(chan bool, len(n))
 	cxt, cancel := context.WithCancel(l.cxt)
 	defer cancel()
-	p := launcher.Minecraft + `/versions/` + l.librarie.ID + `/natives/`
+	p := l.path + `/versions/` + l.librarie.ID + `/natives/`
 	err := os.MkdirAll(p, 0777)
 	if err != nil {
 		return fmt.Errorf("unzipnative: %w", err)

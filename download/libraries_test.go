@@ -10,6 +10,7 @@ import (
 	"testing"
 
 	"github.com/xmdhs/gomclauncher/auth"
+	"github.com/xmdhs/gomclauncher/launcher"
 )
 
 func TestNewlibrarie(t *testing.T) {
@@ -17,7 +18,7 @@ func TestNewlibrarie(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	l, err := Newlibraries(context.Background(), b, "", func(s string) { fmt.Println(s) })
+	l, err := Newlibraries(context.Background(), b, "", func(s string) { fmt.Println(s) }, launcher.Minecraft)
 	if err != nil {
 		t.Fatal(err)
 	}
