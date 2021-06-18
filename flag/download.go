@@ -71,14 +71,14 @@ func (f Flag) D() {
 	} else {
 		fmt.Println(lang.Lang("downloadlibrarie"))
 	}
-	f.dd(dl, false)
+	f.dd(dl.Downlibrarie)
 	fmt.Println(lang.Lang("finish"))
 	if f.Outmsg {
 		fmt.Println(lang.Lang("verifyassets"))
 	} else {
 		fmt.Println(lang.Lang("downloadassets"))
 	}
-	f.dd(dl, true)
+	f.dd(dl.Downassets)
 	fmt.Println(lang.Lang("finish"))
 	if f.Outmsg {
 		fmt.Println(lang.Lang("verifynatives"))
@@ -93,16 +93,12 @@ func (f Flag) D() {
 	fmt.Println(lang.Lang("finish"))
 }
 
-func (f Flag) dd(l download.Libraries, a bool) {
+func (f Flag) dd(down func(i int, c chan int) error) {
 	ch := make(chan int, 5)
 	e := make(chan error)
 	var err error
 	go func() {
-		if a {
-			err = l.Downassets(f.Downint, ch)
-		} else {
-			err = l.Downlibrarie(f.Downint, ch)
-		}
+		err = down(f.Downint, ch)
 		if err != nil {
 			e <- err
 		}
