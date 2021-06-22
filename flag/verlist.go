@@ -11,9 +11,9 @@ import (
 func (f Flag) Arunlist() {
 	l, err := download.Getversionlist(context.Background(), f.Atype, func(s string) { fmt.Println(s) })
 	errr(err)
-	m := make(map[string]bool)
+	m := make(map[string]struct{})
 	for _, v := range l.Versions {
-		m[v.Type] = true
+		m[v.Type] = struct{}{}
 	}
 	var ok bool
 	for k := range m {
