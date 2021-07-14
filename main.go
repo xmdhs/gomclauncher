@@ -148,6 +148,7 @@ func init() {
 	flag.BoolVar(&remove, "remove", false, lang.Lang("removeusage"))
 	flag.StringVar(&f.JavePath, "javapath", "java", lang.Lang("javapathusage"))
 	flag.BoolVar(&ms, "ms", false, lang.Lang("msusage"))
+	//flag.StringVar(&uselang, "lang", "", lang.Lang("langusage"))
 	flag.BoolVar(&v, "v", false, lang.Lang("vusage"))
 	flag.Parse()
 
