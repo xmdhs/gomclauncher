@@ -74,11 +74,12 @@ func rule(v map[string]interface{}) ajvm {
 		if ok {
 			jvmrule.Action = action
 		}
-		name, ok := r["os"].(map[string]interface{})["name"]
+		os := r["os"].(map[string]interface{})
+		name, ok := os["name"]
 		if ok {
 			jvmrule.Os = name.(string)
 		}
-		arch, ok := r["os"].(map[string]interface{})["arch"]
+		arch, ok := os["arch"]
 		if ok {
 			jvmrule.arch = arch.(string)
 		}
