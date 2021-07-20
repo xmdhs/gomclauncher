@@ -158,30 +158,34 @@ func deCompress(zipFile, dest string) error {
 	}
 	defer reader.Close()
 	for _, file := range reader.File {
-		if !strings.Contains(strings.ToTitle(file.Name), strings.ToTitle("META-INF")) && (strings.HasSuffix(strings.ToTitle(file.Name), strings.ToTitle("dll")) || strings.HasSuffix(strings.ToTitle(file.Name), strings.ToTitle("dylib")) || strings.HasSuffix(strings.ToTitle(file.Name), strings.ToTitle("so"))) {
-			if strings.Contains(file.Name, "..") {
-				continue
+		if file.FileInfo().IsDir() {
+			continue
+		}
+		err := func() error {
+			if strings.HasSuffix(strings.ToTitle(file.Name), strings.ToTitle("dll")) || strings.HasSuffix(strings.ToTitle(file.Name), strings.ToTitle("dylib")) || strings.HasSuffix(strings.ToTitle(file.Name), strings.ToTitle("so")) {
+				rc, err := file.Open()
+				if err != nil {
+					return fmt.Errorf("DeCompress: %w", err)
+				}
+				defer rc.Close()
+				filename := dest + file.FileInfo().Name()
+				if err != nil {
+					return fmt.Errorf("DeCompress: %w", err)
+				}
+				w, err := os.Create(filename)
+				if err != nil {
+					return fmt.Errorf("DeCompress: %w", err)
+				}
+				defer w.Close()
+				_, err = io.Copy(w, rc)
+				if err != nil {
+					return fmt.Errorf("DeCompress: %w", err)
+				}
 			}
-			rc, err := file.Open()
-			if err != nil {
-				return fmt.Errorf("DeCompress: %w", err)
-			}
-			defer rc.Close()
-			filename := dest + file.Name
-			if err != nil {
-				return fmt.Errorf("DeCompress: %w", err)
-			}
-			w, err := os.Create(filename)
-			if err != nil {
-				return fmt.Errorf("DeCompress: %w", err)
-			}
-			defer w.Close()
-			_, err = io.Copy(w, rc)
-			if err != nil {
-				return fmt.Errorf("DeCompress: %w", err)
-			}
-			w.Close()
-			rc.Close()
+			return nil
+		}()
+		if err != nil {
+			return err
 		}
 	}
 	return nil
