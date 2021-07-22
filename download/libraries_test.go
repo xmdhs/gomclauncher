@@ -73,7 +73,7 @@ func Test_source(t *testing.T) {
 			name: "1",
 			args: args{
 				url:   "https://launchermeta.mojang.com/mc/game/version_manifest.json",
-				types: "mcbbsapi",
+				types: "mcbbs",
 			},
 			want: "https://download.mcbbs.net/mc/game/version_manifest.json",
 		},
@@ -84,6 +84,14 @@ func Test_source(t *testing.T) {
 				types: "vvv",
 			},
 			want: "https://launchermeta.mojang.com/mc/game/version_manifest.json",
+		},
+		{
+			name: "3",
+			args: args{
+				url:   "https://launchermeta.mojang.com/mc/game/version_manifest.json/launchermeta.mojang.com",
+				types: "mcbbs",
+			},
+			want: "https://download.mcbbs.net/mc/game/version_manifest.json/launchermeta.mojang.com",
 		},
 	}
 	for _, tt := range tests {
