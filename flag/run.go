@@ -1,7 +1,6 @@
 package flag
 
 import (
-	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -30,18 +29,11 @@ func (f Flag) Arun() {
 		if err != nil {
 			panic(err)
 		}
-		if t.ID != f.Version {
-			b = bytes.ReplaceAll(b, []byte(t.ID), []byte(f.Version))
-			err := ioutil.WriteFile(f.Minecraftpath+"/versions/"+f.Version+"/"+f.Version+".json", b, 0777)
-			if err != nil {
-				panic(err)
-			}
-		}
 		if t.InheritsFrom != "" {
 			f.Download = t.InheritsFrom
 			f.D()
 		} else {
-			f.Download = f.Version
+			f.Download = t.ID
 			f.D()
 		}
 	}
