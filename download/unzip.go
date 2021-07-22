@@ -43,6 +43,7 @@ func (l Libraries) Unzip(i int) error {
 					ch:       ch,
 					cxt:      cxt,
 					randurls: l.randurls,
+					print:    l.print,
 				}
 				select {
 				case ch <- struct{}{}:
