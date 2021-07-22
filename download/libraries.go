@@ -154,20 +154,31 @@ func modlibraries2(l []launcher.Librarie, Launcherjson *launcher.LauncherjsonX11
 	}
 }
 
+var mirror = map[string]map[string]string{
+	"bmclapi": {
+		`launchermeta.mojang.com`:          `bmclapi.bangbang93.com`,
+		`launcher.mojang.com`:              `bmclapi.bangbang93.com`,
+		`resources.download.minecraft.net`: `bmclapi.bangbang93.com/assets`,
+		`libraries.minecraft.net`:          `bmclapi.bangbang93.com/maven`,
+		`files.minecraftforge.net/maven`:   `bmclapi.bangbang93.com/maven`,
+	},
+	"mcbbsapi": {
+		`launchermeta.mojang.com`:          `download.mcbbs.net`,
+		`launcher.mojang.com`:              `download.mcbbs.net`,
+		`resources.download.minecraft.net`: `download.mcbbs.net/assets`,
+		`libraries.minecraft.net`:          `download.mcbbs.net/maven`,
+		`files.minecraftforge.net/maven`:   `download.mcbbs.net/maven`,
+	},
+}
+
 func source(url, types string) string {
-	switch types {
-	case "bmclapi":
-		url = strings.ReplaceAll(url, `launchermeta.mojang.com`, `bmclapi.bangbang93.com`)
-		url = strings.ReplaceAll(url, `launcher.mojang.com`, `bmclapi.bangbang93.com`)
-		url = strings.ReplaceAll(url, `resources.download.minecraft.net`, `bmclapi.bangbang93.com/assets`)
-		url = strings.ReplaceAll(url, `libraries.minecraft.net`, `bmclapi.bangbang93.com/maven`)
-		url = strings.ReplaceAll(url, `files.minecraftforge.net/maven`, `bmclapi.bangbang93.com/maven`)
-	case "mcbbs":
-		url = strings.ReplaceAll(url, `launchermeta.mojang.com`, `download.mcbbs.net`)
-		url = strings.ReplaceAll(url, `launcher.mojang.com`, `download.mcbbs.net`)
-		url = strings.ReplaceAll(url, `resources.download.minecraft.net`, `download.mcbbs.net/assets`)
-		url = strings.ReplaceAll(url, `libraries.minecraft.net`, `download.mcbbs.net/maven`)
-		url = strings.ReplaceAll(url, `files.minecraftforge.net/maven`, `download.mcbbs.net/maven`)
+	m, ok := mirror[types]
+	if ok {
+		for k, v := range m {
+			if strings.Contains(url, k) {
+				return strings.Replace(url, k, v, 1)
+			}
+		}
 	}
 	return url
 }
