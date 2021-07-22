@@ -58,3 +58,39 @@ func Test_get(t *testing.T) {
 	}
 	os.RemoveAll("test")
 }
+
+func Test_source(t *testing.T) {
+	type args struct {
+		url   string
+		types string
+	}
+	tests := []struct {
+		name string
+		args args
+		want string
+	}{
+		{
+			name: "1",
+			args: args{
+				url:   "https://launchermeta.mojang.com/mc/game/version_manifest.json",
+				types: "mcbbsapi",
+			},
+			want: "https://download.mcbbs.net/mc/game/version_manifest.json",
+		},
+		{
+			name: "2",
+			args: args{
+				url:   "https://launchermeta.mojang.com/mc/game/version_manifest.json",
+				types: "vvv",
+			},
+			want: "https://launchermeta.mojang.com/mc/game/version_manifest.json",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := source(tt.args.url, tt.args.types); got != tt.want {
+				t.Errorf("source() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

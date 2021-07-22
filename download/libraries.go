@@ -156,13 +156,13 @@ func modlibraries2(l []launcher.Librarie, Launcherjson *launcher.LauncherjsonX11
 
 var mirror = map[string]map[string]string{
 	"bmclapi": {
-		`launchermeta.mojang.com`:          `bmclapi.bangbang93.com`,
-		`launcher.mojang.com`:              `bmclapi.bangbang93.com`,
-		`resources.download.minecraft.net`: `bmclapi.bangbang93.com/assets`,
-		`libraries.minecraft.net`:          `bmclapi.bangbang93.com/maven`,
-		`files.minecraftforge.net/maven`:   `bmclapi.bangbang93.com/maven`,
+		`launchermeta.mojang.com`:          `bmclapi2.bangbang93.com`,
+		`launcher.mojang.com`:              `bmclapi2.bangbang93.com`,
+		`resources.download.minecraft.net`: `bmclapi2.bangbang93.com/assets`,
+		`libraries.minecraft.net`:          `bmclapi2.bangbang93.com/maven`,
+		`files.minecraftforge.net/maven`:   `bmclapi2.bangbang93.com/maven`,
 	},
-	"mcbbsapi": {
+	"mcbbs": {
 		`launchermeta.mojang.com`:          `download.mcbbs.net`,
 		`launcher.mojang.com`:              `download.mcbbs.net`,
 		`resources.download.minecraft.net`: `download.mcbbs.net/assets`,
