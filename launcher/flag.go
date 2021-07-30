@@ -108,6 +108,7 @@ func (g *Gameinfo) modjson() (*launcher1155, error) {
 	if err != nil {
 		return nil, JsonErr
 	}
+	g.inheritsFrom = mod.InheritsFrom
 	if mod.InheritsFrom != "" {
 		b, err := ioutil.ReadFile(g.Minecraftpath + `/versions/` + mod.InheritsFrom + "/" + mod.InheritsFrom + ".json")
 		if err != nil {
