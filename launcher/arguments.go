@@ -46,6 +46,9 @@ func (g *Gameinfo) jvmflagrelace(s string, l *launcher1155) string {
 	s = strings.ReplaceAll(s, "${natives_directory}", g.Minecraftpath+`/versions/`+g.Version+`/natives`)
 	s = strings.ReplaceAll(s, "${launcher_name}", Launcherbrand)
 	s = strings.ReplaceAll(s, "${launcher_version}", Launcherversion)
+	s = strings.ReplaceAll(s, "${library_directory}", g.Minecraftpath+"/libraries")
+	s = strings.ReplaceAll(s, "${classpath_separator}", string(os.PathListSeparator))
+	s = strings.ReplaceAll(s, "${version_name}", g.inheritsFrom+".jar")
 	s = strings.ReplaceAll(s, "${classpath}", l.cp())
 	return s
 }

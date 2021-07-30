@@ -36,6 +36,8 @@ type Gameinfo struct {
 	JavePath       string
 	ApiAddress     string
 	authlibpath    string
+
+	inheritsFrom string
 }
 
 func (g *Gameinfo) Run115() (err error) {
@@ -126,6 +128,9 @@ func (g *Gameinfo) modjson() (*launcher1155, error) {
 		j.MainClass = mod.MainClass
 		if len(mod.Arguments.Game) != 0 {
 			j.Arguments.Game = append(j.Arguments.Game, mod.Arguments.Game...)
+		}
+		if len(mod.Arguments.Jvm) != 0 {
+			j.Arguments.Jvm = append(j.Arguments.Jvm, mod.Arguments.Jvm...)
 		}
 		if mod.MinecraftArguments != "" {
 			j.Arguments.Game = append(j.Arguments.Game, minecraftArguments2jvm(mod.MinecraftArguments)...)
