@@ -202,11 +202,13 @@ func (g *Gameinfo) legacy(l *launcher1155) {
 			}
 			f, err := os.Open(g.Minecraftpath + "/assets/objects/" + v.Hash[0:2] + "/" + v.Hash)
 			fileerr(err)
+			defer f.Close()
 			if a.Virtual {
 				ff, err := os.Create(p + path)
 				if err != nil {
 					panic(fmt.Errorf("legacy: %w", err))
 				}
+				defer ff.Close()
 				_, err = io.Copy(ff, f)
 				if err != nil {
 					panic(fmt.Errorf("legacy: %w", err))
@@ -216,6 +218,7 @@ func (g *Gameinfo) legacy(l *launcher1155) {
 				if err != nil {
 					panic(fmt.Errorf("legacy: %w", err))
 				}
+				defer fff.Close()
 				_, err = io.Copy(fff, f)
 				if err != nil {
 					panic(fmt.Errorf("legacy: %w", err))
