@@ -1,3 +1,5 @@
 .vscode
 gml.json
 .minecraft
+\.idea
+\windows
