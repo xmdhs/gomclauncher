@@ -56,7 +56,11 @@
 ```
 
 ## 使用项目
+
 BMCLAPI https://bmclapidoc.bangbang93.com/  
-authlib-injector https://github.com/yushijinhun/authlib-injector  
+
+uthlib-injector https://github.com/yushijinhun/authlib-injector  
+
 gomclauncher https://github.com/xmdhs/gomclauncher
+
 GoVCL https://z-kit.cc/
