@@ -1,0 +1,9 @@
+object MainWindow: TMainWindow
+  Left = 420
+  Height = 240
+  Top = 138
+  Width = 320
+  Caption = 'MainWindow'
+  OnCreate = FormCreate
+  LCLVersion = '2.0.10.0'
+end

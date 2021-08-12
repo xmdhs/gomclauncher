@@ -1,5 +1,30 @@
 package main
 
+
+import (
+"gomclauncher/UIcode/form"
+"github.com/ying32/govcl/vcl"
+)
+
+func main() {
+
+	vcl.Application.SetOnException(func(sender vcl.IObject, e *vcl.Exception) {
+		// 在这里自行处理VCL中的异常
+		mylog.WriteLog(e.Message())
+	})
+
+	//vcl.Application.SetTitle("抖音视频监控小工具 - Viggo - " + app.APP_VERSION)
+	vcl.Application.SetScaled(true)
+	vcl.Application.Initialize()
+	vcl.Application.SetMainFormOnTaskBar(true)
+	vcl.Application.CreateForm(&form.MasterForm)
+	vcl.Application.CreateForm(&form.NoticeSettingsWindow)
+	vcl.Application.Run()
+
+}
+
+
+/*
 import (
 	"encoding/base64"
 	"encoding/json"
@@ -217,3 +242,4 @@ func version() {
 	fmt.Println("Build on: " + buildOn)
 	fmt.Println("Repository: https://github.com/xmdhs/gomclauncher")
 }
+*/
