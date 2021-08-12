@@ -41,7 +41,7 @@ func (f Flag) Arun() {
 				panic(err)
 			}
 		}
-		InheritsFrom := t["inheritsFrom"].(string)
+		InheritsFrom, _ := t["inheritsFrom"].(string)
 		if InheritsFrom != "" {
 			f.Download = InheritsFrom
 			f.D()
