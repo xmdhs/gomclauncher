@@ -1,7 +1,6 @@
 package flag
 
 import (
-	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -25,20 +24,26 @@ func (f Flag) Arun() {
 		panic(err)
 	}
 	if f.Outmsg {
-		t := test{}
+		t := map[string]interface{}{}
 		err := json.Unmarshal(b, &t)
 		if err != nil {
 			panic(err)
 		}
-		if t.ID != f.Version {
-			b = bytes.ReplaceAll(b, []byte(t.ID), []byte(f.Version))
+		id, _ := t["id"].(string)
+		if id != f.Version {
+			t["id"] = f.Version
+			b, err = json.Marshal(t)
+			if err != nil {
+				panic(err)
+			}
 			err := ioutil.WriteFile(f.Minecraftpath+"/versions/"+f.Version+"/"+f.Version+".json", b, 0777)
 			if err != nil {
 				panic(err)
 			}
 		}
-		if t.InheritsFrom != "" {
-			f.Download = t.InheritsFrom
+		InheritsFrom := t["inheritsFrom"].(string)
+		if InheritsFrom != "" {
+			f.Download = InheritsFrom
 			f.D()
 		} else {
 			f.Download = f.Version
@@ -62,9 +67,4 @@ func (f Flag) Arun() {
 		}
 		panic(err)
 	}
-}
-
-type test struct {
-	ID           string `json:"id"`
-	InheritsFrom string `json:"inheritsFrom"`
 }
