@@ -1,3 +1,5 @@
+github.com/Comdex/imgo v0.0.0-20200213094239-bb8d436f1e5a h1:R6uoBNIHx3UyxxG+ntWSC/g9gXUIPSk1bvW9zzhIadE=
+github.com/Comdex/imgo v0.0.0-20200213094239-bb8d436f1e5a/go.mod h1:OqTmmqMJZcFVi/fGDvpvoCYxFjyFgkJ5wRU42g1bWQY=
 github.com/Xuanwo/go-locale v1.0.0 h1:oqC32Kyiu2XZq+fxtwEg0mWiv9WyDhyHu+sT5cDkgME=
 github.com/Xuanwo/go-locale v1.0.0/go.mod h1:kB9tcLfr4Sp+ByIE9SE7vbUkXkGQqel2XH3EHpL0haA=
 github.com/davecgh/go-spew v1.1.0 h1:ZDRjVQ15GmhC3fiQ8ni8+OwkZQO4DARzQgrnXU1Liz8=
@@ -21,6 +23,13 @@ github.com/xmdhs/lorca v0.1.10-0.20210304103543-f1ac205917e5 h1:RiH1o3Rod0OzIUKk
 github.com/xmdhs/lorca v0.1.10-0.20210304103543-f1ac205917e5/go.mod h1:9pAZxYwwD+g+BionehMLWNm1/Wh4RAhFVfcpJKU3/uk=
 github.com/xmdhs/msauth v0.2.1 h1:huNcqmOa6IcjBmswir+UOyIxoMe8H+0fmaVKn28udyU=
 github.com/xmdhs/msauth v0.2.1/go.mod h1:a0As/hLX0pSQGZFJ66QqjtyEPiD5FOfIKLPUrWWee7I=
+github.com/ying32/dylib v0.0.0-20210414124638-bf395b2d391a h1:kyKEUVx/Q2CVZmGMAtgChD4U+hvc/oRU7BgaOK0u7bY=
+github.com/ying32/dylib v0.0.0-20210414124638-bf395b2d391a/go.mod h1:WPBTfbqg/aA1xqHFPB4fgBHETq/G/75yErbnexmaEOo=
+github.com/ying32/govcl v1.2.10 h1:n0Z0DdrzKP6ia1NII4TVDnp0WumQ0X66MvV3NSh9yQk=
+github.com/ying32/govcl v2.0.10+incompatible h1:Gd76fALUdePCGEpZhkSvVpp06n9hXramgGTm6WjJVKc=
+github.com/ying32/govcl v2.0.10+incompatible/go.mod h1:yZVtbJ9Md1nAVxtHKIriKZn4K6TQYqI1en3sN/m9FJ8=
+github.com/ying32/liblclbinres v0.0.0-20210305091625-aea78f1f52c0 h1:f8x44jTxqYQ0lnB45pax+07u0beGhpfjWw+iXxRsbGY=
+github.com/ying32/liblclbinres v0.0.0-20210305091625-aea78f1f52c0/go.mod h1:oEmgAOPt+dALMzap3HgEQnaN+iCLE7m3C867jERInaI=
 golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2/go.mod h1:djNgcEr1/C05ACkg1iLfiJU5Ep61QUkGW8qpdssI0+w=
 golang.org/x/net v0.0.0-20190311183353-d8887717615a/go.mod h1:t9HGtf8HONx5eT2rtn7q6eTqICYqUVnKs3thJo3Qplg=
 golang.org/x/sys v0.0.0-20190215142949-d0b11bdaac8a/go.mod h1:STP8DvDyc/dI5b8T5hshtkjS+E42TnysNCUPdjciGhY=

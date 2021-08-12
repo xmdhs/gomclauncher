@@ -21,7 +21,6 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="MainWindow"/>
         <IsVisibleTab Value="True"/>
-        <TopLine Value="13"/>
         <CursorPos X="96" Y="17"/>
         <UsageCount Value="20"/>
         <Loaded Value="True"/>

@@ -3,11 +3,18 @@ package form
 
 import (
     "github.com/ying32/govcl/vcl"
-    _ "embed"
 )
 
 type TMainWindow struct {
     *vcl.TForm
+    StaticText1 *vcl.TStaticText
+    GroupBox1   *vcl.TGroupBox
+    Image1      *vcl.TImage
+    StaticText2 *vcl.TStaticText
+    StaticText3 *vcl.TStaticText
+    Image2      *vcl.TImage
+    Image3      *vcl.TImage
+    Image4      *vcl.TImage
 
     //::private::
     TMainWindowFields

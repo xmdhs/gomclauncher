@@ -14,3 +14,8 @@ func (f *TMainWindow) OnFormCreate(sender vcl.IObject) {
 
 }
 
+
+func (f *TMainWindow) OnImage1Click(sender vcl.IObject) {
+
+}
+

@@ -1,8 +1,8 @@
 object MainWindow: TMainWindow
-  Left = 420
-  Height = 240
-  Top = 138
-  Width = 320
+  Left = 498
+  Height = 450
+  Top = 147
+  Width = 800
   Caption = 'MainWindow'
   OnCreate = FormCreate
   LCLVersion = '2.0.10.0'

@@ -15,8 +15,21 @@
       </XPManifest>
       <Icon Value="0"/>
     </General>
+    <VersionInfo>
+      <UseVersionInfo Value="True"/>
+      <AutoIncrementBuild Value="True"/>
+      <MajorVersionNr Value="1"/>
+      <Language Value="0804"/>
+    </VersionInfo>
     <Res2go>
-      <PackageName Value=""/>
+      <Enabled Value="True"/>
+      <OutputPath Value="..\UIcode"/>
+      <UseOriginalFileName Value="True"/>
+      <SaveGfmFile Value="True"/>
+      <PackageName Value="form"/>
+      <GoUseTempdll Value="True"/>
+      <GoBuildMode Value="exe"/>
+      <GoUseEmbed Value="True"/>
     </Res2go>
     <BuildModes Count="1">
       <Item1 Name="Default" Default="True"/>
