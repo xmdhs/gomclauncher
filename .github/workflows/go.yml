@@ -1,35 +1,52 @@
-name: Go
+name: Go Build gomclauncherGUI
 
 on:
   push:
-    branches: [master]
+        branches:
+          - master
+          - feature/*
+        paths-ignore:
+          - '**/*.md'
+          - .gitignore
+          - .editorconfig
+          - appveyor.yml
+          - 'azure-pipelines*.yml'
+          - 'ci/azure-pipelines/template*.yml'
+
   pull_request:
-    branches: [master]
+          branches:
+            - master
+            - feature/*
+            - release/*
+          paths-ignore:
+            - '**/*.md'
+            - .gitignore
+            - .editorconfig
+            - appveyor.yml
+            - 'azure-pipelines*.yml'
+            - 'ci/azure-pipelines/template*.yml'
 
 jobs:
   build:
-    name: Build
-    runs-on: ubuntu-latest
+    name: Build gomclauncherGUI
+    runs-on: windows-latest
     steps:
       - name: Set up Go 1.x
         uses: actions/setup-go@v2
         with:
-          go-version: ^1.16
+          go-version: ^1.14
         id: go
 
       - name: Check out code into the Go module directory
         uses: actions/checkout@v2
-
+        
       - name: Build
         run: |
-          chmod +x build.sh
-          ./build.sh
-      - name: Test
-        run: go test -race -v ./...
-
+          go build -i -buildmode=exe -ldflags="-H windowsgui" -tags="tempdll" -o "gomclauncherGUI.exe"
+          
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v2
         with:
           # A file, directory or wildcard pattern that describes what to upload
-          path: ./gml*
-          name: ${{ github.run_number }}
+          path: ./gomclauncherGUI.exe
+          name: gomclauncherGUI-${{ github.run_number }}
