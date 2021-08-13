@@ -1,5 +1,3 @@
-github.com/Comdex/imgo v0.0.0-20200213094239-bb8d436f1e5a h1:R6uoBNIHx3UyxxG+ntWSC/g9gXUIPSk1bvW9zzhIadE=
-github.com/Comdex/imgo v0.0.0-20200213094239-bb8d436f1e5a/go.mod h1:OqTmmqMJZcFVi/fGDvpvoCYxFjyFgkJ5wRU42g1bWQY=
 github.com/Xuanwo/go-locale v1.0.0 h1:oqC32Kyiu2XZq+fxtwEg0mWiv9WyDhyHu+sT5cDkgME=
 github.com/Xuanwo/go-locale v1.0.0/go.mod h1:kB9tcLfr4Sp+ByIE9SE7vbUkXkGQqel2XH3EHpL0haA=
 github.com/davecgh/go-spew v1.1.0 h1:ZDRjVQ15GmhC3fiQ8ni8+OwkZQO4DARzQgrnXU1Liz8=
@@ -19,13 +17,14 @@ github.com/smartystreets/goconvey v1.6.4/go.mod h1:syvi0/a8iFYH4r/RixwvyeAJjdLS9
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
 github.com/stretchr/testify v1.6.1 h1:hDPOHmpOpP40lSULcqw7IrRb/u7w6RpDC9399XyoNd0=
 github.com/stretchr/testify v1.6.1/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg=
+github.com/xmdhs/gomclauncher v1.3.14 h1:eutS8UUWAnz3YF7lo0WKPQigKij2+WKKxP9Acvbnn5w=
+github.com/xmdhs/gomclauncher v1.3.14/go.mod h1:pebMzVF+MIq0u2LAMOx/LEHNGtA3RwTP1AnjGiIwkxQ=
 github.com/xmdhs/lorca v0.1.10-0.20210304103543-f1ac205917e5 h1:RiH1o3Rod0OzIUKkA+HuouWnMeb7/gCDdGPtWAP9MfY=
 github.com/xmdhs/lorca v0.1.10-0.20210304103543-f1ac205917e5/go.mod h1:9pAZxYwwD+g+BionehMLWNm1/Wh4RAhFVfcpJKU3/uk=
 github.com/xmdhs/msauth v0.2.1 h1:huNcqmOa6IcjBmswir+UOyIxoMe8H+0fmaVKn28udyU=
 github.com/xmdhs/msauth v0.2.1/go.mod h1:a0As/hLX0pSQGZFJ66QqjtyEPiD5FOfIKLPUrWWee7I=
 github.com/ying32/dylib v0.0.0-20210414124638-bf395b2d391a h1:kyKEUVx/Q2CVZmGMAtgChD4U+hvc/oRU7BgaOK0u7bY=
 github.com/ying32/dylib v0.0.0-20210414124638-bf395b2d391a/go.mod h1:WPBTfbqg/aA1xqHFPB4fgBHETq/G/75yErbnexmaEOo=
-github.com/ying32/govcl v1.2.10 h1:n0Z0DdrzKP6ia1NII4TVDnp0WumQ0X66MvV3NSh9yQk=
 github.com/ying32/govcl v2.0.10+incompatible h1:Gd76fALUdePCGEpZhkSvVpp06n9hXramgGTm6WjJVKc=
 github.com/ying32/govcl v2.0.10+incompatible/go.mod h1:yZVtbJ9Md1nAVxtHKIriKZn4K6TQYqI1en3sN/m9FJ8=
 github.com/ying32/liblclbinres v0.0.0-20210305091625-aea78f1f52c0 h1:f8x44jTxqYQ0lnB45pax+07u0beGhpfjWw+iXxRsbGY=
@@ -38,6 +37,7 @@ golang.org/x/sys v0.0.0-20200930185726-fdedc70b468f h1:+Nyd8tzPX9R7BWHguqsrbFdRx
 golang.org/x/sys v0.0.0-20200930185726-fdedc70b468f/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/text v0.3.0/go.mod h1:NqM8EUOU14njkJ3fqMW+pc6Ldnwhi/IjpwHt7yyuwOQ=
 golang.org/x/text v0.3.3/go.mod h1:5Zoc/QRtKVWzQhOtBMvqHzDpF6irO9z98xDceosuGiQ=
+golang.org/x/text v0.3.6/go.mod h1:5Zoc/QRtKVWzQhOtBMvqHzDpF6irO9z98xDceosuGiQ=
 golang.org/x/text v0.3.7 h1:olpwvP2KacW1ZWvsR7uQhoyTYvKAupfQrRGBFM352Gk=
 golang.org/x/text v0.3.7/go.mod h1:u+2+/6zg+i71rQMx5EYifcz6MCKuco9NR6JIITiCfzQ=
 golang.org/x/tools v0.0.0-20180917221912-90fa682c2a6e/go.mod h1:n7NCudcB/nEzxVGmLbDWY5pfWTLqBcC2KZ6jyYvM4mQ=

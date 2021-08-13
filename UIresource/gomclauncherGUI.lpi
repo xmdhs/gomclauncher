@@ -14,22 +14,34 @@
         <DpiAware Value="True"/>
       </XPManifest>
       <Icon Value="0"/>
+      <Resources Count="12">
+        <Resource_0 FileName="assets\icon\add.png" Type="BITMAP" ResourceName="ADD"/>
+        <Resource_1 FileName="assets\icon\balance.png" Type="BITMAP" ResourceName="BALANCE"/>
+        <Resource_2 FileName="assets\icon\check_filled.png" Type="BITMAP" ResourceName="CHECK_FILLED"/>
+        <Resource_3 FileName="assets\icon\close_filled.png" Type="BITMAP" ResourceName="CLOSE_FILLED"/>
+        <Resource_4 FileName="assets\icon\copy.png" Type="BITMAP" ResourceName="COPY"/>
+        <Resource_5 FileName="assets\icon\download.png" Type="BITMAP" ResourceName="DOWNLOAD"/>
+        <Resource_6 FileName="assets\icon\help_filled.png" Type="BITMAP" ResourceName="HELP_FILLED"/>
+        <Resource_7 FileName="assets\icon\info_filled.png" Type="BITMAP" ResourceName="INFO_FILLED"/>
+        <Resource_8 FileName="assets\icon\like.png" Type="BITMAP" ResourceName="LIKE"/>
+        <Resource_9 FileName="assets\icon\list.png" Type="BITMAP" ResourceName="LIST"/>
+        <Resource_10 FileName="assets\icon\setting.png" Type="BITMAP" ResourceName="SETTING"/>
+        <Resource_11 FileName="assets\icon\user.png" Type="BITMAP" ResourceName="USER"/>
+      </Resources>
     </General>
     <VersionInfo>
       <UseVersionInfo Value="True"/>
-      <AutoIncrementBuild Value="True"/>
       <MajorVersionNr Value="1"/>
       <Language Value="0804"/>
     </VersionInfo>
     <Res2go>
       <Enabled Value="True"/>
-      <OutputPath Value="..\UIcode"/>
+      <OutputPath Value=".."/>
       <UseOriginalFileName Value="True"/>
-      <SaveGfmFile Value="True"/>
       <PackageName Value="form"/>
       <GoUseTempdll Value="True"/>
+      <GoEnabledFinalizerOn Value="True"/>
       <GoBuildMode Value="exe"/>
-      <GoUseEmbed Value="True"/>
     </Res2go>
     <BuildModes Count="1">
       <Item1 Name="Default" Default="True"/>
@@ -47,19 +59,35 @@
         <PackageName Value="LCL"/>
       </Item1>
     </RequiredPackages>
-    <Units Count="2">
+    <Units Count="4">
       <Unit0>
         <Filename Value="gomclauncherGUI.lpr"/>
         <IsPartOfProject Value="True"/>
       </Unit0>
       <Unit1>
-        <Filename Value="mainwindow.pas"/>
+        <Filename Value="mainform.pas"/>
         <IsPartOfProject Value="True"/>
-        <ComponentName Value="MainWindow"/>
+        <ComponentName Value="MainForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="MainWindow"/>
+        <UnitName Value="MainForm"/>
       </Unit1>
+      <Unit2>
+        <Filename Value="versionsetting.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="VersionSetting"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="VersionSetting"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="userconfig.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="UserConfig"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="UserConfig"/>
+      </Unit3>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

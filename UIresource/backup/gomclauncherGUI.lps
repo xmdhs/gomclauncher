@@ -4,7 +4,7 @@
     <PathDelim Value="\"/>
     <Version Value="11"/>
     <BuildModes Active="Default"/>
-    <Units Count="2">
+    <Units Count="5">
       <Unit0>
         <Filename Value="gomclauncherGUI.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -15,19 +15,115 @@
         <UsageCount Value="20"/>
       </Unit0>
       <Unit1>
-        <Filename Value="mainwindow.pas"/>
+        <Filename Value="mainform.pas"/>
         <IsPartOfProject Value="True"/>
-        <ComponentName Value="MainWindow"/>
+        <ComponentName Value="MainForm"/>
+        <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="MainWindow"/>
+        <UnitName Value="MainForm"/>
         <IsVisibleTab Value="True"/>
-        <CursorPos X="96" Y="17"/>
+        <TopLine Value="17"/>
+        <CursorPos X="3" Y="37"/>
+        <ComponentState Value="1"/>
+        <UsageCount Value="20"/>
+        <Loaded Value="True"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="versionsetting.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="VersionSetting"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="VersionSetting"/>
+        <EditorIndex Value="1"/>
+        <TopLine Value="24"/>
+        <CursorPos X="3" Y="44"/>
         <UsageCount Value="20"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
-      </Unit1>
+      </Unit2>
+      <Unit3>
+        <Filename Value="userconfig.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="UserConfig"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="UserConfig"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="13"/>
+        <CursorPos X="3" Y="33"/>
+        <UsageCount Value="20"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="D:\lazarus\lcl\interfaces\carbon\alllclintfunits.pas"/>
+        <UnitName Value="AllLCLIntfUnits"/>
+        <EditorIndex Value="3"/>
+        <CursorPos X="14" Y="11"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit4>
     </Units>
-    <JumpHistory HistoryIndex="-1"/>
+    <JumpHistory Count="15" HistoryIndex="14">
+      <Position1>
+        <Filename Value="mainform.pas"/>
+      </Position1>
+      <Position2>
+        <Filename Value="versionsetting.pas"/>
+        <Caret Line="13" Column="22" TopLine="2"/>
+      </Position2>
+      <Position3>
+        <Filename Value="versionsetting.pas"/>
+        <Caret Line="17" Column="22" TopLine="2"/>
+      </Position3>
+      <Position4>
+        <Filename Value="versionsetting.pas"/>
+        <Caret Line="18" Column="22" TopLine="2"/>
+      </Position4>
+      <Position5>
+        <Filename Value="versionsetting.pas"/>
+        <Caret Line="17" Column="22" TopLine="2"/>
+      </Position5>
+      <Position6>
+        <Filename Value="versionsetting.pas"/>
+        <Caret Line="19" Column="22" TopLine="2"/>
+      </Position6>
+      <Position7>
+        <Filename Value="versionsetting.pas"/>
+        <Caret Line="18" Column="22" TopLine="2"/>
+      </Position7>
+      <Position8>
+        <Filename Value="versionsetting.pas"/>
+        <Caret Line="19" Column="22" TopLine="2"/>
+      </Position8>
+      <Position9>
+        <Filename Value="versionsetting.pas"/>
+        <Caret Line="21" Column="22" TopLine="2"/>
+      </Position9>
+      <Position10>
+        <Filename Value="versionsetting.pas"/>
+        <Caret Line="37" Column="3" TopLine="17"/>
+      </Position10>
+      <Position11>
+        <Filename Value="versionsetting.pas"/>
+        <Caret Line="36" Column="3" TopLine="16"/>
+      </Position11>
+      <Position12>
+        <Filename Value="versionsetting.pas"/>
+        <Caret Line="37" Column="3" TopLine="16"/>
+      </Position12>
+      <Position13>
+        <Filename Value="mainform.pas"/>
+      </Position13>
+      <Position14>
+        <Filename Value="versionsetting.pas"/>
+        <Caret Line="39" Column="3" TopLine="33"/>
+      </Position14>
+      <Position15>
+        <Filename Value="userconfig.pas"/>
+      </Position15>
+    </JumpHistory>
     <RunParams>
       <FormatVersion Value="2"/>
       <Modes Count="0" ActiveMode=""/>

@@ -1,0 +1,9 @@
+object UserConfig: TUserConfig
+  Left = 573
+  Height = 240
+  Top = 260
+  Width = 320
+  Caption = 'UserConfig'
+  OnShow = FormShow
+  LCLVersion = '2.0.10.0'
+end
