@@ -59,6 +59,7 @@ func main() {
 	}
 	if remove {
 		f.Remove(ms)
+		return
 	}
 	if ms {
 		f.MsLogin()
