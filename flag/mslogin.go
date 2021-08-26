@@ -21,21 +21,22 @@ func (f *Flag) MsLogin() {
 	}
 	var p *auth.Profile
 	c, ok := f.Gmlconfig["ms"][f.Email]
-	if ok {
-		var err error
-		p, err = auth.GetProfile(c.AccessToken)
-		if err != nil {
-			p, err = auth.MsLogin()
-			if err != nil {
-				msLogincheakErr(err)
-			}
-		}
-	} else {
+	login := func() {
 		var err error
 		p, err = auth.MsLogin()
 		if err != nil {
 			msLogincheakErr(err)
 		}
+	}
+
+	if ok {
+		var err error
+		p, err = auth.GetProfile(c.AccessToken)
+		if err != nil {
+			login()
+		}
+	} else {
+		login()
 	}
 	aconfig := f.Gmlconfig["ms"][f.Email]
 	aconfig.Name = p.Name
