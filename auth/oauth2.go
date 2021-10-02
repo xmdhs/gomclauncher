@@ -22,6 +22,7 @@ type MsToken struct {
 }
 
 func (m *MsToken) Expires() bool {
+	fmt.Println(m.ExpiresIn)
 	return time.Now().After(m.ExpiresIn)
 }
 

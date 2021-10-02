@@ -35,9 +35,13 @@ func MsLogin() (*Profile, error) {
 
 func MsLoginRefresh(t *MsToken) (*Profile, error) {
 	has := false
-	if t != nil && t.Expires() {
-		err := t.Refresh()
-		if err == nil {
+	if t != nil {
+		if t.Expires() {
+			err := t.Refresh()
+			if err == nil {
+				has = true
+			}
+		} else {
 			has = true
 		}
 	}
