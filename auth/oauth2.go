@@ -54,5 +54,5 @@ func (m *MsToken) Refresh() error {
 
 func (m *MsToken) parse(mm msToken) {
 	m.msToken = mm
-	m.ExpiresIn = time.Now().Add(time.Duration(mm.ExpiresIn) + time.Second)
+	m.ExpiresIn = time.Now().Add(time.Duration(mm.ExpiresIn) * time.Second)
 }
