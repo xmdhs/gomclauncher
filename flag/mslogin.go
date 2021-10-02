@@ -1,6 +1,7 @@
 package flag
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"os"
@@ -19,24 +20,17 @@ func (f *Flag) MsLogin() {
 	if f.Gmlconfig["ms"] == nil {
 		f.Gmlconfig["ms"] = make(map[string]Config)
 	}
-	var p *auth.Profile
+	token := &auth.MsToken{}
 	c, ok := f.Gmlconfig["ms"][f.Email]
-	login := func() {
-		var err error
-		p, err = auth.MsLogin()
+	if ok && c.ExtData != nil {
+		err := json.Unmarshal(c.ExtData, token)
 		if err != nil {
-			msLogincheakErr(err)
+			token = nil
 		}
 	}
-
-	if ok {
-		var err error
-		p, err = auth.GetProfile(c.AccessToken)
-		if err != nil {
-			login()
-		}
-	} else {
-		login()
+	p, err := auth.MsLoginRefresh(token)
+	if err != nil {
+		msLogincheakErr(err)
 	}
 	aconfig := f.Gmlconfig["ms"][f.Email]
 	aconfig.Name = p.Name
@@ -44,6 +38,11 @@ func (f *Flag) MsLogin() {
 	aconfig.AccessToken = p.AccessToken
 	aconfig.Time = time.Now().Unix()
 	aconfig.ClientToken = ""
+	b, err := json.Marshal(p.MsToken)
+	if err != nil {
+		panic(err)
+	}
+	aconfig.ExtData = b
 	f.Gmlconfig["ms"][f.Email] = aconfig
 	saveconfig(f.Gmlconfig)
 

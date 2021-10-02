@@ -30,15 +30,28 @@ func getCode() (string, error) {
 }
 
 func MsLogin() (*Profile, error) {
-	code, err := getCode()
-	if err != nil {
-		return nil, fmt.Errorf("MsLogin: %w", err)
+	return MsLoginRefresh(nil)
+}
+
+func MsLoginRefresh(t *MsToken) (*Profile, error) {
+	has := false
+	if t == nil || t.Expires() {
+		err := t.Refresh()
+		if err == nil {
+			has = true
+		}
 	}
-	token, err := getToken(code)
-	if err != nil {
-		return nil, fmt.Errorf("MsLogin: %w", err)
+	if !has {
+		code, err := getCode()
+		if err != nil {
+			return nil, fmt.Errorf("MsLogin: %w", err)
+		}
+		t, err = getToken(code)
+		if err != nil {
+			return nil, fmt.Errorf("MsLogin: %w", err)
+		}
 	}
-	xbltoken, uhs, err := getXbltoken(token)
+	xbltoken, uhs, err := getXbltoken(t.AccessToken)
 	if err != nil {
 		return nil, fmt.Errorf("MsLogin: %w", err)
 	}
@@ -55,25 +68,28 @@ func MsLogin() (*Profile, error) {
 		return nil, fmt.Errorf("MsLogin: %w", err)
 	}
 	p.AccessToken = AccessToken
+	p.MsToken = *t
 	return p, nil
 }
 
-func getToken(code string) (string, error) {
+func getToken(code string) (*MsToken, error) {
 	code = url.QueryEscape(code)
 	msg := `client_id=00000000402b5328&code=` + code + `&grant_type=authorization_code&redirect_uri=https://login.live.com/oauth20_desktop.srf&scope=service::user.auth.xboxlive.com::MBI_SSL`
 	b, err := httPost(oauth20Token, msg, `application/x-www-form-urlencoded`)
 	if err != nil {
-		return "", fmt.Errorf("getToken: %w", err)
+		return nil, fmt.Errorf("getToken: %w", err)
 	}
-	var t token
+	var t msToken
 	err = json.Unmarshal(b, &t)
 	if err != nil {
-		return "", fmt.Errorf("getToken: %w", err)
+		return nil, fmt.Errorf("getToken: %w", err)
 	}
 	if t.AccessToken == "" {
-		return "", ErrCode
+		return nil, ErrCode
 	}
-	return t.AccessToken, nil
+	m := &MsToken{}
+	m.parse(t)
+	return m, nil
 }
 
 func getXbltoken(token string) (Xbltoken, uhs string, err error) {
@@ -122,7 +138,7 @@ func loginWithXbox(uhs string, xstsToken string) (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("loginWithXbox: %w", err)
 	}
-	t := token{}
+	t := msToken{}
 	err = json.Unmarshal(b, &t)
 	if err != nil {
 		return "", fmt.Errorf("loginWithXbox: %w", err)
@@ -164,6 +180,7 @@ type Profile struct {
 	ID          string `json:"id"`
 	Name        string `json:"name"`
 	AccessToken string
+	MsToken     MsToken
 }
 
 type msauth struct {
@@ -179,9 +196,6 @@ type displayClaims struct {
 
 type xui struct {
 	Uhs string `json:"uhs"`
-}
-type token struct {
-	AccessToken string `json:"access_token"`
 }
 
 var (

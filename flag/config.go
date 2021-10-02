@@ -73,4 +73,5 @@ type Config struct {
 	ClientToken string
 	AccessToken string
 	Time        int64
+	ExtData     json.RawMessage
 }
