@@ -4,7 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"net/http"
 	"net/url"
+	"strconv"
 	"time"
 )
 
@@ -43,6 +45,12 @@ func (m *MsToken) Refresh() error {
 	if err != nil {
 		return fmt.Errorf("MsToken.Refresh: %w", err)
 	}
+	if resp.StatusCode != http.StatusOK {
+		return fmt.Errorf("MsToken.Refresh: %w", errRefresh{
+			code: resp.StatusCode,
+			msg:  string(b),
+		})
+	}
 	tm := msToken{}
 	err = json.Unmarshal(b, &tm)
 	if err != nil {
@@ -55,4 +63,13 @@ func (m *MsToken) Refresh() error {
 func (m *MsToken) parse(mm msToken) {
 	m.msToken = mm
 	m.ExpiresIn = time.Now().Add(time.Duration(mm.ExpiresIn) * time.Second)
+}
+
+type errRefresh struct {
+	code int
+	msg  string
+}
+
+func (e errRefresh) Error() string {
+	return "http code: " + strconv.Itoa(e.code) + " msg: " + e.msg
 }

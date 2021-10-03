@@ -35,7 +35,7 @@ func MsLogin() (*Profile, error) {
 
 func MsLoginRefresh(t *MsToken) (*Profile, error) {
 	has := false
-	if t != nil && t.msToken.ExpiresIn != 0 {
+	if t != nil {
 		if t.Expires() {
 			err := t.Refresh()
 			if err == nil {

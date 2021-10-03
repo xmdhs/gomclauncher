@@ -28,9 +28,14 @@ func (f *Flag) MsLogin() {
 			token = nil
 		}
 	}
-	p, err := auth.MsLoginRefresh(token)
+	p, err := auth.GetProfile(c.AccessToken)
 	if err != nil {
-		msLogincheakErr(err)
+		p, err = auth.MsLoginRefresh(token)
+		if err != nil {
+			msLogincheakErr(err)
+		}
+	} else {
+		p.MsToken = *token
 	}
 	aconfig := f.Gmlconfig["ms"][f.Email]
 	aconfig.Name = p.Name
