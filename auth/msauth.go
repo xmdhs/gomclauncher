@@ -227,6 +227,12 @@ func httPost(url, msg, ContentType string) ([]byte, error) {
 	if err != nil {
 		return nil, fmt.Errorf("httPost: %w", err)
 	}
+	if rep.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("httPost: %w", ErrHttpCode{
+			code: rep.StatusCode,
+			msg:  string(b),
+		})
+	}
 	return b, nil
 }
 

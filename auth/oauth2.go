@@ -46,7 +46,7 @@ func (m *MsToken) Refresh() error {
 		return fmt.Errorf("MsToken.Refresh: %w", err)
 	}
 	if resp.StatusCode != http.StatusOK {
-		return fmt.Errorf("MsToken.Refresh: %w", errRefresh{
+		return fmt.Errorf("MsToken.Refresh: %w", ErrHttpCode{
 			code: resp.StatusCode,
 			msg:  string(b),
 		})
@@ -65,11 +65,11 @@ func (m *MsToken) parse(mm msToken) {
 	m.ExpiresIn = time.Now().Add(time.Duration(mm.ExpiresIn) * time.Second)
 }
 
-type errRefresh struct {
+type ErrHttpCode struct {
 	code int
 	msg  string
 }
 
-func (e errRefresh) Error() string {
+func (e ErrHttpCode) Error() string {
 	return "http code: " + strconv.Itoa(e.code) + " msg: " + e.msg
 }
