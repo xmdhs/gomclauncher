@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 
 	"github.com/xmdhs/gomclauncher/auth"
+	"github.com/xmdhs/gomclauncher/internal"
 	"github.com/xmdhs/gomclauncher/launcher"
 )
 
@@ -41,7 +42,15 @@ func (f Flag) Tidy() {
 		for _, v := range list {
 			librariesMap[filepath.Join(v)] = struct{}{}
 		}
-		assetsMap[ll.GetLauncherjsonX115().AssetIndex.ID] = struct{}{}
+		j := ll.GetLauncherjsonX115()
+		assetsMap[j.AssetIndex.ID] = struct{}{}
+
+		for _, v := range j.Libraries {
+			path, _, url := internal.Swichnatives(v)
+			if url != "" {
+				librariesMap[filepath.Join(f.Minecraftpath, `/libraries/`, path)] = struct{}{}
+			}
+		}
 	}
 
 	librariesMap[filepath.Join(f.Minecraftpath, `/libraries/`, `moe/yushi/authlibinjector/`, "authlib-injector/", auth.Authlibversion, "/authlib-injector-"+auth.Authlibversion+".jar")] = struct{}{}

@@ -6,10 +6,10 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"runtime"
 	"strings"
 	"sync"
 
+	"github.com/xmdhs/gomclauncher/internal"
 	"github.com/xmdhs/gomclauncher/launcher"
 )
 
@@ -22,7 +22,7 @@ func (l Libraries) Unzip(i int) error {
 	go func() {
 		for _, v := range l.librarie.Libraries {
 			v := v
-			path, sha1, url := swichnatives(v)
+			path, sha1, url := internal.Swichnatives(v)
 			path = l.path + `/libraries/` + path
 			if url == "" {
 				done <- struct{}{}
@@ -123,33 +123,6 @@ func (l Libraries) unzipnative(n []string) error {
 			return fmt.Errorf("unzipnative: %w", err)
 		}
 	}
-}
-
-func swichnatives(l launcher.LibraryX115) (path, sha1, url string) {
-	Os := runtime.GOOS
-	switch Os {
-	case "windows":
-		path = l.Downloads.Classifiers.NativesWindows.Path
-		sha1 = l.Downloads.Classifiers.NativesWindows.Sha1
-		url = l.Downloads.Classifiers.NativesWindows.URL
-	case "darwin":
-		if l.Downloads.Classifiers.NativesOsx.Path != "" {
-			path = l.Downloads.Classifiers.NativesOsx.Path
-			sha1 = l.Downloads.Classifiers.NativesOsx.Sha1
-			url = l.Downloads.Classifiers.NativesOsx.URL
-		} else {
-			path = l.Downloads.Classifiers.NativesMacos.Path
-			sha1 = l.Downloads.Classifiers.NativesMacos.Sha1
-			url = l.Downloads.Classifiers.NativesMacos.URL
-		}
-	case "linux":
-		path = l.Downloads.Classifiers.NativesLinux.Path
-		sha1 = l.Downloads.Classifiers.NativesLinux.Sha1
-		url = l.Downloads.Classifiers.NativesLinux.URL
-	default:
-		panic("???")
-	}
-	return
 }
 
 func deCompress(zipFile, dest string) error {

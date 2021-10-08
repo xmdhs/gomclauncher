@@ -83,7 +83,7 @@ func (l *launcher1155) cp() string {
 
 func (l *launcher1155) CP() []string {
 	path := l.Minecraftpath + `/libraries/`
-	list := make([]string, 0, len(l.json.Libraries)+1)
+	list := make([]string, 0, len(l.json.Libraries))
 	for _, p := range l.json.Libraries {
 		pack := Name2path(p.Name)
 		v, ok := l.Gameinfo.flag[pack[0]]
@@ -99,7 +99,6 @@ func (l *launcher1155) CP() []string {
 		}
 
 	}
-	list = append(list, l.Minecraftpath+`/versions/`+l.json.ID+`/`+l.json.ID+`.jar`)
 	return list
 }
 
