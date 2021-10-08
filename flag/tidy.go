@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/xmdhs/gomclauncher/auth"
 	"github.com/xmdhs/gomclauncher/launcher"
 )
 
@@ -43,6 +44,8 @@ func (f Flag) Tidy() {
 		assetsMap[ll.GetLauncherjsonX115().AssetIndex.ID] = struct{}{}
 	}
 
+	librariesMap[filepath.Join(f.Minecraftpath, `/libraries/`, `moe/yushi/authlibinjector/`, "authlib-injector/", auth.Authlibversion, "/authlib-injector-"+auth.Authlibversion+".jar")] = struct{}{}
+
 	assetPathMap := map[string]struct{}{}
 
 	for k := range assetsMap {
@@ -61,43 +64,62 @@ func (f Flag) Tidy() {
 	}
 
 	err := filepath.WalkDir(f.Minecraftpath+"/libraries", func(path string, d fs.DirEntry, err error) error {
-		if err != nil {
-			panic(err)
-		}
-		if d.IsDir() {
-			return nil
-		}
-		_, ok := librariesMap[filepath.Join(path)]
-		if !ok {
-			err := os.Remove(path)
-			if err != nil {
-				return err
-			}
-		}
-		return nil
+		return removeFile(err, d, librariesMap, path)
 	})
 	if err != nil {
 		panic(err)
 	}
 	err = filepath.WalkDir(f.Minecraftpath+"/assets/objects", func(path string, d fs.DirEntry, err error) error {
-		if err != nil {
-			panic(err)
-		}
-		if d.IsDir() {
-			return nil
-		}
-		_, ok := assetPathMap[filepath.Join(path)]
-		if !ok {
-			err := os.Remove(path)
-			if err != nil {
-				return err
-			}
-		}
-		return nil
+		return removeFile(err, d, assetPathMap, path)
 	})
 	if err != nil {
 		panic(err)
 	}
+}
+
+func removeFile(err error, d fs.DirEntry, m map[string]struct{}, path string) error {
+	if err != nil {
+		panic(err)
+	}
+	if d.IsDir() {
+		if isEmptyDir(path) {
+			err = os.RemoveAll(path)
+			if err != nil {
+				return err
+			}
+			return fs.SkipDir
+		}
+		return nil
+	}
+	_, ok := m[filepath.Join(path)]
+	if !ok {
+		err := os.Remove(path)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func isEmptyDir(dir string) bool {
+	d, err := os.ReadDir(dir)
+	if err != nil {
+		panic(err)
+	}
+	if len(d) == 0 {
+		return true
+	}
+	for _, v := range d {
+		if v.IsDir() {
+			rt := isEmptyDir(filepath.Join(dir, v.Name()))
+			if !rt {
+				return false
+			}
+			continue
+		}
+		return false
+	}
+	return true
 }
 
 type assets struct {
