@@ -1,17 +1,17 @@
 package launcher
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
+	"io/fs"
 	"io/ioutil"
 	"os"
 	"runtime"
 	"strings"
 	"sync"
-
-	"github.com/xmdhs/gomclauncher/lang"
 )
 
 func (g *Gameinfo) argumentsjvm(l *launcher1155) error {
@@ -119,26 +119,33 @@ type jvmRule struct {
 	arch   string
 }
 
-func (g *Gameinfo) argumentsGame(l *launcher1155) {
+func (g *Gameinfo) argumentsGame(l *launcher1155) error {
 	j := l.json.Arguments.Game
 	for _, v := range j {
 		argument, ok := v.(string)
 		if ok {
-			flag := g.argumentsrelace(argument, l)
+			flag, err := g.argumentsrelace(argument, l)
+			if err != nil {
+				return fmt.Errorf("g.Gameinfo: %w", err)
+			}
 			if flag != "" {
 				l.flag = append(l.flag, flag)
 			}
 		}
 	}
+	return nil
 }
 
-func (g *Gameinfo) argumentsrelace(s string, l *launcher1155) string {
+func (g *Gameinfo) argumentsrelace(s string, l *launcher1155) (string, error) {
 	s = strings.ReplaceAll(s, "${auth_player_name}", g.Name)
 	s = strings.ReplaceAll(s, "${version_name}", Launcherbrand+" "+Launcherversion)
 	s = strings.ReplaceAll(s, "${game_directory}", g.Gamedir)
 	s = strings.ReplaceAll(s, "${assets_root}", g.Minecraftpath+`/assets`)
 	if strings.Contains(s, "${game_assets}") {
-		g.legacy(l)
+		err := g.legacy(l)
+		if err != nil {
+			return "", fmt.Errorf("g.argumentsrelace: %w", err)
+		}
 	}
 	s = strings.ReplaceAll(s, "${game_assets}", g.Minecraftpath+`/assets/virtual/legacy`)
 	s = strings.ReplaceAll(s, "${assets_index_name}", l.json.AssetIndex.ID)
@@ -151,7 +158,7 @@ func (g *Gameinfo) argumentsrelace(s string, l *launcher1155) string {
 		g.Userproperties = "{}"
 	}
 	s = strings.ReplaceAll(s, "${user_properties}", g.Userproperties)
-	return s
+	return s, nil
 }
 
 func archbool(arch string) bool {
@@ -167,24 +174,29 @@ func archbool(arch string) bool {
 	return false
 }
 
-func (g *Gameinfo) legacy(l *launcher1155) {
+func (g *Gameinfo) legacy(l *launcher1155) error {
 	p := g.Minecraftpath + `/assets/virtual/legacy/`
-	fileerr := func(err error) {
-		if err != nil {
-			if os.IsNotExist(err) {
-				panic(fmt.Errorf(lang.Lang("legacynoexit"), err))
-			} else {
-				panic(fmt.Errorf("legacy: %w", err))
-			}
+	b, err := ioutil.ReadFile(g.Minecraftpath + "/assets/indexes/" + l.json.AssetIndex.ID + ".json")
+	if err != nil {
+		if os.IsNotExist(err) {
+			return fmt.Errorf("gameinfo.legacy: %w", ErrLegacyNoExit(err))
+		} else {
+			return fmt.Errorf("gameinfo.legacy: %w", err)
 		}
 	}
-	b, err := ioutil.ReadFile(g.Minecraftpath + "/assets/indexes/" + l.json.AssetIndex.ID + ".json")
-	fileerr(err)
 	a := assets{}
 	err = json.Unmarshal(b, &a)
 	if err != nil {
-		panic(fmt.Errorf("legacy: %w", err))
+		if os.IsNotExist(err) {
+			return fmt.Errorf("gameinfo.legacy: %w", ErrLegacyNoExit(err))
+		} else {
+			return fmt.Errorf("gameinfo.legacy: %w", err)
+		}
 	}
+	eCh := make(chan error, 10)
+	cxt, c := context.WithCancel(context.TODO())
+	defer c()
+
 	var w sync.WaitGroup
 	for path, v := range a.Objects {
 		path, v := path, v
@@ -198,37 +210,86 @@ func (g *Gameinfo) legacy(l *launcher1155) {
 				err = os.MkdirAll(g.Gamedir+"/resources/"+ss, 0777)
 			}
 			if err != nil {
-				panic(fmt.Errorf("legacy: %w", err))
+				if errors.Is(err, fs.ErrNotExist) {
+					select {
+					case eCh <- fmt.Errorf("gameinfo.legacy: %w", ErrLegacyNoExit(err)):
+					case <-cxt.Done():
+					}
+				} else {
+					select {
+					case eCh <- fmt.Errorf("gameinfo.legacy: %w", err):
+					case <-cxt.Done():
+					}
+				}
 			}
 			f, err := os.Open(g.Minecraftpath + "/assets/objects/" + v.Hash[0:2] + "/" + v.Hash)
-			fileerr(err)
+			if err != nil {
+				if errors.Is(err, fs.ErrNotExist) {
+					select {
+					case eCh <- fmt.Errorf("gameinfo.legacy: %w", ErrLegacyNoExit(err)):
+					case <-cxt.Done():
+					}
+				} else {
+					select {
+					case eCh <- fmt.Errorf("gameinfo.legacy: %w", err):
+					case <-cxt.Done():
+					}
+				}
+			}
 			defer f.Close()
 			if a.Virtual {
 				ff, err := os.Create(p + path)
 				if err != nil {
-					panic(fmt.Errorf("legacy: %w", err))
+					select {
+					case eCh <- fmt.Errorf("gameinfo.legacy: %w", err):
+					case <-cxt.Done():
+					}
 				}
 				defer ff.Close()
 				_, err = io.Copy(ff, f)
 				if err != nil {
-					panic(fmt.Errorf("legacy: %w", err))
+					select {
+					case eCh <- fmt.Errorf("gameinfo.legacy: %w", err):
+					case <-cxt.Done():
+					}
 				}
 			} else {
 				fff, err := os.Create(g.Gamedir + "/resources/" + path)
 				if err != nil {
-					panic(fmt.Errorf("legacy: %w", err))
+					select {
+					case eCh <- fmt.Errorf("gameinfo.legacy: %w", err):
+					case <-cxt.Done():
+					}
 				}
 				defer fff.Close()
 				_, err = io.Copy(fff, f)
 				if err != nil {
-					panic(fmt.Errorf("legacy: %w", err))
+					select {
+					case eCh <- fmt.Errorf("gameinfo.legacy: %w", err):
+					case <-cxt.Done():
+					}
 				}
 			}
 			w.Done()
 		}()
 	}
-	w.Wait()
+
+	go func() {
+		w.Wait()
+		c()
+	}()
+
+	select {
+	case <-cxt.Done():
+		return nil
+	case err := <-eCh:
+		return err
+	}
 }
+
+type ErrLegacyNoExit error
+
+var _ error = ErrLegacyNoExit(errors.New(""))
 
 type assets struct {
 	Objects map[string]asset `json:"objects"`

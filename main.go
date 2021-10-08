@@ -24,6 +24,10 @@ func main() {
 	if v {
 		version()
 	}
+	if tidy {
+		f.Tidy()
+		return
+	}
 	if f.Proxy != "" {
 		proxy, err := url.Parse(f.Proxy)
 		if err != nil {
@@ -107,17 +111,17 @@ func init() {
 }
 
 var (
-	credit        bool
-	update        bool
-	list          bool
-	yggdrasilname string
-	remove        bool
-	ms            bool
-	v             bool
-	gitHash       string
-	buildDate     string
-	buildOn       string
-	uselang       string
+	credit    bool
+	update    bool
+	list      bool
+	remove    bool
+	ms        bool
+	v         bool
+	tidy      bool
+	gitHash   string
+	buildDate string
+	buildOn   string
+	uselang   string
 )
 
 func init() {
@@ -151,8 +155,8 @@ func init() {
 	flag.BoolVar(&ms, "ms", false, lang.Lang("msusage"))
 	//flag.StringVar(&uselang, "lang", "", lang.Lang("langusage"))
 	flag.BoolVar(&v, "v", false, lang.Lang("vusage"))
+	flag.BoolVar(&tidy, "tidy", false, lang.Lang("tidy"))
 	flag.Parse()
-
 	if uselang != "" {
 		err := lang.Setlanguge(uselang)
 		if err != nil {

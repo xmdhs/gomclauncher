@@ -53,6 +53,11 @@ func (f Flag) Arun() {
 	f.Jsonbyte = b
 	err = f.Run115()
 	if err != nil {
+		var e launcher.ErrLegacyNoExit
+		if errors.As(err, &e) {
+			fmt.Println(lang.Lang("legacynoexit"))
+			os.Exit(0)
+		}
 		if errors.Is(err, os.ErrNotExist) {
 			fmt.Println(lang.Lang("flag.os.ErrNotExist"))
 			os.Exit(0)

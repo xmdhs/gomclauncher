@@ -56,7 +56,10 @@ func (g *Gameinfo) GenLauncherCmdArgs() (l *launcher1155, args []string, err err
 			err = e.(error)
 		}
 	}()
-	creatlauncherprofiles(g)
+	err = creatlauncherprofiles(g)
+	if err != nil {
+		return nil, nil, fmt.Errorf("Gameinfo.GenLauncherCmdArgs: %w", err)
+	}
 	l, err = g.modjson()
 	if err != nil {
 		return nil, nil, fmt.Errorf("Gameinfo.GenLauncherCmdArgs: %w", err)
@@ -76,25 +79,29 @@ func (g *Gameinfo) GenLauncherCmdArgs() (l *launcher1155, args []string, err err
 		return nil, nil, fmt.Errorf("Gameinfo.GenLauncherCmdArgs: %w", err)
 	}
 	l.flag = append(l.flag, l.json.MainClass)
-	g.argumentsGame(l)
+	err = g.argumentsGame(l)
+	if err != nil {
+		return nil, nil, fmt.Errorf("Gameinfo.GenLauncherCmdArgs: %w", err)
+	}
 	return l, l.flag, nil
 }
 
-func creatlauncherprofiles(g *Gameinfo) {
+func creatlauncherprofiles(g *Gameinfo) error {
 	g.authlibpath = g.Minecraftpath + `/libraries/` + `moe/yushi/authlibinjector/` + "authlib-injector/" + auth.Authlibversion + "/authlib-injector-" + auth.Authlibversion + ".jar"
 	path := g.Minecraftpath + "/launcher_profiles.json"
 	_, err := os.Stat(path)
 	if err != nil && os.IsNotExist(err) {
 		f, err := os.Create(path)
 		if err != nil {
-			panic(fmt.Errorf("creatlauncherprofiles: %w", err))
+			return fmt.Errorf("creatlauncherprofiles: %w", err)
 		}
 		defer f.Close()
 		_, err = f.WriteString(`{"selectedProfile": "(Default)","profiles": {"(Default)": {"name": "(Default)"}},"clientToken": "88888888-8888-8888-8888-888888888888"}`)
 		if err != nil {
-			panic(fmt.Errorf("creatlauncherprofiles: %w", err))
+			return fmt.Errorf("creatlauncherprofiles: %w", err)
 		}
 	}
+	return nil
 }
 
 var JsonErr = errors.New("json err")
@@ -112,10 +119,7 @@ func (g *Gameinfo) modjson() (*launcher1155, error) {
 	if mod.InheritsFrom != "" {
 		b, err := ioutil.ReadFile(g.Minecraftpath + `/versions/` + mod.InheritsFrom + "/" + mod.InheritsFrom + ".json")
 		if err != nil {
-			if os.IsNotExist(err) {
-				return nil, fmt.Errorf("Gameinfo.modjson: %w", err)
-			}
-			panic(fmt.Errorf("Gameinfo.modjson: %w", err))
+			return nil, fmt.Errorf("gameinfo.modjson: %w", err)
 		}
 		err = json.Unmarshal(b, &j)
 		if err != nil {
