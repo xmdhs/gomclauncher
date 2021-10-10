@@ -179,7 +179,7 @@ func (g *Gameinfo) legacy(l *launcher1155) error {
 	b, err := ioutil.ReadFile(g.Minecraftpath + "/assets/indexes/" + l.json.AssetIndex.ID + ".json")
 	if err != nil {
 		if os.IsNotExist(err) {
-			return fmt.Errorf("gameinfo.legacy: %w", ErrLegacyNoExit(err))
+			return fmt.Errorf("gameinfo.legacy: %w", ErrLegacyNoExit{rawErr: err})
 		} else {
 			return fmt.Errorf("gameinfo.legacy: %w", err)
 		}
@@ -188,7 +188,7 @@ func (g *Gameinfo) legacy(l *launcher1155) error {
 	err = json.Unmarshal(b, &a)
 	if err != nil {
 		if os.IsNotExist(err) {
-			return fmt.Errorf("gameinfo.legacy: %w", ErrLegacyNoExit(err))
+			return fmt.Errorf("gameinfo.legacy: %w", ErrLegacyNoExit{rawErr: err})
 		} else {
 			return fmt.Errorf("gameinfo.legacy: %w", err)
 		}
@@ -212,7 +212,7 @@ func (g *Gameinfo) legacy(l *launcher1155) error {
 			if err != nil {
 				if errors.Is(err, fs.ErrNotExist) {
 					select {
-					case eCh <- fmt.Errorf("gameinfo.legacy: %w", ErrLegacyNoExit(err)):
+					case eCh <- fmt.Errorf("gameinfo.legacy: %w", ErrLegacyNoExit{rawErr: err}):
 					case <-cxt.Done():
 					}
 				} else {
@@ -226,7 +226,7 @@ func (g *Gameinfo) legacy(l *launcher1155) error {
 			if err != nil {
 				if errors.Is(err, fs.ErrNotExist) {
 					select {
-					case eCh <- fmt.Errorf("gameinfo.legacy: %w", ErrLegacyNoExit(err)):
+					case eCh <- fmt.Errorf("gameinfo.legacy: %w", ErrLegacyNoExit{rawErr: err}):
 					case <-cxt.Done():
 					}
 				} else {
@@ -287,9 +287,17 @@ func (g *Gameinfo) legacy(l *launcher1155) error {
 	}
 }
 
-type ErrLegacyNoExit error
+type ErrLegacyNoExit struct {
+	rawErr error
+}
 
-var _ error = ErrLegacyNoExit(errors.New(""))
+func (e ErrLegacyNoExit) Error() string {
+	return e.rawErr.Error()
+}
+
+func (e ErrLegacyNoExit) Unwrap() error {
+	return e.rawErr
+}
 
 type assets struct {
 	Objects map[string]asset `json:"objects"`

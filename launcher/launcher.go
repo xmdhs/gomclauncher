@@ -86,7 +86,7 @@ func (l *launcher1155) CP() []string {
 	list := make([]string, 0, len(l.json.Libraries))
 	for _, p := range l.json.Libraries {
 		pack := Name2path(p.Name)
-		v, ok := l.Gameinfo.flag[pack[0]]
+		v, ok := l.Gameinfo.flag[pack[0]+pack[1]]
 		add := func() {
 			list = append(list, path+p.Downloads.Artifact.Path)
 		}

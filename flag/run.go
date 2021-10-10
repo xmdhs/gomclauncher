@@ -55,7 +55,7 @@ func (f Flag) Arun() {
 	if err != nil {
 		var e launcher.ErrLegacyNoExit
 		if errors.As(err, &e) {
-			fmt.Println(lang.Lang("legacynoexit"))
+			fmt.Println(lang.Lang("legacynoexit"), err)
 			os.Exit(0)
 		}
 		if errors.Is(err, os.ErrNotExist) {

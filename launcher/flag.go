@@ -190,8 +190,13 @@ func (g *Gameinfo) libraries2LibraryX115(l Librarie) LibraryX115 {
 
 }
 
-func Name2path(name string) []string {
-	return strings.Split(name, ":")
+func Name2path(name string) [3]string {
+	l := strings.Split(name, ":")
+	if len(l) != 3 {
+		return [3]string{name, name, "1.0"}
+	}
+	return *(*[3]string)(l)
+
 }
 
 type Modsjson struct {
