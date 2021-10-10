@@ -113,7 +113,7 @@ func getXSTStoken(Xbltoken string) (string, error) {
 		e := ErrHttpCode{}
 		if errors.As(err, &e) && e.code == 401 {
 			m := map[string]interface{}{}
-			err1 := json.Unmarshal(b, &m)
+			err1 := json.Unmarshal([]byte(e.msg), &m)
 			if err1 != nil {
 				return "", fmt.Errorf("getXSTStoken: %w", err)
 			}
