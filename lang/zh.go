@@ -80,4 +80,5 @@ var zh = map[string]string{
 	"webfail":                    "或许是网络问题",
 	"legacynoexit":               "资源文件不存在，文件不存在，请开启文件效验: %w",
 	"tidy":                       "去除 assets/objects 文件夹中没有使用的文件",
+	"ErrChild":                   "未成年账户，尝试修改出生日期，或者添加至家庭 https://support.xbox.com/zh-cn/help/family-online-safety/child-accounts/add-family-member-on-xbox-one",
 }

@@ -9,7 +9,6 @@ import (
 
 	"github.com/xmdhs/gomclauncher/auth"
 	"github.com/xmdhs/gomclauncher/lang"
-	msauth "github.com/xmdhs/msauth/auth"
 )
 
 func (f *Flag) MsLogin() {
@@ -60,14 +59,12 @@ func (f *Flag) MsLogin() {
 
 func msLogincheakErr(err error) {
 	switch {
-	case errors.Is(err, msauth.ErrHostname):
-		fmt.Println(lang.Lang("msauth.ErrHostname"))
+	case errors.Is(err, auth.ErrChild):
+		fmt.Println(lang.Lang("ErrChild"))
 	case errors.Is(err, auth.ErrCode):
 		fmt.Println(lang.Lang("auth.ErrCode"))
 	case errors.Is(err, auth.ErrProfile):
 		fmt.Println(lang.Lang("auth.ErrProfile"))
-	case errors.Is(err, msauth.ErrNotInstallChrome):
-		fmt.Println(lang.Lang("msauth.ErrNotInstallChrome"))
 	default:
 		panic(err)
 	}

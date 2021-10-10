@@ -110,6 +110,24 @@ func getXSTStoken(Xbltoken string) (string, error) {
 	 }`
 	b, err := httPost(authenticatewithXSTSURL, msg, `application/json`)
 	if err != nil {
+		e := ErrHttpCode{}
+		if errors.As(err, &e) && e.code == 401 {
+			m := map[string]interface{}{}
+			err = json.Unmarshal(b, &m)
+			if err != nil {
+				return "", fmt.Errorf("getXSTStoken: %w", err)
+			}
+			code, ok := m["XErr"]
+			if ok {
+				c, _ := code.(float64)
+				switch int(c) {
+				case 2148916238:
+					return "", ErrChild
+				case 2148916233:
+					return "", ErrXboxNotLinked
+				}
+			}
+		}
 		return "", fmt.Errorf("getXSTStoken: %w", err)
 	}
 	m := msauth{}
@@ -119,6 +137,11 @@ func getXSTStoken(Xbltoken string) (string, error) {
 	}
 	return m.Token, nil
 }
+
+var (
+	ErrChild         = errors.New("child account or not added to a Family")
+	ErrXboxNotLinked = errors.New("xbox account not exist")
+)
 
 func loginWithXbox(uhs string, xstsToken string) (string, error) {
 	msg := `{"identityToken": "XBL3.0 x=` + jsonEscape(uhs) + `;` + jsonEscape(xstsToken) + `"}`

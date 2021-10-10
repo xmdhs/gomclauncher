@@ -6,8 +6,6 @@ github.com/davecgh/go-spew v1.1.0 h1:ZDRjVQ15GmhC3fiQ8ni8+OwkZQO4DARzQgrnXU1Liz8
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/gopherjs/gopherjs v0.0.0-20181017120253-0766667cb4d1 h1:EGx4pi6eqNxGaHF6qqu48+N2wcFQ5qg5FXgOdqsJ5d8=
 github.com/gopherjs/gopherjs v0.0.0-20181017120253-0766667cb4d1/go.mod h1:wJfORRmW1u3UXTncJ5qlYoELFm8eSnnEO6hX4iZ3EWY=
-github.com/gorilla/websocket v1.4.2 h1:+/TMaTYc4QFitKJxsQ7Yye35DkWvkdLcvGKqM+x0Ufc=
-github.com/gorilla/websocket v1.4.2/go.mod h1:YR8l580nyteQvAITg2hZ9XVh4b55+EU/adAjf1fMHhE=
 github.com/jtolds/gls v4.20.0+incompatible h1:xdiiI2gbIgH/gLH7ADydsJ1uDOEzR8yvV7C0MuV77Wo=
 github.com/jtolds/gls v4.20.0+incompatible/go.mod h1:QJZ7F/aHp+rZTRtaJ1ow/lLfFfVYBRgL+9YlvaHOwJU=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
@@ -19,10 +17,6 @@ github.com/smartystreets/goconvey v1.6.4/go.mod h1:syvi0/a8iFYH4r/RixwvyeAJjdLS9
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
 github.com/stretchr/testify v1.6.1 h1:hDPOHmpOpP40lSULcqw7IrRb/u7w6RpDC9399XyoNd0=
 github.com/stretchr/testify v1.6.1/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg=
-github.com/xmdhs/lorca v0.1.10-0.20210304103543-f1ac205917e5 h1:RiH1o3Rod0OzIUKkA+HuouWnMeb7/gCDdGPtWAP9MfY=
-github.com/xmdhs/lorca v0.1.10-0.20210304103543-f1ac205917e5/go.mod h1:9pAZxYwwD+g+BionehMLWNm1/Wh4RAhFVfcpJKU3/uk=
-github.com/xmdhs/msauth v0.2.1 h1:huNcqmOa6IcjBmswir+UOyIxoMe8H+0fmaVKn28udyU=
-github.com/xmdhs/msauth v0.2.1/go.mod h1:a0As/hLX0pSQGZFJ66QqjtyEPiD5FOfIKLPUrWWee7I=
 github.com/xxmdhs/oauth v0.8.1-0.20211010103419-7a2089f844ac h1:9gUqb5rPuOUIrGrQib8gSURnzUdKbhB1bvbUvH8YVI0=
 github.com/xxmdhs/oauth v0.8.1-0.20211010103419-7a2089f844ac/go.mod h1:knnEuh3Xwk0XkJEf8ia2P0LMb2UapoISfu3kmfcd3kU=
 golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2/go.mod h1:djNgcEr1/C05ACkg1iLfiJU5Ep61QUkGW8qpdssI0+w=
