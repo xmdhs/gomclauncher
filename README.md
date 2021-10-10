@@ -40,6 +40,8 @@
 
 查看其他可选的版本类型 `./gml-linux -verlist ?`
 
+去除 assets/objects 文件夹中没有使用的文件 `./gml-linux -tidy`
+
 查看启动器版本 `./gml-linux -v`
 ## 截图
 ![image.png](https://i.loli.net/2020/07/02/E7ZcBCGfo1v46kI.png)

@@ -6,8 +6,6 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/xmdhs/gomclauncher/auth"
-	"github.com/xmdhs/gomclauncher/internal"
 	"github.com/xmdhs/gomclauncher/launcher"
 )
 
@@ -20,11 +18,24 @@ func (f Flag) Tidy() {
 		}
 	}
 
-	librariesMap := map[string]struct{}{}
+	//librariesMap := map[string]struct{}{}
 
 	assetsMap := map[string]struct{}{}
 
 	for _, v := range l {
+		b, err := os.ReadFile(f.Minecraftpath + "/versions/" + v + "/" + v + ".json")
+		if err != nil {
+			panic(err)
+		}
+		var l launcher.LauncherjsonX115
+		err = json.Unmarshal(b, &l)
+		if err != nil {
+			panic(err)
+		}
+		assetsMap[l.AssetIndex.ID] = struct{}{}
+	}
+
+	/*for _, v := range l {
 		g := launcher.Gameinfo{}
 		g.Version = v
 		g.Gamedir = f.Minecraftpath
@@ -54,7 +65,7 @@ func (f Flag) Tidy() {
 	}
 
 	librariesMap[filepath.Join(f.Minecraftpath, `/libraries/`, `moe/yushi/authlibinjector/`, "authlib-injector/", auth.Authlibversion, "/authlib-injector-"+auth.Authlibversion+".jar")] = struct{}{}
-
+	*/
 	assetPathMap := map[string]struct{}{}
 
 	for k := range assetsMap {
@@ -72,13 +83,13 @@ func (f Flag) Tidy() {
 		}
 	}
 
-	err := filepath.WalkDir(f.Minecraftpath+"/libraries", func(path string, d fs.DirEntry, err error) error {
+	/*err := filepath.WalkDir(f.Minecraftpath+"/libraries", func(path string, d fs.DirEntry, err error) error {
 		return removeFile(err, d, librariesMap, path)
 	})
 	if err != nil {
 		panic(err)
-	}
-	err = filepath.WalkDir(f.Minecraftpath+"/assets/objects", func(path string, d fs.DirEntry, err error) error {
+	}*/
+	err := filepath.WalkDir(f.Minecraftpath+"/assets/objects", func(path string, d fs.DirEntry, err error) error {
 		return removeFile(err, d, assetPathMap, path)
 	})
 	if err != nil {

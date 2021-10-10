@@ -79,5 +79,5 @@ var zh = map[string]string{
 	"auth.JsonNotTrue":           "外置登录地址错误",
 	"webfail":                    "或许是网络问题",
 	"legacynoexit":               "资源文件不存在，文件不存在，请开启文件效验: %w",
-	"tidy":                       "去除 libraries 和 assets 文件夹中没有使用的文件",
+	"tidy":                       "去除 assets/objects 文件夹中没有使用的文件",
 }
