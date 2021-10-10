@@ -178,7 +178,7 @@ func minecraftArguments2jvm(m string) []interface{} {
 
 func (g *Gameinfo) libraries2LibraryX115(l Librarie) LibraryX115 {
 	p := Name2path(l.Name)
-	g.flag[p[0]] = p[2]
+	g.flag[p[0]+p[1]] = p[2]
 	return LibraryX115{
 		Downloads: downloadsX115{
 			Artifact: artifactX115{

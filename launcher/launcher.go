@@ -62,7 +62,7 @@ func (l *launcher1155) cp() string {
 	for _, p := range l.json.Libraries {
 		if Ifallow(p) {
 			pack := Name2path(p.Name)
-			v, ok := l.Gameinfo.flag[pack[0]]
+			v, ok := l.Gameinfo.flag[pack[0]+pack[1]]
 			add := func() {
 				b.WriteString(path)
 				b.WriteString(p.Downloads.Artifact.Path)
