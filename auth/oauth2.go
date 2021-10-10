@@ -3,8 +3,6 @@ package auth
 import (
 	"encoding/json"
 	"fmt"
-	"io"
-	"net/http"
 	"net/url"
 	"strconv"
 	"time"
@@ -29,27 +27,13 @@ func (m *MsToken) Expires() bool {
 
 func (m *MsToken) Refresh() error {
 	v := &url.Values{}
-	v.Add("client_id", "00000000402b5328")
-	v.Add("scope", "service::user.auth.xboxlive.com::MBI_SSL")
+	v.Add("client_id", "a48a9fad-1702-46d7-8ee9-42b857ad292d")
+	v.Add("scope", "XboxLive.signin offline_access")
 	v.Add("refresh_token", m.RefreshToken)
 	v.Add("grant_type", "refresh_token")
-
-	resp, err := c.Get(oauth20Token + "?" + v.Encode())
-	if resp != nil {
-		defer resp.Body.Close()
-	}
+	b, err := httPost(oauth20Token, v.Encode(), "application/x-www-form-urlencoded")
 	if err != nil {
 		return fmt.Errorf("MsToken.Refresh: %w", err)
-	}
-	b, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return fmt.Errorf("MsToken.Refresh: %w", err)
-	}
-	if resp.StatusCode != http.StatusOK {
-		return fmt.Errorf("MsToken.Refresh: %w", ErrHttpCode{
-			code: resp.StatusCode,
-			msg:  string(b),
-		})
 	}
 	tm := msToken{}
 	err = json.Unmarshal(b, &tm)

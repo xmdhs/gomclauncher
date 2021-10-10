@@ -6,11 +6,10 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"net/url"
 	"strings"
 	"time"
 
-	"github.com/xmdhs/msauth/auth"
+	"github.com/xxmdhs/oauth"
 )
 
 const (
@@ -20,14 +19,6 @@ const (
 	loginWithXboxURL        = `https://api.minecraftservices.com/authentication/login_with_xbox`
 	getTheprofileURL        = `https://api.minecraftservices.com/minecraft/profile`
 )
-
-func getCode() (string, error) {
-	code, err := auth.Getcode("")
-	if err != nil {
-		return "", fmt.Errorf("getCode: %w", err)
-	}
-	return code, nil
-}
 
 func MsLogin() (*Profile, error) {
 	return MsLoginRefresh(nil)
@@ -42,11 +33,8 @@ func MsLoginRefresh(t *MsToken) (*Profile, error) {
 		}
 	}
 	if !has {
-		code, err := getCode()
-		if err != nil {
-			return nil, fmt.Errorf("MsLogin: %w", err)
-		}
-		t, err = getToken(code)
+		var err error
+		t, err = getToken()
 		if err != nil {
 			return nil, fmt.Errorf("MsLogin: %w", err)
 		}
@@ -72,28 +60,28 @@ func MsLoginRefresh(t *MsToken) (*Profile, error) {
 	return p, nil
 }
 
-func getToken(code string) (*MsToken, error) {
-	code = url.QueryEscape(code)
-	msg := `client_id=00000000402b5328&code=` + code + `&grant_type=authorization_code&redirect_uri=https://login.live.com/oauth20_desktop.srf&scope=service::user.auth.xboxlive.com::MBI_SSL`
-	b, err := httPost(oauth20Token, msg, `application/x-www-form-urlencoded`)
-	if err != nil {
-		return nil, fmt.Errorf("getToken: %w", err)
-	}
+func getToken() (*MsToken, error) {
 	var t msToken
-	err = json.Unmarshal(b, &t)
+	f := oauth.Flow{
+		Scopes:        []string{"XboxLive.signin", "offline_access"},
+		ClientID:      "a48a9fad-1702-46d7-8ee9-42b857ad292d",
+		DeviceInitURL: "https://login.microsoftonline.com/consumers/oauth2/v2.0/devicecode",
+		TokenURL:      "https://login.microsoftonline.com/consumers/oauth2/v2.0/token",
+	}
+	token, err := f.DeviceFlow()
 	if err != nil {
 		return nil, fmt.Errorf("getToken: %w", err)
 	}
-	if t.AccessToken == "" {
-		return nil, ErrCode
-	}
-	m := &MsToken{}
+	t.AccessToken = token.Token
+	t.RefreshToken = token.RefreshToken
+	t.ExpiresIn = token.ExpiresIn
+	m := MsToken{}
 	m.parse(t)
-	return m, nil
+	return &m, nil
 }
 
 func getXbltoken(token string) (Xbltoken, uhs string, err error) {
-	msg := `{"Properties": {"AuthMethod": "RPS","SiteName": "user.auth.xboxlive.com","RpsTicket": "` + jsonEscape(token) + `"},"RelyingParty": "http://auth.xboxlive.com","TokenType": "JWT"}`
+	msg := `{"Properties": {"AuthMethod": "RPS","SiteName": "user.auth.xboxlive.com","RpsTicket": "d=` + jsonEscape(token) + `"},"RelyingParty": "http://auth.xboxlive.com","TokenType": "JWT"}`
 	b, err := httPost(authenticateURL, msg, `application/json`)
 	if err != nil {
 		return "", "", fmt.Errorf("getXbltoken: %w", err)
