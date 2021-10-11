@@ -9,6 +9,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/cli/browser"
 	"github.com/xxmdhs/oauth"
 )
 
@@ -67,6 +68,14 @@ func getToken() (*MsToken, error) {
 		ClientID:      "a48a9fad-1702-46d7-8ee9-42b857ad292d",
 		DeviceInitURL: "https://login.microsoftonline.com/consumers/oauth2/v2.0/devicecode",
 		TokenURL:      "https://login.microsoftonline.com/consumers/oauth2/v2.0/token",
+		BrowseURL: func(s string) error {
+			fmt.Println("if not opening a web browser, try open " + s)
+			err := browser.OpenURL(s)
+			if err != nil {
+				fmt.Println("open browser failed: " + err.Error())
+			}
+			return nil
+		},
 	}
 	token, err := f.DeviceFlow()
 	if err != nil {
