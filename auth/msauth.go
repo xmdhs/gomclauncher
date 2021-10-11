@@ -69,7 +69,7 @@ func getToken() (*MsToken, error) {
 		DeviceInitURL: "https://login.microsoftonline.com/consumers/oauth2/v2.0/devicecode",
 		TokenURL:      "https://login.microsoftonline.com/consumers/oauth2/v2.0/token",
 		BrowseURL: func(s string) error {
-			fmt.Println("if not opening a web browser, try open " + s)
+			fmt.Println("If not opening a web browser, try to open " + s)
 			err := browser.OpenURL(s)
 			if err != nil {
 				fmt.Println("open browser failed: " + err.Error())
