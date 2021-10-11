@@ -76,6 +76,7 @@ func getToken() (*MsToken, error) {
 			}
 			return nil
 		},
+		HTTPClient: c,
 	}
 	token, err := f.DeviceFlow()
 	if err != nil {
