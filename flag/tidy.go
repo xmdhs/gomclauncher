@@ -69,6 +69,9 @@ func (f Flag) Tidy() {
 	assetPathMap := map[string]struct{}{}
 
 	for k := range assetsMap {
+		if k == "" {
+			continue
+		}
 		b, err := os.ReadFile(f.Minecraftpath + "/assets/indexes/" + k + ".json")
 		if err != nil {
 			panic(err)
