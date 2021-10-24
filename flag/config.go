@@ -67,6 +67,7 @@ func (c Config) setonline(gmlconfig *Gmlconfig, f *Flag) error {
 
 type Gmlconfig map[string]map[string]Config
 
+
 type Config struct {
 	Name        string
 	UUID        string

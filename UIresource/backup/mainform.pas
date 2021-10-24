@@ -5,7 +5,8 @@ unit MainForm;
 interface
 
 uses
-  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls;
+  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls,
+  ComCtrls;
 
 type
 
@@ -22,6 +23,7 @@ type
     GameGroupBox: TGroupBox;
     GeneralSettingBox: TGroupBox;
     ListBtn3: TImage;
+    ListView1: TListView;
     T4: TLabel;
     UserName: TLabel;
     UserMode: TLabel;

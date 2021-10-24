@@ -1,7 +1,7 @@
 object MainForm: TMainForm
-  Left = 358
+  Left = 382
   Height = 600
-  Top = 93
+  Top = 86
   Width = 800
   Caption = 'MainForm'
   ClientHeight = 600
@@ -3075,6 +3075,13 @@ object MainForm: TMainForm
     Top = 480
     Width = 147
     Caption = 'GameStart'
+    Font.CharSet = GB2312_CHARSET
+    Font.Color = clBlack
+    Font.Height = -19
+    Font.Name = 'Microsoft YaHei UI'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    ParentFont = False
     TabOrder = 1
   end
   object VersionListChose: TComboBox
@@ -3085,5 +3092,32 @@ object MainForm: TMainForm
     AutoDropDown = True
     ItemHeight = 17
     TabOrder = 2
+  end
+  object ListView1: TListView
+    Left = 339
+    Height = 192
+    Top = 102
+    Width = 271
+    Columns = <    
+      item
+        AutoSize = True
+        Caption = '213'
+        Width = 10
+      end    
+      item
+        Width = 10
+      end    
+      item
+        Width = 10
+      end>
+    Items.LazData = {
+      B900000006000000FFFFFFFFFFFFFFFFFFFFFFFF0000000007000000E9A1B9E7
+      9BAE30FFFFFFFFFFFFFFFFFFFFFFFF0100000007000000E9A1B9E79BAE310700
+      0000E9A1B9E79BAE32FFFFFFFFFFFFFFFFFFFFFFFF0000000007000000E9A1B9
+      E79BAE33FFFFFFFFFFFFFFFFFFFFFFFF0000000007000000E9A1B9E79BAE34FF
+      FFFFFFFFFFFFFFFFFFFFFF0000000007000000E9A1B9E79BAE35FFFFFFFFFFFF
+      FFFFFFFFFFFF0000000007000000E9A1B9E79BAE36FFFFFFFF
+    }
+    TabOrder = 3
   end
 end
