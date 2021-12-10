@@ -145,15 +145,18 @@ func (l Libraries) Downlibrarie(i int, c chan int) error {
 var FileDownLoadFail = errors.New("file download fail")
 
 func (l Libraries) Downjar(version string) error {
-	err := downLoadlogging(l.cxt, l.librarie.Logging.Client.File.ID,
-		l.librarie.Logging.Client.File.URL,
-		l.path,
-		l.librarie.Logging.Client.File.Sha1,
-		l.print,
-	)
-	if err != nil {
-		return fmt.Errorf("Downjar: %w", err)
+	if l.librarie.Logging.Client.File.URL != "" {
+		err := downLoadlogging(l.cxt, l.librarie.Logging.Client.File.ID,
+			l.librarie.Logging.Client.File.URL,
+			l.path,
+			l.librarie.Logging.Client.File.Sha1,
+			l.print,
+		)
+		if err != nil {
+			return fmt.Errorf("Downjar: %w", err)
+		}
 	}
+
 	path := l.path + `/versions/` + version + "/" + version + ".jar"
 	if ver(path, l.librarie.Downloads.Client.Sha1) {
 		return nil
