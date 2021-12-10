@@ -108,4 +108,31 @@ func (v version) Downjson(cxt context.Context, version, apath string, print func
 	return NoSuch
 }
 
-var NoSuch = errors.New("no such")
+var (
+	NoSuch         = errors.New("no such")
+	ErrFileChecker = errors.New("file checker")
+)
+
+func downLoadlogging(cxt context.Context, filename, url, apath, sha1 string, print func(string)) error {
+	path := apath + `/assets/logging/` + filename
+	if ver(path, sha1) {
+		return nil
+	}
+	var err error
+	for i := 0; i < 4; i++ {
+		err = get(cxt, url, path)
+		if err != nil {
+			print(fmt.Sprint(lang.Lang("weberr"), url, fmt.Errorf("downLoadlogging: %w", err)))
+			continue
+		}
+		if !ver(path, sha1) {
+			print(fmt.Sprint(lang.Lang("filecheckerr")))
+			err = ErrFileChecker
+			continue
+		}
+	}
+	if err != nil {
+		return fmt.Errorf("downLoadlogging: %w", err)
+	}
+	return nil
+}

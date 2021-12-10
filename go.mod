@@ -9,4 +9,4 @@ require (
 	golang.org/x/text v0.3.7
 )
 
-require github.com/cli/browser v1.1.0 // indirect
+require github.com/cli/browser v1.1.0

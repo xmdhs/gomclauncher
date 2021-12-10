@@ -109,11 +109,11 @@ func get(cxt context.Context, u, path string) error {
 		}
 	}
 	f, err := os.Create(path)
-	bw := bufio.NewWriter(f)
-	defer f.Close()
 	if err != nil {
 		return fmt.Errorf("get: %w", err)
 	}
+	defer f.Close()
+	bw := bufio.NewWriter(f)
 	for {
 		timer.Reset(5 * time.Second)
 		i, err := io.CopyN(bw, reps.Body, 100000)
@@ -219,6 +219,7 @@ func assetsjson(cxt context.Context, r *randurls, url, path, typee, sha1 string,
 		}
 		if !ver(path, sha1) {
 			f = r.fail(f)
+			err = ErrFileChecker
 			print(lang.Lang("filecheckerr") + " " + url)
 			continue
 		}
