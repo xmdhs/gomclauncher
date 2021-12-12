@@ -61,7 +61,6 @@ func (l *launcher1155) cp() string {
 	b := bytes.NewBuffer(nil)
 	for _, p := range l.json.Libraries {
 		if Ifallow(p) {
-			Fixlog4j(&p)
 			pack := Name2path(p.Name)
 			v, ok := l.Gameinfo.flag[pack[0]+pack[1]]
 			add := func() {
