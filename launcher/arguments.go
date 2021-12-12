@@ -47,7 +47,7 @@ func (g *Gameinfo) jvmflagadd(v string, l *launcher1155) {
 func addloggingXml(log *loggingX115, l *launcher1155) {
 	filename := filepath.Join(l.Minecraftpath, "/assets/logging/", log.Client.File.ID)
 	arg := log.Client.Argument
-	if filename != "" {
+	if log.Client.File.ID != "" {
 		s := strings.ReplaceAll(arg, "${path}", filename)
 		l.flag = append(l.flag, s)
 	}

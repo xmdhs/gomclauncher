@@ -1,13 +1,17 @@
 package launcher
 
 import (
+	_ "embed"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io/fs"
 	"io/ioutil"
 	"os"
+	"path/filepath"
 	"strings"
 
+	"github.com/Masterminds/semver/v3"
 	"github.com/xmdhs/gomclauncher/auth"
 )
 
@@ -78,12 +82,39 @@ func (g *Gameinfo) GenLauncherCmdArgs() (l *launcher1155, args []string, err err
 	if err != nil {
 		return nil, nil, fmt.Errorf("Gameinfo.GenLauncherCmdArgs: %w", err)
 	}
+	log4j(l)
 	l.flag = append(l.flag, l.json.MainClass)
 	err = g.argumentsGame(l)
 	if err != nil {
 		return nil, nil, fmt.Errorf("Gameinfo.GenLauncherCmdArgs: %w", err)
 	}
 	return l, l.flag, nil
+}
+
+//go:embed fixlog4j.jar
+var fixlog4jJar []byte
+
+func log4j(l *launcher1155) {
+	s, err := semver.NewVersion(l.json.Assets)
+	if err != nil {
+		return
+	}
+	if s.Compare(semver.MustParse("1.18.1")) >= 0 && s.Compare(semver.MustParse("1.7")) < 0 {
+		return
+	}
+	path := filepath.Join(l.Minecraftpath, "fixlog4j.jar")
+	_, err = os.Stat(path)
+	if err != nil {
+		if errors.Is(err, fs.ErrNotExist) {
+			err := os.WriteFile(path, fixlog4jJar, 0777)
+			if err != nil {
+				panic(err)
+			}
+		} else {
+			panic(err)
+		}
+	}
+	l.flag = append(l.flag, `-javaagent:`+path)
 }
 
 func creatlauncherprofiles(g *Gameinfo) error {
@@ -141,7 +172,7 @@ func (g *Gameinfo) modjson() (*launcher1155, error) {
 			j.Arguments.Game = append(j.Arguments.Game, minecraftArguments2jvm(mod.MinecraftArguments)...)
 			j.Arguments.Jvm = append(j.Arguments.Jvm, getjvm()...)
 		}
-
+		j.Logging = mod.Logging
 	} else {
 		err = json.Unmarshal(g.Jsonbyte, &j)
 		if err != nil {
@@ -207,6 +238,7 @@ type Modsjson struct {
 	ID                 string        `json:"id"`
 	Libraries          []Librarie    `json:"libraries"`
 	Arguments          argumentsX115 `json:"arguments"`
+	Logging            loggingX115   `json:"logging"`
 }
 
 type Librarie struct {

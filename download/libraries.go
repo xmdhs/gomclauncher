@@ -161,6 +161,7 @@ var mirror = map[string]map[string]string{
 		`resources.download.minecraft.net`: `bmclapi2.bangbang93.com/assets`,
 		`libraries.minecraft.net`:          `bmclapi2.bangbang93.com/maven`,
 		`files.minecraftforge.net/maven`:   `bmclapi2.bangbang93.com/maven`,
+		"maven.minecraftforge.net":         "bmclapi2.bangbang93.com/maven",
 	},
 	"mcbbs": {
 		`launchermeta.mojang.com`:          `download.mcbbs.net`,
@@ -168,6 +169,7 @@ var mirror = map[string]map[string]string{
 		`resources.download.minecraft.net`: `download.mcbbs.net/assets`,
 		`libraries.minecraft.net`:          `download.mcbbs.net/maven`,
 		`files.minecraftforge.net/maven`:   `download.mcbbs.net/maven`,
+		"maven.minecraftforge.net":         "bmclapi2.bangbang93.com/maven",
 	},
 }
 

@@ -9,4 +9,7 @@ require (
 	golang.org/x/text v0.3.7
 )
 
-require golang.org/x/sys v0.0.0-20211023085530-d6a326fbbf70 // indirect
+require (
+	github.com/Masterminds/semver/v3 v3.1.1
+	golang.org/x/sys v0.0.0-20211023085530-d6a326fbbf70 // indirect
+)
