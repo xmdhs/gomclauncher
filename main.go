@@ -14,6 +14,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/Masterminds/semver/v3"
 	"github.com/xmdhs/gomclauncher/auth"
 	aflag "github.com/xmdhs/gomclauncher/flag"
 	"github.com/xmdhs/gomclauncher/lang"
@@ -195,7 +196,13 @@ func check() {
 		fmt.Println(err)
 		return
 	}
-	if u.Version != launcher.Launcherversion {
+	s, err := semver.NewVersion(u.Version)
+	if err != nil {
+		fmt.Println(lang.Lang("checkupdateerr"))
+		fmt.Println(err)
+		return
+	}
+	if s.GreaterThan(semver.MustParse(launcher.Launcherversion)) {
 		fmt.Println(lang.Lang("checkupdate"), u.Version)
 		fmt.Println(lang.Lang("nowversion"), launcher.Launcherversion)
 		fmt.Println(lang.Lang("updateinfo"))
