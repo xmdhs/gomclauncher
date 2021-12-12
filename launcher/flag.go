@@ -141,7 +141,7 @@ func (g *Gameinfo) modjson() (*launcher1155, error) {
 			j.Arguments.Game = append(j.Arguments.Game, minecraftArguments2jvm(mod.MinecraftArguments)...)
 			j.Arguments.Jvm = append(j.Arguments.Jvm, getjvm()...)
 		}
-
+		j.Logging = mod.Logging
 	} else {
 		err = json.Unmarshal(g.Jsonbyte, &j)
 		if err != nil {
@@ -207,6 +207,7 @@ type Modsjson struct {
 	ID                 string        `json:"id"`
 	Libraries          []Librarie    `json:"libraries"`
 	Arguments          argumentsX115 `json:"arguments"`
+	Logging            loggingX115   `json:"logging"`
 }
 
 type Librarie struct {

@@ -3,6 +3,7 @@ package internal
 import (
 	"runtime"
 
+	"github.com/Masterminds/semver/v3"
 	"github.com/xmdhs/gomclauncher/launcher"
 )
 
@@ -31,4 +32,15 @@ func Swichnatives(l launcher.LibraryX115) (path, sha1, url string) {
 		panic("???")
 	}
 	return
+}
+
+func NeedFixlog4j(ver string) bool {
+	v, err := semver.NewVersion(ver)
+	if err != nil {
+		return true
+	}
+	if v.Major() >= 2 && v.LessThan(semver.MustParse("2.15.0")) {
+		return true
+	}
+	return false
 }
