@@ -14,6 +14,7 @@ import (
 	"time"
 
 	"github.com/xmdhs/gomclauncher/auth"
+	"github.com/xmdhs/gomclauncher/internal"
 	"github.com/xmdhs/gomclauncher/lang"
 	"github.com/xmdhs/gomclauncher/launcher"
 )
@@ -133,7 +134,7 @@ func get(cxt context.Context, u, path string) error {
 
 func modlibraries2(l []launcher.Librarie, Launcherjson *launcher.LauncherjsonX115) {
 	for _, v := range l {
-		l := launcher.Librarie2LibraryX115(&v)
+		l := internal.Librarie2LibraryX115(&v)
 		Launcherjson.Libraries = append(Launcherjson.Libraries, *l)
 	}
 }
