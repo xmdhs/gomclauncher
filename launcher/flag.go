@@ -11,7 +11,6 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/Masterminds/semver/v3"
 	"github.com/xmdhs/gomclauncher/auth"
 )
 
@@ -82,7 +81,9 @@ func (g *Gameinfo) GenLauncherCmdArgs() (l *launcher1155, args []string, err err
 	if err != nil {
 		return nil, nil, fmt.Errorf("Gameinfo.GenLauncherCmdArgs: %w", err)
 	}
-	log4j(l)
+	if l.fixlog4j {
+		log4j(l)
+	}
 	l.flag = append(l.flag, l.json.MainClass)
 	err = g.argumentsGame(l)
 	if err != nil {
@@ -95,15 +96,8 @@ func (g *Gameinfo) GenLauncherCmdArgs() (l *launcher1155, args []string, err err
 var fixlog4jJar []byte
 
 func log4j(l *launcher1155) {
-	s, err := semver.NewVersion(l.json.Assets)
-	if err != nil {
-		return
-	}
-	if s.Compare(semver.MustParse("1.18.1")) >= 0 && s.Compare(semver.MustParse("1.7")) < 0 {
-		return
-	}
 	path := filepath.Join(l.Minecraftpath, "fixlog4j.jar")
-	_, err = os.Stat(path)
+	_, err := os.Stat(path)
 	if err != nil {
 		if errors.Is(err, fs.ErrNotExist) {
 			err := os.WriteFile(path, fixlog4jJar, 0777)
@@ -172,8 +166,8 @@ func (g *Gameinfo) modjson() (*launcher1155, error) {
 			j.Arguments.Game = append(j.Arguments.Game, minecraftArguments2jvm(mod.MinecraftArguments)...)
 			j.Arguments.Jvm = append(j.Arguments.Jvm, getjvm()...)
 		}
-		if mod.Logging.Client.Argument != "" {
-			j.Logging = mod.Logging
+		if mod.Logging != nil {
+			j.Logging = *mod.Logging
 		}
 	} else {
 		err = json.Unmarshal(g.Jsonbyte, &j)
@@ -240,7 +234,7 @@ type Modsjson struct {
 	ID                 string        `json:"id"`
 	Libraries          []Librarie    `json:"libraries"`
 	Arguments          argumentsX115 `json:"arguments"`
-	Logging            loggingX115   `json:"logging"`
+	Logging            *loggingX115  `json:"logging"`
 }
 
 type Librarie struct {

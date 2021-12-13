@@ -6,12 +6,16 @@ import (
 	"os"
 	"os/exec"
 	"runtime"
+
+	"github.com/Masterminds/semver/v3"
 )
 
 type launcher1155 struct {
 	json LauncherjsonX115
 	flag []string
 	*Gameinfo
+	//run launcher1155.cp to set this
+	fixlog4j bool
 }
 
 func (l *launcher1155) GetLauncherjsonX115() LauncherjsonX115 {
@@ -59,26 +63,43 @@ func (l launcher1155) Launcher115() error {
 func (l *launcher1155) cp() string {
 	path := l.Minecraftpath + `/libraries/`
 	b := bytes.NewBuffer(nil)
+	const log4jpackname = "org.apache.logging.log4jlog4j-core"
 	for _, p := range l.json.Libraries {
-		if Ifallow(p) {
-			pack := Name2path(p.Name)
-			v, ok := l.Gameinfo.flag[pack[0]+pack[1]]
-			add := func() {
-				b.WriteString(path)
-				b.WriteString(p.Downloads.Artifact.Path)
-				b.WriteByte(os.PathListSeparator)
+		if !Ifallow(p) {
+			continue
+		}
+		pack := Name2path(p.Name)
+		key := pack[0] + pack[1]
+		v, ok := l.Gameinfo.flag[key]
+		add := func() {
+			b.WriteString(path)
+			b.WriteString(p.Downloads.Artifact.Path)
+			b.WriteByte(os.PathListSeparator)
+			if key == log4jpackname && needFixlog4j(pack[2]) {
+				l.fixlog4j = true
 			}
-			if ok {
-				if v == pack[2] {
-					add()
-				}
-			} else {
+		}
+		if ok {
+			if v == pack[2] {
 				add()
 			}
+		} else {
+			add()
 		}
 	}
 	b.WriteString(l.Minecraftpath + `/versions/` + l.json.ID + `/` + l.json.ID + `.jar`)
 	return b.String()
+}
+
+func needFixlog4j(ver string) bool {
+	v, err := semver.NewVersion(ver)
+	if err != nil {
+		return true
+	}
+	if v.Major() >= 2 && v.LessThan(semver.MustParse("2.15.0")) {
+		return true
+	}
+	return false
 }
 
 // Deprecated: 之前想清理安装多余的库，就添加了这个函数用来导出某个版本所引入的库。可惜 forge 并不会在 json 中写上所有它导入的库，因此这个函数也就没有意义了。
