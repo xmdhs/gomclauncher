@@ -164,8 +164,8 @@ func (g *Gameinfo) modjson() (*launcher1155, error) {
 			j.Arguments.Jvm = append(j.Arguments.Jvm, mod.Arguments.Jvm...)
 		}
 		if mod.MinecraftArguments != "" {
-			j.Arguments.Game = append(j.Arguments.Game, minecraftArguments2jvm(mod.MinecraftArguments)...)
-			j.Arguments.Jvm = append(j.Arguments.Jvm, getjvm()...)
+			j.Arguments.Game = minecraftArguments2jvm(mod.MinecraftArguments)
+			j.Arguments.Jvm = getjvm()
 		}
 		if mod.Logging != nil {
 			j.Logging = *mod.Logging
@@ -176,10 +176,15 @@ func (g *Gameinfo) modjson() (*launcher1155, error) {
 			return nil, JsonErr
 		}
 		if j.MinecraftArguments != "" {
-			j.Arguments.Game = append(j.Arguments.Game, minecraftArguments2jvm(j.MinecraftArguments)...)
-			j.Arguments.Jvm = append(j.Arguments.Jvm, getjvm()...)
+			j.Arguments.Game = minecraftArguments2jvm(j.MinecraftArguments)
+			j.Arguments.Jvm = getjvm()
 		}
 		g.Version = j.ID
+	}
+	// Legacy Fabric
+	if len(j.Arguments.Jvm) == 0 || len(j.Arguments.Game) == 0 {
+		j.Arguments.Jvm = getjvm()
+		j.Arguments.Game = minecraftArguments2jvm(j.MinecraftArguments)
 	}
 	l := newlauncher1155(j)
 	l.Gameinfo = g
