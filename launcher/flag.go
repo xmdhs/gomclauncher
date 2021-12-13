@@ -175,14 +175,9 @@ func (g *Gameinfo) modjson() (*launcher1155, error) {
 		if err != nil {
 			return nil, JsonErr
 		}
-		if j.MinecraftArguments != "" {
-			j.Arguments.Game = minecraftArguments2jvm(j.MinecraftArguments)
-			j.Arguments.Jvm = getjvm()
-		}
 		g.Version = j.ID
 	}
-	// Legacy Fabric
-	if len(j.Arguments.Jvm) == 0 || len(j.Arguments.Game) == 0 {
+	if j.MinecraftArguments != "" && (len(j.Arguments.Jvm) == 0 || len(j.Arguments.Game) == 0) {
 		j.Arguments.Jvm = getjvm()
 		j.Arguments.Game = minecraftArguments2jvm(j.MinecraftArguments)
 	}
@@ -192,12 +187,13 @@ func (g *Gameinfo) modjson() (*launcher1155, error) {
 }
 
 func getjvm() []interface{} {
-	cp := []string{"-Djava.library.path\u003d${natives_directory}", "-Dminecraft.launcher.brand\u003d${launcher_name}", "-Dminecraft.launcher.version\u003d${launcher_version}", "-cp", "${classpath}"}
-	i := make([]interface{}, 0)
-	for _, v := range cp {
-		i = append(i, v)
+	return []interface{}{
+		"-Djava.library.path\u003d${natives_directory}",
+		"-Dminecraft.launcher.brand\u003d${launcher_name}",
+		"-Dminecraft.launcher.version\u003d${launcher_version}",
+		"-cp",
+		"${classpath}",
 	}
-	return i
 }
 
 func minecraftArguments2jvm(m string) []interface{} {
