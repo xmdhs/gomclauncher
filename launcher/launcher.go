@@ -81,6 +81,7 @@ func (l *launcher1155) cp() string {
 	return b.String()
 }
 
+// Deprecated: 之前想清理安装多余的库，就添加了这个函数用来导出某个版本所引入的库。可惜 forge 并不会在 json 中写上所有它导入的库，因此这个函数也就没有意义了。
 func (l *launcher1155) CP() []string {
 	path := l.Minecraftpath + `/libraries/`
 	list := make([]string, 0, len(l.json.Libraries))
