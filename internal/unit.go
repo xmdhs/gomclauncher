@@ -2,33 +2,36 @@ package internal
 
 import (
 	"runtime"
+	"strings"
 
 	"github.com/xmdhs/gomclauncher/launcher"
 )
 
 func Swichnatives(l launcher.LibraryX115) (path, sha1, url string) {
 	Os := runtime.GOOS
+	key := ""
 	switch Os {
 	case "windows":
-		path = l.Downloads.Classifiers.NativesWindows.Path
-		sha1 = l.Downloads.Classifiers.NativesWindows.Sha1
-		url = l.Downloads.Classifiers.NativesWindows.URL
+		key = l.Natives.Windows
 	case "darwin":
-		if l.Downloads.Classifiers.NativesOsx.Path != "" {
-			path = l.Downloads.Classifiers.NativesOsx.Path
-			sha1 = l.Downloads.Classifiers.NativesOsx.Sha1
-			url = l.Downloads.Classifiers.NativesOsx.URL
-		} else {
-			path = l.Downloads.Classifiers.NativesMacos.Path
-			sha1 = l.Downloads.Classifiers.NativesMacos.Sha1
-			url = l.Downloads.Classifiers.NativesMacos.URL
-		}
+		key = l.Natives.Osx
 	case "linux":
-		path = l.Downloads.Classifiers.NativesLinux.Path
-		sha1 = l.Downloads.Classifiers.NativesLinux.Sha1
-		url = l.Downloads.Classifiers.NativesLinux.URL
+		key = l.Natives.Linux
 	default:
 		panic("???")
 	}
-	return
+	Arch := runtime.GOARCH
+	arch := ""
+	switch Arch {
+	case "amd64":
+		arch = "64"
+	case "386":
+		arch = "32"
+	}
+	key = strings.ReplaceAll(key, "${arch}", arch)
+	a, ok := l.Downloads.Classifiers[key]
+	if !ok {
+		return "", "", ""
+	}
+	return a.Path, a.Sha1, a.URL
 }

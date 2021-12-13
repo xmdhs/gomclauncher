@@ -230,19 +230,15 @@ func Name2path(name string) [3]string {
 
 type Modsjson struct {
 	//1.15.2
-	MinecraftArguments string        `json:"minecraftArguments"`
-	InheritsFrom       string        `json:"inheritsFrom"`
-	MainClass          string        `json:"mainClass"`
-	ID                 string        `json:"id"`
-	Libraries          []Librarie    `json:"libraries"`
-	Arguments          argumentsX115 `json:"arguments"`
-	Logging            *loggingX115  `json:"logging"`
+	InheritsFrom string `json:"inheritsFrom"`
+	patchX115
+	Libraries []Librarie   `json:"libraries"`
+	Logging   *loggingX115 `json:"logging"`
 }
 
 type Librarie struct {
-	Name      string        `json:"name"`
-	Url       string        `json:"url"`
-	Clientreq bool          `json:"clientreq"`
-	Serverreq bool          `json:"serverreq"`
-	Downloads downloadsX115 `json:"downloads"`
+	Url       string `json:"url"`
+	Clientreq bool   `json:"clientreq"`
+	Serverreq bool   `json:"serverreq"`
+	LibraryX115
 }

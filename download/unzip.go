@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"strings"
+	"path/filepath"
 	"sync"
 
 	"github.com/xmdhs/gomclauncher/internal"
@@ -126,6 +126,12 @@ func (l Libraries) unzipnative(n []string) error {
 	}
 }
 
+var needSuffix = map[string]struct{}{
+	".dll":   {},
+	".so":    {},
+	".dylib": {},
+}
+
 func deCompress(zipFile, dest string) error {
 	reader, err := zip.OpenReader(zipFile)
 	if err != nil {
@@ -137,13 +143,15 @@ func deCompress(zipFile, dest string) error {
 			continue
 		}
 		err := func() error {
-			if strings.HasSuffix(strings.ToTitle(file.Name), strings.ToTitle("dll")) || strings.HasSuffix(strings.ToTitle(file.Name), strings.ToTitle("dylib")) || strings.HasSuffix(strings.ToTitle(file.Name), strings.ToTitle("so")) {
+			name := file.FileInfo().Name()
+			ext := filepath.Ext(name)
+			if _, ok := needSuffix[ext]; ok {
 				rc, err := file.Open()
 				if err != nil {
 					return fmt.Errorf("DeCompress: %w", err)
 				}
 				defer rc.Close()
-				filename := dest + file.FileInfo().Name()
+				filename := filepath.Join(dest, name)
 				if err != nil {
 					return fmt.Errorf("DeCompress: %w", err)
 				}

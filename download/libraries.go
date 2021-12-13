@@ -133,24 +133,8 @@ func get(cxt context.Context, u, path string) error {
 
 func modlibraries2(l []launcher.Librarie, Launcherjson *launcher.LauncherjsonX115) {
 	for _, v := range l {
-		if v.Downloads.Artifact.URL != "" {
-			Librarie := launcher.LibraryX115{}
-			Librarie.Downloads.Artifact.Path = v.Downloads.Artifact.Path
-			Librarie.Downloads.Artifact.URL = v.Downloads.Artifact.URL
-			Librarie.Downloads.Artifact.Sha1 = v.Downloads.Artifact.Sha1
-			Launcherjson.Libraries = append(Launcherjson.Libraries, Librarie)
-		} else {
-			Librarie := launcher.LibraryX115{}
-			s := launcher.Name2path(v.Name)
-			path := strings.ReplaceAll(s[0], ".", "/") + "/" + s[1] + "/" + s[2] + "/" + s[1] + "-" + s[2] + ".jar"
-			Librarie.Downloads.Artifact.Path = path
-			if v.Url != "" {
-				Librarie.Downloads.Artifact.URL = v.Url + path
-			} else {
-				Librarie.Downloads.Artifact.URL = `https://libraries.minecraft.net/` + path
-			}
-			Launcherjson.Libraries = append(Launcherjson.Libraries, Librarie)
-		}
+		l := launcher.Librarie2LibraryX115(&v)
+		Launcherjson.Libraries = append(Launcherjson.Libraries, *l)
 	}
 }
 

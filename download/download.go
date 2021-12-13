@@ -80,7 +80,6 @@ func ver(path, hash string) bool {
 	}
 	_, err := os.Stat(path)
 	return err == nil
-
 }
 
 func (l Libraries) Downlibrarie(i int, c chan int) error {

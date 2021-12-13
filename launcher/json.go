@@ -39,31 +39,13 @@ type assetIndexX115 struct {
 }
 
 type downloadsX115jar struct {
-	Client         clientX115jar      `json:"client"`
-	ClientMappings clientMappingsX115 `json:"client_mappings"`
-	Server         serverX115         `json:"server"`
-	ServerMappings serverMappingsX115 `json:"server_mappings"`
+	Client         clientX115jar `json:"client"`
+	ClientMappings clientX115jar `json:"client_mappings"`
+	Server         clientX115jar `json:"server"`
+	ServerMappings clientX115jar `json:"server_mappings"`
 }
 
 type clientX115jar struct {
-	Sha1 string  `json:"sha1"`
-	Size float64 `json:"size"`
-	URL  string  `json:"url"`
-}
-
-type clientMappingsX115 struct {
-	Sha1 string  `json:"sha1"`
-	Size float64 `json:"size"`
-	URL  string  `json:"url"`
-}
-
-type serverX115 struct {
-	Sha1 string  `json:"sha1"`
-	Size float64 `json:"size"`
-	URL  string  `json:"url"`
-}
-
-type serverMappingsX115 struct {
 	Sha1 string  `json:"sha1"`
 	Size float64 `json:"size"`
 	URL  string  `json:"url"`
@@ -78,62 +60,11 @@ type LibraryX115 struct {
 }
 
 type downloadsX115 struct {
-	Artifact    artifactX115    `json:"artifact"`
-	Classifiers classifiersX115 `json:"classifiers"`
+	Artifact    artifactX115            `json:"artifact"`
+	Classifiers map[string]artifactX115 `json:"classifiers"`
 }
 
 type artifactX115 struct {
-	Path string  `json:"path"`
-	Sha1 string  `json:"sha1"`
-	Size float64 `json:"size"`
-	URL  string  `json:"url"`
-}
-
-type classifiersX115 struct {
-	Javadoc        javadocX115        `json:"javadoc"`
-	NativesLinux   nativesLinuxX115   `json:"natives-linux"`
-	NativesMacos   nativesMacosX115   `json:"natives-macos"`
-	NativesOsx     nativesOsxX115     `json:"natives-osx"`
-	NativesWindows nativesWindowsX115 `json:"natives-windows"`
-	Sources        sourcesX115        `json:"sources"`
-}
-
-type javadocX115 struct {
-	Path string  `json:"path"`
-	Sha1 string  `json:"sha1"`
-	Size float64 `json:"size"`
-	URL  string  `json:"url"`
-}
-
-type nativesLinuxX115 struct {
-	Path string  `json:"path"`
-	Sha1 string  `json:"sha1"`
-	Size float64 `json:"size"`
-	URL  string  `json:"url"`
-}
-
-type nativesMacosX115 struct {
-	Path string  `json:"path"`
-	Sha1 string  `json:"sha1"`
-	Size float64 `json:"size"`
-	URL  string  `json:"url"`
-}
-
-type nativesOsxX115 struct {
-	Path string `json:"path"`
-	Sha1 string `json:"sha1"`
-	Size int    `json:"size"`
-	URL  string `json:"url"`
-}
-
-type nativesWindowsX115 struct {
-	Path string  `json:"path"`
-	Sha1 string  `json:"sha1"`
-	Size float64 `json:"size"`
-	URL  string  `json:"url"`
-}
-
-type sourcesX115 struct {
 	Path string  `json:"path"`
 	Sha1 string  `json:"sha1"`
 	Size float64 `json:"size"`
