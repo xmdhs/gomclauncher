@@ -95,6 +95,7 @@ func (g *Gameinfo) GenLauncherCmdArgs() (l *launcher1155, args []string, err err
 //go:embed fixlog4j.jar
 var fixlog4jJar []byte
 
+// log4j to fix the CVE-2021-44228
 func log4j(l *launcher1155) {
 	path := filepath.Join(l.Minecraftpath, "fixlog4j.jar")
 	_, err := os.Stat(path)

@@ -9,7 +9,6 @@ import (
 	"io/fs"
 	"io/ioutil"
 	"os"
-	"path/filepath"
 	"runtime"
 	"strings"
 	"sync"
@@ -31,7 +30,6 @@ func (g *Gameinfo) argumentsjvm(l *launcher1155) error {
 			return JsonNorTrue
 		}
 	}
-	addloggingXml(&l.json.Logging, l)
 	return nil
 }
 
@@ -41,15 +39,6 @@ func (g *Gameinfo) jvmflagadd(v string, l *launcher1155) {
 	flag := g.jvmflagrelace(v, l)
 	if v != "" {
 		l.flag = append(l.flag, flag)
-	}
-}
-
-func addloggingXml(log *loggingX115, l *launcher1155) {
-	filename := filepath.Join(l.Minecraftpath, "/assets/logging/", log.Client.File.ID)
-	arg := log.Client.Argument
-	if log.Client.File.ID != "" {
-		s := strings.ReplaceAll(arg, "${path}", filename)
-		l.flag = append(l.flag, s)
 	}
 }
 
