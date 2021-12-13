@@ -28,12 +28,13 @@ func (l Libraries) Unzip(i int) error {
 				done <- struct{}{}
 				continue
 			}
-			if launcher.Ifallow(v) {
+			allow := launcher.Ifallow(v)
+			if allow {
 				m.Lock()
 				natives = append(natives, path)
 				m.Unlock()
 			}
-			if launcher.Ifallow(v) && !ver(path, sha1) {
+			if allow && !ver(path, sha1) {
 				d := downinfo{
 					url:      url,
 					path:     path,
