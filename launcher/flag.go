@@ -172,7 +172,9 @@ func (g *Gameinfo) modjson() (*launcher1155, error) {
 			j.Arguments.Game = append(j.Arguments.Game, minecraftArguments2jvm(mod.MinecraftArguments)...)
 			j.Arguments.Jvm = append(j.Arguments.Jvm, getjvm()...)
 		}
-		j.Logging = mod.Logging
+		if mod.Logging.Client.Argument != "" {
+			j.Logging = mod.Logging
+		}
 	} else {
 		err = json.Unmarshal(g.Jsonbyte, &j)
 		if err != nil {
