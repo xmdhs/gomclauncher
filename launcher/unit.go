@@ -24,7 +24,7 @@ func FullLibraryX115(l *LibraryX115, url string) [3]string {
 			}
 			l.Downloads.Classifiers[os] = artifactX115{
 				Path: strings.ReplaceAll(s[0], ".", "/") + "/" + s[1] + "/" + s[2] + "/" + s[1] + "-" + s[2] + "-" + os + ".jar",
-				URL:  url + s[0] + "/" + s[1] + "/" + s[2] + "/" + s[1] + "-" + s[2] + "-" + os + ".jar",
+				URL:  url + strings.ReplaceAll(s[0], ".", "/") + "/" + s[1] + "/" + s[2] + "/" + s[1] + "-" + s[2] + "-" + os + ".jar",
 			}
 		}
 		arch := internal.Getarch()
