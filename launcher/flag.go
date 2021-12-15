@@ -188,9 +188,9 @@ func (g *Gameinfo) modjson() (*launcher1155, error) {
 
 func getjvm() []interface{} {
 	return []interface{}{
-		"-Djava.library.path\u003d${natives_directory}",
-		"-Dminecraft.launcher.brand\u003d${launcher_name}",
-		"-Dminecraft.launcher.version\u003d${launcher_version}",
+		"-Djava.library.path=${natives_directory}",
+		"-Dminecraft.launcher.brand=${launcher_name}",
+		"-Dminecraft.launcher.version=${launcher_version}",
 		"-cp",
 		"${classpath}",
 	}
