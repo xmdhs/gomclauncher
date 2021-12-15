@@ -208,17 +208,13 @@ func minecraftArguments2jvm(m string) []interface{} {
 func (g *Gameinfo) libraries2LibraryX115(l Librarie) LibraryX115 {
 	p := Name2path(l.Name)
 	g.flag[p[0]+p[1]] = p[2]
+	FullLibraryX115(&l.LibraryX115, l.Url)
 	return LibraryX115{
-		Downloads: downloadsX115{
-			Artifact: artifactX115{
-				//<package>/<name>/<version>/<name>-<version>.jar
-				Path: strings.ReplaceAll(p[0], ".", "/") + "/" + p[1] + "/" + p[2] + "/" + p[1] + "-" + p[2] + ".jar",
-			},
-		},
+		Downloads: l.Downloads,
 	}
-
 }
 
+// Name2path return [<group>,<name>,<version>]
 func Name2path(name string) [3]string {
 	l := strings.Split(name, ":")
 	if len(l) != 3 {

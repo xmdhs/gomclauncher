@@ -68,7 +68,10 @@ func (l *launcher1155) cp() string {
 		if !Ifallow(p) {
 			continue
 		}
-		pack := Name2path(p.Name)
+		pack := FullLibraryX115(&p, "")
+		if p.Downloads.Artifact.Path == "" {
+			continue
+		}
 		key := pack[0] + pack[1]
 		v, ok := l.Gameinfo.flag[key]
 		add := func() {

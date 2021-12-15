@@ -9,7 +9,6 @@ import (
 	"path/filepath"
 	"sync"
 
-	"github.com/xmdhs/gomclauncher/internal"
 	"github.com/xmdhs/gomclauncher/launcher"
 )
 
@@ -22,7 +21,7 @@ func (l Libraries) Unzip(i int) error {
 	go func() {
 		for _, v := range l.librarie.Libraries {
 			v := v
-			path, sha1, url := internal.Swichnatives(v)
+			path, sha1, url := swichnatives(v)
 			path = l.path + `/libraries/` + path
 			if url == "" {
 				done <- struct{}{}

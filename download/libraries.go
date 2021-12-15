@@ -14,7 +14,6 @@ import (
 	"time"
 
 	"github.com/xmdhs/gomclauncher/auth"
-	"github.com/xmdhs/gomclauncher/internal"
 	"github.com/xmdhs/gomclauncher/lang"
 	"github.com/xmdhs/gomclauncher/launcher"
 )
@@ -54,6 +53,9 @@ func Newlibraries(cxt context.Context, b []byte, typee string, print func(string
 		if err != nil {
 			return Libraries{}, fmt.Errorf("Newlibraries: %w", err)
 		}
+	}
+	for i := range l.Libraries {
+		launcher.FullLibraryX115(&l.Libraries[i], "")
 	}
 	url = l.AssetIndex.URL
 	id = l.AssetIndex.ID
@@ -100,8 +102,10 @@ func get(cxt context.Context, u, path string) error {
 	if err != nil {
 		return fmt.Errorf("get: %w", err)
 	}
+	if reps.StatusCode != 200 {
+		return fmt.Errorf("get: %w", &ErrHTTPCode{code: reps.StatusCode})
+	}
 	_, err = os.Stat(path)
-
 	if err != nil {
 		dir, _ := filepath.Split(path)
 		err := os.MkdirAll(dir, 0777)
@@ -132,9 +136,17 @@ func get(cxt context.Context, u, path string) error {
 	return nil
 }
 
+type ErrHTTPCode struct {
+	code int
+}
+
+func (e *ErrHTTPCode) Error() string {
+	return fmt.Sprintf("http code: %d", e.code)
+}
+
 func modlibraries2(l []launcher.Librarie, Launcherjson *launcher.LauncherjsonX115) {
 	for _, v := range l {
-		l := internal.Librarie2LibraryX115(&v)
+		l := librarie2LibraryX115(&v)
 		Launcherjson.Libraries = append(Launcherjson.Libraries, *l)
 	}
 }
