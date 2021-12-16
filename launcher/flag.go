@@ -50,10 +50,15 @@ func (g *Gameinfo) Run115() (err error) {
 	}
 	err = l.Launcher115()
 	if err != nil {
+		if errors.Is(err, os.ErrNotExist) {
+			return fmt.Errorf("Run115: %w", ErrJavaPath)
+		}
 		return fmt.Errorf("Run115: %w", err)
 	}
 	return nil
 }
+
+var ErrJavaPath = errors.New("java path not exists")
 
 func (g *Gameinfo) GenLauncherCmdArgs() (l *launcher1155, args []string, err error) {
 	defer func() {
