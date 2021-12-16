@@ -48,7 +48,10 @@ func (g *Gameinfo) Run115() (err error) {
 	if err != nil {
 		return fmt.Errorf("Run115: %w", err)
 	}
-	l.Launcher115()
+	err = l.Launcher115()
+	if err != nil {
+		return fmt.Errorf("Run115: %w", err)
+	}
 	return nil
 }
 
