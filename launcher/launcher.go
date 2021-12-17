@@ -99,7 +99,8 @@ func needFixlog4j(ver string) bool {
 	if err != nil {
 		return true
 	}
-	if v.Major() >= 2 && v.LessThan(semver.MustParse("2.15.0")) {
+	// CVE-2021-45046 CVE-2021-44228 has been addressed in 2.16.0
+	if v.Major() >= 2 && v.LessThan(semver.MustParse("2.16.0")) {
 		return true
 	}
 	return false
