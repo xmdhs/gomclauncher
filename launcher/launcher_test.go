@@ -30,14 +30,14 @@ func Test_needFixlog4j(t *testing.T) {
 		{
 			name: "3",
 			args: args{
-				ver: "2.15.0",
+				ver: "2.16.0",
 			},
 			want: false,
 		},
 		{
 			name: "4",
 			args: args{
-				ver: "2.15.1",
+				ver: "2.16.1",
 			},
 			want: false,
 		},
