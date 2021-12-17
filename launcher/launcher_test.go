@@ -75,12 +75,12 @@ func Test_launcher1155_cp(t *testing.T) {
 	}{
 		{
 			name: "1",
-			l:    newl("org.apache.logging.log4j:log4j-core:2.15.0"),
+			l:    newl("org.apache.logging.log4j:log4j-core:2.16.0"),
 			want: false,
 		},
 		{
 			name: "2",
-			l:    newl("org.apache.logging.log4j:log4j-core:2.15.1"),
+			l:    newl("org.apache.logging.log4j:log4j-core:2.16.1"),
 			want: false,
 		},
 		{
