@@ -10,6 +10,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"sync"
 
 	"github.com/xmdhs/gomclauncher/auth"
 )
@@ -41,6 +42,9 @@ type Gameinfo struct {
 	authlibpath    string
 
 	inheritsFrom string
+
+	jvmflagrelaceOnce sync.Once
+	jvmflagrelaceMap  map[string]func() string
 }
 
 func (g *Gameinfo) Run115() (err error) {

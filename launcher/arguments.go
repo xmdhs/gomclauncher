@@ -43,13 +43,21 @@ func (g *Gameinfo) jvmflagadd(v string, l *launcher1155) {
 }
 
 func (g *Gameinfo) jvmflagrelace(s string, l *launcher1155) string {
-	s = strings.ReplaceAll(s, "${natives_directory}", g.Minecraftpath+`/versions/`+g.Version+`/natives`)
-	s = strings.ReplaceAll(s, "${launcher_name}", Launcherbrand)
-	s = strings.ReplaceAll(s, "${launcher_version}", Launcherversion)
-	s = strings.ReplaceAll(s, "${library_directory}", g.Minecraftpath+"/libraries")
-	s = strings.ReplaceAll(s, "${classpath_separator}", string(os.PathListSeparator))
-	s = strings.ReplaceAll(s, "${version_name}", g.inheritsFrom)
-	s = strings.ReplaceAll(s, "${classpath}", l.cp())
+	g.jvmflagrelaceOnce.Do(func() {
+		g.jvmflagrelaceMap = make(map[string]func() string)
+		g.jvmflagrelaceMap["${natives_directory}"] = func() string { return g.Minecraftpath + `/versions/` + g.Version + `/natives` }
+		g.jvmflagrelaceMap["${launcher_name}"] = func() string { return Launcherbrand }
+		g.jvmflagrelaceMap["${launcher_version}"] = func() string { return Launcherversion }
+		g.jvmflagrelaceMap["${library_directory}"] = func() string { return g.Minecraftpath + "/libraries" }
+		g.jvmflagrelaceMap["${classpath_separator}"] = func() string { return string(os.PathListSeparator) }
+		g.jvmflagrelaceMap["${version_name}"] = func() string { return g.inheritsFrom }
+	})
+	g.jvmflagrelaceMap["${classpath}"] = l.cp
+	for k, v := range g.jvmflagrelaceMap {
+		if strings.Contains(s, k) {
+			s = strings.ReplaceAll(s, k, v())
+		}
+	}
 	return s
 }
 
