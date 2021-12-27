@@ -2,7 +2,6 @@ package launcher
 
 import (
 	"bytes"
-	"encoding/json"
 	"fmt"
 	"os"
 	"os/exec"
@@ -91,8 +90,6 @@ func (l *launcher1155) cp() string {
 			add()
 		}
 	}
-	s, _ := json.Marshal(l.json)
-	fmt.Println(string(s))
 	b.WriteString(l.Minecraftpath + `/versions/` + l.json.ID + `/` + l.json.ID + `.jar`)
 	return b.String()
 }
