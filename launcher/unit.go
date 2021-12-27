@@ -11,12 +11,12 @@ func FullLibraryX115(l *LibraryX115, url string) [3]string {
 	if url == "" {
 		url = `https://libraries.minecraft.net/`
 	}
-	if (l.Downloads.Artifact.URL == "" || l.Downloads.Artifact.Path == "") && len(l.Extract.Exclude) == 0 {
+	if (l.Downloads.Artifact.URL == "" || l.Downloads.Artifact.Path == "") && !hasNatives(&l.Natives) {
 		p := strings.ReplaceAll(s[0], ".", "/") + "/" + s[1] + "/" + s[2] + "/" + s[1] + "-" + s[2] + ".jar"
 		l.Downloads.Artifact.Path = p
 		l.Downloads.Artifact.URL = url + p
 	}
-	if len(l.Extract.Exclude) != 0 && len(l.Downloads.Classifiers) == 0 {
+	if hasNatives(&l.Natives) && len(l.Downloads.Classifiers) == 0 {
 		l.Downloads.Classifiers = make(map[string]artifactX115, 3)
 		do := func(os string) {
 			if os == "" {
@@ -33,4 +33,8 @@ func FullLibraryX115(l *LibraryX115, url string) [3]string {
 		do(strings.ReplaceAll(l.Natives.Linux, "${arch}", arch))
 	}
 	return s
+}
+
+func hasNatives(l *nativesX115) bool {
+	return l.Windows != "" || l.Osx != "" || l.Linux != ""
 }

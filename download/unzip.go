@@ -22,11 +22,11 @@ func (l Libraries) Unzip(i int) error {
 		for _, v := range l.librarie.Libraries {
 			v := v
 			path, sha1, url := swichnatives(v)
-			path = l.path + `/libraries/` + path
 			if url == "" {
 				done <- struct{}{}
 				continue
 			}
+			path = l.path + `/libraries/` + path
 			allow := launcher.Ifallow(v)
 			if allow {
 				m.Lock()

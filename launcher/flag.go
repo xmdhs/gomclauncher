@@ -217,9 +217,7 @@ func (g *Gameinfo) libraries2LibraryX115(l Librarie) LibraryX115 {
 	p := Name2path(l.Name)
 	g.flag[p[0]+p[1]] = p[2]
 	FullLibraryX115(&l.LibraryX115, l.Url)
-	return LibraryX115{
-		Downloads: l.Downloads,
-	}
+	return l.LibraryX115
 }
 
 // Name2path return [<group>,<name>,<version>]

@@ -41,6 +41,13 @@ func Test_needFixlog4j(t *testing.T) {
 			},
 			want: false,
 		},
+		{
+			name: "5",
+			args: args{
+				ver: "2.15.0",
+			},
+			want: true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
