@@ -109,7 +109,7 @@ var fixlog4jJar []byte
 
 // log4j to fix the CVE-2021-44228
 func log4j(l *launcher1155) {
-	path := filepath.Join(l.Minecraftpath, "fixlog4j.jar")
+	path := filepath.Join(l.Minecraftpath, "fixlog4j-0.0.1.jar")
 	_, err := os.Stat(path)
 	if err != nil {
 		if errors.Is(err, fs.ErrNotExist) {
