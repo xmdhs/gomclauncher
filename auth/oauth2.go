@@ -10,7 +10,6 @@ import (
 
 type msToken struct {
 	AccessToken  string `json:"access_token,omitempty"`
-	ExpiresIn    int    `json:"expires_in,omitempty"`
 	RefreshToken string `json:"refresh_token,omitempty"`
 	Scope        string `json:"scope,omitempty"`
 	TokenType    string `json:"token_type,omitempty"`
@@ -18,9 +17,11 @@ type msToken struct {
 
 type MsToken struct {
 	msToken
+	// Deprecated: Always nil
 	ExpiresIn time.Time
 }
 
+// Deprecated: use Refresh
 func (m *MsToken) Expires() bool {
 	return time.Now().After(m.ExpiresIn)
 }
@@ -46,7 +47,6 @@ func (m *MsToken) Refresh() error {
 
 func (m *MsToken) parse(mm msToken) {
 	m.msToken = mm
-	m.ExpiresIn = time.Now().Add(time.Duration(mm.ExpiresIn) * time.Second)
 }
 
 type ErrHttpCode struct {

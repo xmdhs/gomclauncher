@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"github.com/cli/browser"
-	"github.com/xxmdhs/oauth"
+	"github.com/cli/oauth"
 )
 
 const (
@@ -64,10 +64,12 @@ func MsLoginRefresh(t *MsToken) (*Profile, error) {
 func getToken() (*MsToken, error) {
 	var t msToken
 	f := oauth.Flow{
-		Scopes:        []string{"XboxLive.signin", "offline_access"},
-		ClientID:      "a48a9fad-1702-46d7-8ee9-42b857ad292d",
-		DeviceInitURL: "https://login.microsoftonline.com/consumers/oauth2/v2.0/devicecode",
-		TokenURL:      "https://login.microsoftonline.com/consumers/oauth2/v2.0/token",
+		Scopes:   []string{"XboxLive.signin", "offline_access"},
+		ClientID: "a48a9fad-1702-46d7-8ee9-42b857ad292d",
+		Host: &oauth.Host{
+			DeviceCodeURL: "https://login.microsoftonline.com/consumers/oauth2/v2.0/devicecode",
+			TokenURL:      "https://login.microsoftonline.com/consumers/oauth2/v2.0/token",
+		},
 		BrowseURL: func(s string) error {
 			fmt.Println("If not opening a web browser, try to open " + s)
 			err := browser.OpenURL(s)
@@ -84,7 +86,6 @@ func getToken() (*MsToken, error) {
 	}
 	t.AccessToken = token.Token
 	t.RefreshToken = token.RefreshToken
-	t.ExpiresIn = token.ExpiresIn
 	m := MsToken{}
 	m.parse(t)
 	return &m, nil
