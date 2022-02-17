@@ -11,13 +11,13 @@ import (
 )
 
 const (
-	Authlibversion = "1.1.38"
-	Authlibsha1    = "e6b3d3ffcba5646316e29bd4937950ab379bd937"
+	Authlibversion = "1.1.39"
+	Authlibsha1    = "5e8cda9cb85e3227f60829db1e595d186543ae40"
 )
 
 var Authliburls = []string{
-	"https://download.mcbbs.net/mirrors/authlib-injector/artifact/38/authlib-injector-1.1.38.jar",
-	"https://authlib-injector.yushi.moe/artifact/38/authlib-injector-1.1.38.jar",
+	"https://download.mcbbs.net/mirrors/authlib-injector/artifact/39/authlib-injector-1.1.39.jar",
+	"https://authlib-injector.yushi.moe/artifact/39/authlib-injector-1.1.39.jar",
 }
 
 func Getauthlibapi(api string) (apiaddress string, err error) {
