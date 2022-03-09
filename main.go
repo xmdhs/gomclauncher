@@ -213,7 +213,7 @@ func check() {
 var Errtxt = errors.New("LookupTXT err")
 
 func checkByDns() (string, error) {
-	l, err := net.LookupTXT("gml.xmdhs.top")
+	l, err := net.LookupTXT("gml.xmdhs.com")
 	if err != nil {
 		return "", fmt.Errorf("checkByDns: %w", err)
 	}
