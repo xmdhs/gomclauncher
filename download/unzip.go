@@ -23,8 +23,18 @@ func (l Libraries) Unzip(i int) error {
 			v := v
 			path, sha1, url := swichnatives(v)
 			if url == "" {
-				done <- struct{}{}
-				continue
+				if v.Rules != nil {
+					path = v.Downloads.Artifact.Path
+					sha1 = v.Downloads.Artifact.Sha1
+					url = v.Downloads.Artifact.URL
+				} else {
+					select {
+					case done <- struct{}{}:
+					case <-cxt.Done():
+						return
+					}
+					continue
+				}
 			}
 			path = l.path + `/libraries/` + path
 			allow := launcher.Ifallow(v)

@@ -13,6 +13,7 @@ import (
 	"strings"
 
 	"github.com/xmdhs/gomclauncher/lang"
+	"github.com/xmdhs/gomclauncher/launcher"
 )
 
 func (l Libraries) Downassets(i int, c chan int) error {
@@ -99,6 +100,14 @@ func (l Libraries) Downlibrarie(i int, c chan int) error {
 	go func() {
 		for _, v := range l.librarie.Libraries {
 			v := v
+			if !launcher.Ifallow(v) {
+				select {
+				case done <- struct{}{}:
+				case <-cxt.Done():
+					return
+				}
+				continue
+			}
 			path := l.path + `/libraries/` + v.Downloads.Artifact.Path
 			if v.Downloads.Artifact.URL == "" {
 				select {
