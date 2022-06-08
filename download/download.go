@@ -62,6 +62,8 @@ func (l Libraries) Downassets(i int, c chan int) error {
 			}
 		case err := <-e:
 			return fmt.Errorf("Downassets: %w", err)
+		case <-cxt.Done():
+			return cxt.Err()
 		}
 	}
 }
@@ -145,6 +147,8 @@ func (l Libraries) Downlibrarie(i int, c chan int) error {
 			}
 		case err := <-e:
 			return fmt.Errorf("Downlibrarie: %w", err)
+		case <-cxt.Done():
+			return cxt.Err()
 		}
 	}
 }

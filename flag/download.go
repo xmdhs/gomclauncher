@@ -40,7 +40,7 @@ func NewFlag() *Flag {
 }
 
 func (f Flag) D() {
-	cxt := context.Background()
+	cxt := context.TODO()
 	l, err := download.Getversionlist(cxt, f.Atype, func(s string) { fmt.Println(s) })
 	errr(err)
 	err = l.Downjson(cxt, f.Download, launcher.Minecraft, func(s string) { fmt.Println(s) })

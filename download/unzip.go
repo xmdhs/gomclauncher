@@ -73,6 +73,8 @@ func (l Libraries) Unzip(i int) error {
 			}
 		case err := <-e:
 			return fmt.Errorf("Unzip: %w", err)
+		case <-cxt.Done():
+			return cxt.Err()
 		}
 	}
 }
@@ -121,6 +123,8 @@ func (l Libraries) unzipnative(n []string) error {
 			}
 		case err := <-e:
 			return fmt.Errorf("unzipnative: %w", err)
+		case <-cxt.Done():
+			return cxt.Err()
 		}
 	}
 }
