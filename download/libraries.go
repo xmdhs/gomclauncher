@@ -2,7 +2,6 @@ package download
 
 import (
 	"bufio"
-	"compress/gzip"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -15,6 +14,7 @@ import (
 	"time"
 
 	"github.com/xmdhs/gomclauncher/auth"
+	"github.com/xmdhs/gomclauncher/internal"
 	"github.com/xmdhs/gomclauncher/lang"
 	"github.com/xmdhs/gomclauncher/launcher"
 )
@@ -184,31 +184,7 @@ func source(url, types string) string {
 }
 
 func Aget(cxt context.Context, aurl string) (*http.Response, *time.Timer, error) {
-	ctx, cancel := context.WithCancel(cxt)
-	rep, err := http.NewRequestWithContext(ctx, "GET", aurl, nil)
-	timer := time.AfterFunc(5*time.Second, func() {
-		cancel()
-	})
-	if err != nil {
-		return nil, nil, fmt.Errorf("Aget: %w", err)
-	}
-	rep.Header.Set("Accept", "*/*")
-	rep.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36")
-	rep.Header.Set("Accept-Encoding", "gzip")
-	c := http.Client{
-		Transport: auth.Transport,
-	}
-	reps, err := c.Do(rep)
-	if err != nil {
-		return reps, nil, fmt.Errorf("Aget: %w", err)
-	}
-	if reps.Header.Get("Content-Encoding") == "gzip" {
-		reps.Body, err = gzip.NewReader(reps.Body)
-		if err != nil {
-			return reps, nil, fmt.Errorf("Aget: %w", err)
-		}
-	}
-	return reps, timer, nil
+	return internal.HttpGet(cxt, aurl, auth.Transport, nil)
 }
 
 func assetsjson(cxt context.Context, r *randurls, url, path, typee, sha1 string, print func(string)) error {

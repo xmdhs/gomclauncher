@@ -1,13 +1,14 @@
 package auth
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"io/ioutil"
-	"net/http"
 	"net/url"
-	"time"
+
+	"github.com/xmdhs/gomclauncher/internal"
 )
 
 const (
@@ -33,17 +34,7 @@ func Getauthlibapi(api string) (apiaddress string, err error) {
 		u.Scheme = "https"
 		api = u.String()
 	}
-	c := &http.Client{
-		Timeout:   5 * time.Second,
-		Transport: Transport,
-	}
-	req, err := http.NewRequest("GET", api, nil)
-	if err != nil {
-		return "", fmt.Errorf("Getauthlibapi: %w", err)
-	}
-	req.Header.Set("Accept", "*/*")
-	req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36")
-	reps, err := c.Do(req)
+	reps, _, err := internal.HttpGet(context.TODO(), api, Transport, nil)
 	if reps != nil {
 		defer reps.Body.Close()
 	}
@@ -74,17 +65,7 @@ type yggdrasil struct {
 }
 
 func checkapi(url string) error {
-	c := &http.Client{
-		Timeout:   5 * time.Second,
-		Transport: Transport,
-	}
-	req, err := http.NewRequest("GET", url, nil)
-	if err != nil {
-		return fmt.Errorf("checkapi: %w", err)
-	}
-	req.Header.Set("Accept", "*/*")
-	req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36")
-	reps, err := c.Do(req)
+	reps, _, err := internal.HttpGet(context.TODO(), url, Transport, nil)
 	if reps != nil {
 		defer reps.Body.Close()
 	}
