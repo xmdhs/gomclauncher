@@ -123,7 +123,7 @@ func log4j(l *launcher1155) {
 }
 
 func creatlauncherprofiles(g *Gameinfo) error {
-	g.authlibpath = g.Minecraftpath + `libraries/moe/yushi/authlibinjector/authlib-injector/authlib-injector.jar`
+	g.authlibpath = g.Minecraftpath + `/libraries/moe/yushi/authlibinjector/authlib-injector/authlib-injector.jar`
 	path := g.Minecraftpath + "/launcher_profiles.json"
 	_, err := os.Stat(path)
 	if err != nil && os.IsNotExist(err) {
