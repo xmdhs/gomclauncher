@@ -2,6 +2,8 @@ package download
 
 import (
 	"context"
+	"crypto/sha1"
+	"encoding/hex"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -43,6 +45,15 @@ b:
 			t.Fatal(err)
 			break b
 		}
+	}
+	b, err = os.ReadFile(".minecraft/com/mojang/patchy/1.1/patchy-1.1.jar")
+	if err != nil {
+		t.Fatal(err)
+	}
+	h := sha1.New()
+	h.Write(b)
+	if hex.EncodeToString(h.Sum(nil)) != "aef610b34a1be37fa851825f12372b78424d8903" {
+		t.Fatal("sha1 not match")
 	}
 }
 
