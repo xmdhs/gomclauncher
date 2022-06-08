@@ -11,10 +11,13 @@ import (
 )
 
 const (
+	// Deprecated: move to package download
 	Authlibversion = "1.1.41"
-	Authlibsha1    = "64e96fc1e29e312a4d1e9d530f492cfa4b089cf1"
+	// Deprecated: move to package download
+	Authlibsha1 = "64e96fc1e29e312a4d1e9d530f492cfa4b089cf1"
 )
 
+// Deprecated: move to package download
 var Authliburls = []string{
 	"https://download.mcbbs.net/mirrors/authlib-injector/artifact/41/authlib-injector-1.1.41.jar",
 	"https://authlib-injector.yushi.moe/artifact/41/authlib-injector-1.1.41.jar",

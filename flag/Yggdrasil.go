@@ -11,10 +11,12 @@ import (
 )
 
 func (f *Flag) Authlib() {
-	err := download.Downauthlib(context.Background(), func(s string) { fmt.Println(s) })
-	if err != nil {
-		fmt.Println(lang.Lang("authlibdownloadfailed"))
-		panic(err)
+	if f.Outmsg {
+		err := download.Downauthlib(context.TODO(), func(s string) { fmt.Println(s) })
+		if err != nil {
+			fmt.Println(lang.Lang("authlibdownloadfailed"))
+			panic(err)
+		}
 	}
 	api, err := auth.Getauthlibapi(f.ApiAddress)
 	if err != nil {

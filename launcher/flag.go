@@ -11,8 +11,6 @@ import (
 	"path/filepath"
 	"strings"
 	"sync"
-
-	"github.com/xmdhs/gomclauncher/auth"
 )
 
 type Gameinfo struct {
@@ -125,7 +123,7 @@ func log4j(l *launcher1155) {
 }
 
 func creatlauncherprofiles(g *Gameinfo) error {
-	g.authlibpath = g.Minecraftpath + `/libraries/` + `moe/yushi/authlibinjector/` + "authlib-injector/" + auth.Authlibversion + "/authlib-injector-" + auth.Authlibversion + ".jar"
+	g.authlibpath = g.Minecraftpath + `libraries/moe/yushi/authlibinjector/authlib-injector/authlib-injector.jar`
 	path := g.Minecraftpath + "/launcher_profiles.json"
 	_, err := os.Stat(path)
 	if err != nil && os.IsNotExist(err) {

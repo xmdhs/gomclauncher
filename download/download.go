@@ -3,9 +3,11 @@ package download
 import (
 	"context"
 	"crypto/sha1"
+	"crypto/sha256"
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"hash"
 	"io"
 	"os"
 	"strings"
@@ -64,19 +66,25 @@ func (l Libraries) Downassets(i int, c chan int) error {
 	}
 }
 
-func ver(path, hash string) bool {
-	if hash != "" {
+func ver(path, ahash string) bool {
+	if ahash != "" {
+		var m hash.Hash
+		switch len(ahash) {
+		case 40:
+			m = sha1.New()
+		case 64:
+			m = sha256.New()
+		}
 		file, err := os.Open(path)
 		if err != nil {
 			return false
 		}
 		defer file.Close()
-		m := sha1.New()
 		if _, err := io.Copy(m, file); err != nil {
 			return false
 		}
 		h := hex.EncodeToString(m.Sum(nil))
-		return strings.ToTitle(h) == strings.ToTitle(hash)
+		return strings.ToTitle(h) == strings.ToTitle(ahash)
 	}
 	_, err := os.Stat(path)
 	return err == nil
