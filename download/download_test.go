@@ -46,7 +46,7 @@ b:
 			break b
 		}
 	}
-	bb, err := os.ReadFile(".minecraft/com/mojang/patchy/1.1/patchy-1.1.jar")
+	bb, err := os.ReadFile(".minecraft/libraries/com/mojang/patchy/1.1/patchy-1.1.jar")
 	if err != nil {
 		t.Fatal(err)
 	}
