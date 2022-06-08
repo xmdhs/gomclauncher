@@ -43,6 +43,9 @@ func init() {
 		fmt.Println(lang.Lang("jsonBreak"))
 		panic(err)
 	}
+}
+
+func init() {
 	str, err := os.Getwd()
 	str = strings.ReplaceAll(str, `\`, `/`)
 	if err != nil {
