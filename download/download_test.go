@@ -27,7 +27,7 @@ func TestNewlibraries(t *testing.T) {
 	ch := make(chan int, 5)
 	e := make(chan error)
 	go func() {
-		err = l.Downlibrarie(64, ch)
+		err := l.Downlibrarie(64, ch)
 		if err != nil {
 			e <- err
 		}
