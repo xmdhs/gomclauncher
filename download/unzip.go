@@ -89,9 +89,17 @@ func (l Libraries) unzipnative(n []string) error {
 	cxt, cancel := context.WithCancel(l.cxt)
 	defer cancel()
 	p := l.path + `/versions/` + l.librarie.ID + `/natives/`
-	err := os.MkdirAll(p, 0777)
+	err := os.RemoveAll(p)
 	if err != nil {
 		return fmt.Errorf("unzipnative: %w", err)
+	}
+	err = os.MkdirAll(p, 0777)
+	if err != nil {
+		return fmt.Errorf("unzipnative: %w", err)
+	}
+
+	if len(n) == 0 {
+		return nil
 	}
 	go func() {
 		for _, v := range n {
