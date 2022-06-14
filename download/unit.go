@@ -45,7 +45,7 @@ func librarie2LibraryX115(l *launcher.Librarie) *launcher.LibraryX115 {
 
 func isArch1_19(s string) bool {
 	l := strings.Split(s, "-")
-	if len(l) != 2 {
+	if len(l) < 2 {
 		return true
 	}
 	arch := l[len(l)-1]
