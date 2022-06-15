@@ -17,6 +17,9 @@ import (
 )
 
 func (l Libraries) Downassets(i int, c chan int) error {
+	if len(l.assetIndex.Objects) == 0 {
+		return nil
+	}
 	e, done, ch := creatch(len(l.assetIndex.Objects), i)
 	cxt, cancel := context.WithCancel(l.cxt)
 	defer cancel()
@@ -94,9 +97,13 @@ func ver(path, ahash string) bool {
 }
 
 func (l Libraries) Downlibrarie(i int, c chan int) error {
+	if len(l.librarie.Libraries) == 0 {
+		return nil
+	}
 	e, done, ch := creatch(len(l.librarie.Libraries), i)
 	cxt, cancel := context.WithCancel(l.cxt)
 	defer cancel()
+
 	go func() {
 		for _, v := range l.librarie.Libraries {
 			v := v
