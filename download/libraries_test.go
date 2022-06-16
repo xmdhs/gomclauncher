@@ -46,7 +46,7 @@ func TestMain(m *testing.M) {
 }
 
 func Test_get(t *testing.T) {
-	err := get(context.Background(), "https://launchermeta.mojang.com/mc/game/version_manifest.json", "test/test/a.json")
+	err := get(context.Background(), "https://piston-meta.mojang.com/mc/game/version_manifest.json", "test/test/a.json")
 	if err != nil {
 		t.Fatal(err)
 		return
@@ -72,7 +72,7 @@ func Test_source(t *testing.T) {
 		{
 			name: "1",
 			args: args{
-				url:   "https://launchermeta.mojang.com/mc/game/version_manifest.json",
+				url:   "https://piston-meta.mojang.com/mc/game/version_manifest.json",
 				types: "mcbbs",
 			},
 			want: "https://download.mcbbs.net/mc/game/version_manifest.json",
@@ -80,18 +80,18 @@ func Test_source(t *testing.T) {
 		{
 			name: "2",
 			args: args{
-				url:   "https://launchermeta.mojang.com/mc/game/version_manifest.json",
+				url:   "https://piston-meta.mojang.com/mc/game/version_manifest.json",
 				types: "vvv",
 			},
-			want: "https://launchermeta.mojang.com/mc/game/version_manifest.json",
+			want: "https://piston-meta.mojang.com/mc/game/version_manifest.json",
 		},
 		{
 			name: "3",
 			args: args{
-				url:   "https://launchermeta.mojang.com/mc/game/version_manifest.json/launchermeta.mojang.com",
+				url:   "https://piston-meta.mojang.com/mc/game/version_manifest.json/piston-meta.mojang.com",
 				types: "mcbbs",
 			},
-			want: "https://download.mcbbs.net/mc/game/version_manifest.json/launchermeta.mojang.com",
+			want: "https://download.mcbbs.net/mc/game/version_manifest.json/piston-meta.mojang.com",
 		},
 	}
 	for _, tt := range tests {

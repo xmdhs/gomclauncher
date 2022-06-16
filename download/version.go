@@ -23,18 +23,18 @@ func Getversionlist(cxt context.Context, atype string, print func(string)) (*ver
 			if i == 3 {
 				return fmt.Errorf("Getversionlist: %w", err)
 			}
-			rep, _, err = Aget(cxt, source(`https://launchermeta.mojang.com/mc/game/version_manifest.json`, f))
+			rep, _, err = Aget(cxt, source(`https://piston-meta.mojang.com/mc/game/version_manifest.json`, f))
 			if rep != nil {
 				defer rep.Body.Close()
 			}
 			if err != nil {
-				print(fmt.Sprint(lang.Lang("getversionlistfail"), fmt.Errorf("Getversionlist: %w", err), source(`https://launchermeta.mojang.com/mc/game/version_manifest.json`, f)))
+				print(fmt.Sprint(lang.Lang("getversionlistfail"), fmt.Errorf("Getversionlist: %w", err), source(`https://piston-meta.mojang.com/mc/game/version_manifest.json`, f)))
 				f = r.fail(f)
 				return nil
 			}
 			b, err = ioutil.ReadAll(rep.Body)
 			if err != nil {
-				print(fmt.Sprint(lang.Lang("getversionlistfail"), fmt.Errorf("Getversionlist: %w", err), source(`https://launchermeta.mojang.com/mc/game/version_manifest.json`, f)))
+				print(fmt.Sprint(lang.Lang("getversionlistfail"), fmt.Errorf("Getversionlist: %w", err), source(`https://piston-meta.mojang.com/mc/game/version_manifest.json`, f)))
 				f = r.fail(f)
 				return nil
 			}
