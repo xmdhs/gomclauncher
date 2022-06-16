@@ -156,6 +156,7 @@ var mirror = map[string]map[string]string{
 	"bmclapi": {
 		`launchermeta.mojang.com`:          `bmclapi2.bangbang93.com`,
 		`piston-meta.mojang.com`:           `bmclapi2.bangbang93.com`,
+		`piston-data.mojang.com`:           `bmclapi2.bangbang93.com`,
 		`launcher.mojang.com`:              `bmclapi2.bangbang93.com`,
 		`resources.download.minecraft.net`: `bmclapi2.bangbang93.com/assets`,
 		`libraries.minecraft.net`:          `bmclapi2.bangbang93.com/maven`,
@@ -165,6 +166,7 @@ var mirror = map[string]map[string]string{
 	"mcbbs": {
 		`launchermeta.mojang.com`:          `download.mcbbs.net`,
 		`piston-meta.mojang.com`:           `download.mcbbs.net`,
+		`piston-data.mojang.com`:           `download.mcbbs.net`,
 		`launcher.mojang.com`:              `download.mcbbs.net`,
 		`resources.download.minecraft.net`: `download.mcbbs.net/assets`,
 		`libraries.minecraft.net`:          `download.mcbbs.net/maven`,
