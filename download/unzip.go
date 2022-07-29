@@ -7,6 +7,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"strings"
 	"sync"
 
 	"github.com/xmdhs/gomclauncher/launcher"
@@ -160,6 +161,7 @@ func deCompress(zipFile, dest string) error {
 		err := func() error {
 			name := file.FileInfo().Name()
 			ext := filepath.Ext(name)
+			ext = strings.ToLower(ext)
 			if _, ok := needSuffix[ext]; ok {
 				rc, err := file.Open()
 				if err != nil {
