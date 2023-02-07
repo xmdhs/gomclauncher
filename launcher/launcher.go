@@ -28,7 +28,6 @@ func newlauncher1155(json LauncherjsonX115) *launcher1155 {
 }
 
 func (l launcher1155) Launcher115() error {
-	fmt.Println(l.flag)
 	var cmd *exec.Cmd
 	if l.JavePath == "" {
 		l.JavePath = "java"
