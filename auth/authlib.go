@@ -53,7 +53,10 @@ func Getauthlibapi(api string) (apiaddress string, err error) {
 		return "", fmt.Errorf("Getauthlibapi: %w", err)
 	}
 	if hurl.Scheme == "" {
-		api = "https://" + reps.Request.URL.Host + "/" + header
+		api, err = url.JoinPath("https://", reps.Request.URL.Host, header)
+		if err != nil {
+			return "", fmt.Errorf("Getauthlibapi: %w", err)
+		}
 	} else {
 		return header, nil
 	}
