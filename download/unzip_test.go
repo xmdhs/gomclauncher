@@ -14,7 +14,7 @@ func TestUnzip(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	l, err := Newlibraries(context.Background(), b, "", func(s string) { fmt.Println(s) }, launcher.Minecraft)
+	l, err := Newlibraries(context.Background(), b, "vanilla", func(s string) { fmt.Println(s) }, launcher.Minecraft)
 	if err != nil {
 		t.Fatal(err)
 	}
