@@ -37,7 +37,7 @@ func Getversionlist(cxt context.Context, atype string, print func(string)) (*ver
 		print(fmt.Sprintf("retry %d: %v", n, err))
 	}))...)
 	if err != nil {
-		return nil, fmt.Errorf("Getversionlist: %w", err)
+		return nil, fmt.Errorf("Getversionlist: %w %w", err, FileDownLoadFail)
 	}
 	v := version{}
 	err = json.Unmarshal(b, &v)
@@ -94,7 +94,7 @@ func (v version) Downjson(cxt context.Context, version, apath string, print func
 				print(fmt.Sprintf("retry %d: %v", n, err))
 			}))...)
 			if err != nil {
-				return fmt.Errorf("Downjson: %w", err)
+				return fmt.Errorf("Downjson: %w %w", err, FileDownLoadFail)
 			}
 			return nil
 		}

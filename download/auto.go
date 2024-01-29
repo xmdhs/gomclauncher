@@ -8,7 +8,6 @@ import (
 
 func (r *randurls) fail(typee string) string {
 	r.typeweightL.Lock()
-	defer r.typeweightL.Unlock()
 
 	if i, ok := r.typeweight[typee]; ok {
 		i--
@@ -17,6 +16,7 @@ func (r *randurls) fail(typee string) string {
 		} else {
 			r.typeweight[typee] = i
 		}
+		r.typeweightL.Unlock()
 		for {
 			lenmap, t := r.auto()
 			if lenmap <= 1 {
@@ -38,6 +38,7 @@ type randurls struct {
 
 func newrandurls(typee string) *randurls {
 	r := &randurls{}
+	r.typeweight = make(map[string]int)
 	if typee == "" {
 		r.typeweight["vanilla"] = 10
 		r.typeweight["bmclapi"] = 20

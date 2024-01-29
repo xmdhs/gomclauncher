@@ -122,7 +122,7 @@ func get(cxt context.Context, u, path string) error {
 	bw := bufio.NewWriter(f)
 	for {
 		timer.Reset(5 * time.Second)
-		i, err := io.CopyN(bw, reps.Body, 10000)
+		i, err := io.CopyN(bw, reps.Body, 50000)
 		if err != nil && err != io.EOF {
 			return fmt.Errorf("get: %w", err)
 		}
@@ -195,7 +195,8 @@ func assetsjson(cxt context.Context, r *randurls, url, path, typee, sha1 string,
 	_, f := r.auto()
 
 	err := retry.Do(func() error {
-		err := get(cxt, source(url, f), path)
+		url := source(url, f)
+		err := get(cxt, url, path)
 		if err != nil {
 			f = r.fail(f)
 			return fmt.Errorf("%v %w %v", lang.Lang("weberr"), err, url)

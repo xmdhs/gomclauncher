@@ -54,6 +54,7 @@ func (l Libraries) Downassets(i int, c chan int) error {
 	if err != nil {
 		return fmt.Errorf("Downassets: %w", err)
 	}
+	close(c)
 	return nil
 }
 
@@ -123,6 +124,7 @@ func (l Libraries) Downlibrarie(i int, c chan int) error {
 	if err != nil {
 		return fmt.Errorf("Downlibrarie: %w", err)
 	}
+	close(c)
 	return nil
 }
 
@@ -134,22 +136,24 @@ func (l Libraries) Downjar(version string) error {
 		return nil
 	}
 	_, t := l.auto()
-	for i := 0; i < 4; i++ {
-		if i == 3 {
-			return FileDownLoadFail
-		}
-		err := get(l.cxt, source(l.librarie.Downloads.Client.URL, t), path)
+
+	err := retry.Do(func() error {
+		u := source(l.librarie.Downloads.Client.URL, t)
+		err := get(l.cxt, u, path)
 		if err != nil {
-			l.print(lang.Lang("weberr") + " " + source(l.librarie.Downloads.Client.URL, t) + " " + fmt.Errorf("Downjar: %w", err).Error())
 			t = l.fail(t)
-			continue
+			return fmt.Errorf("%v %w %v", lang.Lang("weberr"), err, u)
 		}
 		if !ver(path, l.librarie.Downloads.Client.Sha1) {
-			l.print(lang.Lang("filecheckerr") + " " + source(l.librarie.Downloads.Client.URL, t))
 			t = l.fail(t)
-			continue
+			return fmt.Errorf("%v %v", lang.Lang("filecheckerr"), u)
 		}
-		break
+		return nil
+	}, append(retryOpts, retry.OnRetry(func(n uint, err error) {
+		l.print(fmt.Sprintf("retry %d: %v", n, err))
+	}))...)
+	if err != nil {
+		return fmt.Errorf("Downjar: %w %w", err, FileDownLoadFail)
 	}
 	return nil
 }
@@ -178,7 +182,7 @@ func (d downinfo) down(ctx context.Context) error {
 		}
 		return nil
 	}, append(retryOpts, retry.OnRetry(func(n uint, err error) {
-		print(fmt.Sprintf("retry %d: %v", n, err))
+		print(fmt.Sprintf("retry %d: %v\n", n, err))
 	}))...)
 	if err != nil {
 		return errors.Join(err, FileDownLoadFail)
