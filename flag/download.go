@@ -39,7 +39,7 @@ func NewFlag() *Flag {
 	}
 }
 
-func (f Flag) D() {
+func (f *Flag) D() {
 	cxt := context.TODO()
 	l, err := download.Getversionlist(cxt, f.Atype, func(s string) { fmt.Println(s) })
 	errr(err)
@@ -93,7 +93,7 @@ func (f Flag) D() {
 	fmt.Println(lang.Lang("finish"))
 }
 
-func (f Flag) dd(down func(i int, c chan int) error) {
+func (f *Flag) dd(down func(i int, c chan int) error) {
 	ch := make(chan int, 5)
 	e := make(chan error)
 	var err error

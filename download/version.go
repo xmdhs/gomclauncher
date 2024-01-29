@@ -5,47 +5,39 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
-	"net/http"
+	"io"
 	"strings"
 
+	"github.com/avast/retry-go/v4"
 	"github.com/xmdhs/gomclauncher/lang"
 )
 
 func Getversionlist(cxt context.Context, atype string, print func(string)) (*version, error) {
-	var rep *http.Response
-	var err error
 	var b []byte
 	r := newrandurls(atype)
 	_, f := r.auto()
-	for i := 0; i < 4; i++ {
-		if err := func() error {
-			if i == 3 {
-				return fmt.Errorf("Getversionlist: %w", err)
-			}
-			rep, _, err = Aget(cxt, source(`https://piston-meta.mojang.com/mc/game/version_manifest.json`, f))
-			if rep != nil {
-				defer rep.Body.Close()
-			}
-			if err != nil {
-				print(fmt.Sprint(lang.Lang("getversionlistfail"), fmt.Errorf("Getversionlist: %w", err), source(`https://piston-meta.mojang.com/mc/game/version_manifest.json`, f)))
-				f = r.fail(f)
-				return nil
-			}
-			b, err = ioutil.ReadAll(rep.Body)
-			if err != nil {
-				print(fmt.Sprint(lang.Lang("getversionlistfail"), fmt.Errorf("Getversionlist: %w", err), source(`https://piston-meta.mojang.com/mc/game/version_manifest.json`, f)))
-				f = r.fail(f)
-				return nil
-			}
-			return errors.New("")
-		}(); err != nil {
-			if err.Error() == "" {
-				break
-			} else {
-				return nil, fmt.Errorf("Getversionlist: %w", err)
-			}
+
+	err := retry.Do(func() error {
+		url := source(`https://piston-meta.mojang.com/mc/game/version_manifest.json`, f)
+		rep, _, err := Aget(cxt, url)
+		if rep != nil {
+			defer rep.Body.Close()
 		}
+		if err != nil {
+			f = r.fail(f)
+			return fmt.Errorf("%v %w %v", lang.Lang("getversionlistfail"), err, url)
+		}
+		b, err = io.ReadAll(rep.Body)
+		if err != nil {
+			f = r.fail(f)
+			return fmt.Errorf("%v %w %v", lang.Lang("getversionlistfail"), err, url)
+		}
+		return nil
+	}, append(retryOpts, retry.OnRetry(func(n uint, err error) {
+		print(fmt.Sprintf("retry %d: %v", n, err))
+	}))...)
+	if err != nil {
+		return nil, fmt.Errorf("Getversionlist: %w", err)
 	}
 	v := version{}
 	err = json.Unmarshal(b, &v)
@@ -85,22 +77,24 @@ func (v version) Downjson(cxt context.Context, version, apath string, print func
 			if ver(path, s[len(s)-2]) {
 				return nil
 			}
-			for i := 0; i < 4; i++ {
-				if i == 3 {
-					return FileDownLoadFail
-				}
-				err := get(cxt, source(vv.URL, f), path)
+
+			err := retry.Do(func() error {
+				url := source(vv.URL, f)
+				err := get(cxt, url, path)
 				if err != nil {
-					print(fmt.Sprint(lang.Lang("weberr"), source(vv.URL, f), fmt.Errorf("Downjson: %w", err)))
 					f = r.fail(f)
-					continue
+					return fmt.Errorf("%v %v %w", lang.Lang("weberr"), url, err)
 				}
 				if !ver(path, s[len(s)-2]) {
-					print(fmt.Sprint(lang.Lang("filecheckerr"), source(vv.URL, f)))
 					f = r.fail(f)
-					continue
+					return fmt.Errorf("%v %v", lang.Lang("filecheckerr"), url)
 				}
-				break
+				return nil
+			}, append(retryOpts, retry.OnRetry(func(n uint, err error) {
+				print(fmt.Sprintf("retry %d: %v", n, err))
+			}))...)
+			if err != nil {
+				return fmt.Errorf("Downjson: %w", err)
 			}
 			return nil
 		}

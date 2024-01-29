@@ -11,65 +11,50 @@ import (
 	"io"
 	"os"
 	"strings"
+	"sync/atomic"
 
+	"github.com/avast/retry-go/v4"
 	"github.com/xmdhs/gomclauncher/lang"
 	"github.com/xmdhs/gomclauncher/launcher"
+	"golang.org/x/sync/errgroup"
 )
 
 func (l Libraries) Downassets(i int, c chan int) error {
 	if len(l.assetIndex.Objects) == 0 {
 		return nil
 	}
-	e, done, ch := creatch(len(l.assetIndex.Objects), i)
-	cxt, cancel := context.WithCancel(l.cxt)
-	defer cancel()
-	go func() {
-		for _, v := range l.assetIndex.Objects {
-			v := v
+	g, ectx := errgroup.WithContext(l.cxt)
+	g.SetLimit(i)
+
+	n := atomic.Uint64{}
+
+	for _, v := range l.assetIndex.Objects {
+		v := v
+		g.Go(func() error {
 			ok := ver(l.path+`/assets/objects/`+v.Hash[:2]+`/`+v.Hash, v.Hash)
 			if !ok {
 				d := downinfo{
 					url:      `https://resources.download.minecraft.net/` + v.Hash[:2] + `/` + v.Hash,
 					path:     l.path + `/assets/objects/` + v.Hash[:2] + `/` + v.Hash,
-					e:        e,
 					Sha1:     v.Hash,
-					done:     done,
-					ch:       ch,
-					cxt:      cxt,
 					randurls: l.randurls,
 					print:    l.print,
 				}
-				select {
-				case ch <- struct{}{}:
-					go d.down()
-				case <-cxt.Done():
-					return
+				if err := d.down(ectx); err != nil {
+					return err
 				}
+				c <- len(l.assetIndex.Objects) - int(n.Add(1))
 			} else {
-				select {
-				case done <- struct{}{}:
-				case <-cxt.Done():
-					return
-				}
+				c <- len(l.assetIndex.Objects) - int(n.Add(1))
 			}
-		}
-	}()
-	n := 0
-	for {
-		select {
-		case <-done:
-			n++
-			c <- len(l.assetIndex.Objects) - n
-			if n == len(l.assetIndex.Objects) {
-				close(c)
-				return nil
-			}
-		case err := <-e:
-			return fmt.Errorf("Downassets: %w", err)
-		case <-cxt.Done():
-			return cxt.Err()
-		}
+			return nil
+		})
 	}
+	err := g.Wait()
+	if err != nil {
+		return fmt.Errorf("Downassets: %w", err)
+	}
+	return nil
 }
 
 func ver(path, ahash string) bool {
@@ -100,73 +85,45 @@ func (l Libraries) Downlibrarie(i int, c chan int) error {
 	if len(l.librarie.Libraries) == 0 {
 		return nil
 	}
-	e, done, ch := creatch(len(l.librarie.Libraries), i)
-	cxt, cancel := context.WithCancel(l.cxt)
-	defer cancel()
+	g, ctx := errgroup.WithContext(l.cxt)
+	g.SetLimit(i)
+	n := atomic.Uint64{}
 
-	go func() {
-		for _, v := range l.librarie.Libraries {
-			v := v
-			if !launcher.Ifallow(v) {
-				select {
-				case done <- struct{}{}:
-				case <-cxt.Done():
-					return
-				}
-				continue
-			}
-			path := l.path + `/libraries/` + v.Downloads.Artifact.Path
-			if v.Downloads.Artifact.URL == "" {
-				select {
-				case done <- struct{}{}:
-				case <-cxt.Done():
-					return
-				}
-				continue
-			}
+	for _, v := range l.librarie.Libraries {
+		v := v
+		if !launcher.Ifallow(v) {
+			c <- len(l.librarie.Libraries) - int(n.Add(1))
+			continue
+		}
+		path := l.path + `/libraries/` + v.Downloads.Artifact.Path
+		if v.Downloads.Artifact.URL == "" {
+			c <- len(l.librarie.Libraries) - int(n.Add(1))
+			continue
+		}
+		g.Go(func() error {
 			if !ver(path, v.Downloads.Artifact.Sha1) {
 				d := downinfo{
 					print:    l.print,
 					url:      v.Downloads.Artifact.URL,
 					path:     path,
-					e:        e,
 					Sha1:     v.Downloads.Artifact.Sha1,
-					done:     done,
-					ch:       ch,
-					cxt:      cxt,
 					randurls: l.randurls,
 				}
-				select {
-				case ch <- struct{}{}:
-					go d.down()
-				case <-cxt.Done():
-					return
+				if err := d.down(ctx); err != nil {
+					return err
 				}
+				c <- len(l.librarie.Libraries) - int(n.Add(1))
 			} else {
-				select {
-				case done <- struct{}{}:
-				case <-cxt.Done():
-					return
-				}
+				c <- len(l.librarie.Libraries) - int(n.Add(1))
 			}
-		}
-	}()
-	n := 0
-	for {
-		select {
-		case <-done:
-			n++
-			c <- len(l.librarie.Libraries) - n
-			if n == len(l.librarie.Libraries) {
-				close(c)
-				return nil
-			}
-		case err := <-e:
-			return fmt.Errorf("Downlibrarie: %w", err)
-		case <-cxt.Done():
-			return cxt.Err()
-		}
+			return nil
+		})
 	}
+	err := g.Wait()
+	if err != nil {
+		return fmt.Errorf("Downlibrarie: %w", err)
+	}
+	return nil
 }
 
 var FileDownLoadFail = errors.New("file download fail")
@@ -200,51 +157,37 @@ func (l Libraries) Downjar(version string) error {
 type downinfo struct {
 	url   string
 	path  string
-	e     chan error
 	Sha1  string
-	done  chan struct{}
-	ch    chan struct{}
 	print func(string)
-	cxt   context.Context
 	*randurls
 }
 
-func (d downinfo) down() {
+func (d downinfo) down(ctx context.Context) error {
 	_, f := d.auto()
-	for i := 0; i < 7; i++ {
-		if i == 6 {
-			select {
-			case d.e <- FileDownLoadFail:
-			case <-d.cxt.Done():
-			}
-			break
-		}
-		err := get(d.cxt, source(d.url, f), d.path)
+
+	err := retry.Do(func() error {
+		url := source(d.url, f)
+		err := get(ctx, url, d.path)
 		if err != nil {
-			d.print(lang.Lang("weberr") + " " + source(d.url, f) + " " + err.Error())
 			f = d.fail(f)
-			continue
+			return fmt.Errorf(lang.Lang("weberr")+" "+url+" %w", err)
 		}
 		if !ver(d.path, d.Sha1) {
-			d.print(lang.Lang("filecheckerr") + " " + source(d.url, f))
 			f = d.fail(f)
-			continue
+			return fmt.Errorf(lang.Lang("filecheckerr") + " " + url)
 		}
-		select {
-		case d.done <- struct{}{}:
-			<-d.ch
-			d.add(f)
-		case <-d.cxt.Done():
-			return
-		}
-		break
+		return nil
+	}, append(retryOpts, retry.OnRetry(func(n uint, err error) {
+		print(fmt.Sprintf("retry %d: %v", n, err))
+	}))...)
+	if err != nil {
+		return errors.Join(err, FileDownLoadFail)
 	}
-
+	d.add(f)
+	return nil
 }
 
-func creatch(a, i int) (e chan error, done, ch chan struct{}) {
-	e = make(chan error, a)
-	done = make(chan struct{}, a)
-	ch = make(chan struct{}, i)
-	return
+var retryOpts = []retry.Option{
+	retry.Attempts(8),
+	retry.LastErrorOnly(true),
 }

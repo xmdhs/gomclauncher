@@ -3,41 +3,44 @@ package download
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"math/rand"
 	"time"
 
+	"github.com/avast/retry-go/v4"
 	"github.com/xmdhs/gomclauncher/lang"
 )
 
 func Downauthlib(cxt context.Context, print func(string)) (err error) {
 	var path = ".minecraft/libraries/moe/yushi/authlibinjector/authlib-injector/authlib-injector.jar"
 	url := ""
-	for i := 0; i < 8; i++ {
+
+	err = retry.Do(func() error {
 		url = randAuthlibUrls(url)
 		var d, h string
 		d, h, err = getAuthlibLatestUrl(cxt, url)
 		if err != nil {
-			print(lang.Lang("authlibdownloadfail") + " " + fmt.Errorf("Downauthlib: %w", err).Error() + " " + url)
-			continue
+			return fmt.Errorf("%v %w %v", lang.Lang("authlibdownloadfail"), err, url)
 		}
 		if ver(path, h) {
 			return nil
 		}
 		err = get(cxt, d, path)
 		if err != nil {
-			print(lang.Lang("authlibdownloadfail") + " " + fmt.Errorf("Downauthlib: %w", err).Error() + " " + url)
-			continue
+			return fmt.Errorf("%v %w %v", lang.Lang("authlibdownloadfail"), err, url)
 		}
 		if !ver(path, h) {
-			print(lang.Lang("authlibcheckerr") + " " + url)
-			continue
+			return fmt.Errorf("%v %v", lang.Lang("authlibcheckerr"), url)
 		}
-		break
-	}
+		return nil
+	}, append(retryOpts, retry.OnRetry(func(n uint, err error) {
+		print(fmt.Sprintf("retry %d: %v", n, err))
+	}))...)
+
 	if err != nil {
-		return fmt.Errorf("Downauthlib: %w", FileDownLoadFail)
+		return fmt.Errorf("Downauthlib: %w", errors.Join(err, FileDownLoadFail))
 	}
 	return nil
 }

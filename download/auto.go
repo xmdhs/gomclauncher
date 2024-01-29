@@ -4,17 +4,18 @@ import (
 	"math/rand"
 	"strings"
 	"sync"
-	"time"
 )
 
 func (r *randurls) fail(typee string) string {
-	if v, ok := r.typeweight.Load(typee); ok {
-		i := v.(int)
+	r.typeweightL.Lock()
+	defer r.typeweightL.Unlock()
+
+	if i, ok := r.typeweight[typee]; ok {
 		i--
 		if i <= 0 {
-			r.typeweight.Store(typee, 0)
+			r.typeweight[typee] = 0
 		} else {
-			r.typeweight.Store(typee, i)
+			r.typeweight[typee] = i
 		}
 		for {
 			lenmap, t := r.auto()
@@ -29,70 +30,58 @@ func (r *randurls) fail(typee string) string {
 	return typee
 }
 
-type arand struct {
-	*rand.Rand
-	*sync.Mutex
-}
-
 type randurls struct {
-	typeweight sync.Map
-	arand
-	atype string
+	typeweight  map[string]int
+	typeweightL *sync.RWMutex
+	atype       string
 }
 
 func newrandurls(typee string) *randurls {
 	r := &randurls{}
 	if typee == "" {
-		r.typeweight.Store("vanilla", 10)
-		r.typeweight.Store("bmclapi", 12)
-		r.typeweight.Store("mcbbs", 18)
+		r.typeweight["vanilla"] = 10
+		r.typeweight["bmclapi"] = 20
+		r.typeweight["mcbbs"] = 20
 	} else {
 		s := strings.Split(typee, "|")
 		for _, v := range s {
-			r.typeweight.Store(v, 5)
+			r.typeweight[v] = 20
 		}
 	}
-	r.Rand = rand.New(rand.NewSource(time.Now().Unix()))
-	r.Mutex = &sync.Mutex{}
+	r.typeweightL = &sync.RWMutex{}
 	r.atype = typee
 	return r
 }
 
 func (r *randurls) auto() (int, string) {
+	r.typeweightL.RLock()
+	defer r.typeweightL.RUnlock()
+
 	if r.atype != "" && !strings.Contains(r.atype, "|") {
 		return 1, r.atype
 	}
+
 	i := 0
-	lenmap := 0
-	typemap := make(map[string]int)
-	r.typeweight.Range(
-		func(k, v interface{}) bool {
-			if v.(int) > 0 {
-				lenmap++
-				typemap[k.(string)] = v.(int)
-				i += v.(int)
-			}
-			return true
-		})
-	if lenmap == 0 {
-		return 0, ""
+	for _, v := range r.typeweight {
+		i += v
 	}
-	r.Lock()
-	a := r.Intn(i) + 1
-	r.Unlock()
-	for k, v := range typemap {
+
+	a := rand.Intn(i) + 1
+	for k, v := range r.typeweight {
 		a = a - v
 		if a <= 0 {
-			return lenmap, k
+			return len(r.typeweight), k
 		}
 	}
 	panic(a)
 }
 
 func (r *randurls) add(typee string) {
-	if v, ok := r.typeweight.Load(typee); ok {
-		i := v.(int)
+	r.typeweightL.Lock()
+	defer r.typeweightL.Unlock()
+
+	if i, ok := r.typeweight[typee]; ok {
 		i++
-		r.typeweight.Store(typee, i)
+		r.typeweight[typee] = i
 	}
 }

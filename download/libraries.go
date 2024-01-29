@@ -6,13 +6,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
 	"time"
 
+	"github.com/avast/retry-go/v4"
 	"github.com/xmdhs/gomclauncher/auth"
 	"github.com/xmdhs/gomclauncher/internal"
 	"github.com/xmdhs/gomclauncher/lang"
@@ -39,7 +39,7 @@ func Newlibraries(cxt context.Context, b []byte, typee string, print func(string
 		return Libraries{}, fmt.Errorf("Newlibraries: %w", err)
 	}
 	if mod.InheritsFrom != "" {
-		b, err := ioutil.ReadFile(apath + `/versions/` + mod.InheritsFrom + "/" + mod.InheritsFrom + ".json")
+		b, err := os.ReadFile(apath + `/versions/` + mod.InheritsFrom + "/" + mod.InheritsFrom + ".json")
 		if err != nil {
 			return Libraries{}, fmt.Errorf("Newlibraries: %w", err)
 		}
@@ -67,7 +67,7 @@ func Newlibraries(cxt context.Context, b []byte, typee string, print func(string
 			return Libraries{}, fmt.Errorf("Newlibraries: %w", err)
 		}
 	}
-	bb, err := ioutil.ReadFile(path)
+	bb, err := os.ReadFile(path)
 	if err != nil {
 		return Libraries{}, fmt.Errorf("Newlibraries: %w", err)
 	}
@@ -122,7 +122,7 @@ func get(cxt context.Context, u, path string) error {
 	bw := bufio.NewWriter(f)
 	for {
 		timer.Reset(5 * time.Second)
-		i, err := io.CopyN(bw, reps.Body, 100000)
+		i, err := io.CopyN(bw, reps.Body, 10000)
 		if err != nil && err != io.EOF {
 			return fmt.Errorf("get: %w", err)
 		}
@@ -192,25 +192,24 @@ func Aget(cxt context.Context, aurl string) (*http.Response, *time.Timer, error)
 }
 
 func assetsjson(cxt context.Context, r *randurls, url, path, typee, sha1 string, print func(string)) error {
-	var err error
 	_, f := r.auto()
-	for i := 0; i < 4; i++ {
-		if i == 3 {
-			return err
-		}
-		err = get(cxt, source(url, f), path)
+
+	err := retry.Do(func() error {
+		err := get(cxt, source(url, f), path)
 		if err != nil {
 			f = r.fail(f)
-			print(lang.Lang("weberr") + " " + fmt.Errorf("assetsjson: %w", err).Error() + " " + url)
-			continue
+			return fmt.Errorf("%v %w %v", lang.Lang("weberr"), err, url)
 		}
 		if !ver(path, sha1) {
 			f = r.fail(f)
-			err = ErrFileChecker
-			print(lang.Lang("filecheckerr") + " " + url)
-			continue
+			return fmt.Errorf("%v %w %v", lang.Lang("filecheckerr"), ErrFileChecker, url)
 		}
-		break
+		return nil
+	}, append(retryOpts, retry.OnRetry(func(n uint, err error) {
+		print(fmt.Sprintf("retry %d: %v", n, err))
+	}))...)
+	if err != nil {
+		return fmt.Errorf("assetsjson: %w", err)
 	}
 	return nil
 }

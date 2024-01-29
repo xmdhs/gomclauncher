@@ -2,93 +2,55 @@ package download
 
 import (
 	"archive/zip"
-	"context"
 	"fmt"
 	"io"
 	"os"
 	"path/filepath"
 	"strings"
-	"sync"
 
 	"github.com/xmdhs/gomclauncher/launcher"
+	"golang.org/x/sync/errgroup"
 )
 
 func (l Libraries) Unzip(i int) error {
-	e, done, ch := creatch(len(l.librarie.Libraries), i)
 	natives := make([]string, 0)
-	m := sync.Mutex{}
-	cxt, cancel := context.WithCancel(l.cxt)
-	defer cancel()
-	go func() {
-		for _, v := range l.librarie.Libraries {
-			v := v
-			path, sha1, url := swichnatives(v)
-			if url == "" {
-				select {
-				case done <- struct{}{}:
-				case <-cxt.Done():
-					return
-				}
-				continue
-			}
-			path = l.path + `/libraries/` + path
-			allow := launcher.Ifallow(v)
-			if allow {
-				m.Lock()
-				natives = append(natives, path)
-				m.Unlock()
-			}
-			if allow && !ver(path, sha1) {
-				d := downinfo{
-					url:      url,
-					path:     path,
-					e:        e,
-					Sha1:     sha1,
-					done:     done,
-					ch:       ch,
-					cxt:      cxt,
-					randurls: l.randurls,
-					print:    l.print,
-				}
-				select {
-				case ch <- struct{}{}:
-					go d.down()
-				case <-cxt.Done():
-					return
-				}
-			} else {
-				select {
-				case done <- struct{}{}:
-				case <-cxt.Done():
-					return
-				}
-			}
 
+	g, ctx := errgroup.WithContext(l.cxt)
+	g.SetLimit(i)
+
+	for _, v := range l.librarie.Libraries {
+		v := v
+		path, sha1, url := swichnatives(v)
+		if url == "" {
+			continue
 		}
-	}()
-	n := 0
-	for {
-		select {
-		case <-done:
-			n++
-			if n == len(l.librarie.Libraries) {
-				m.Lock()
-				defer m.Unlock()
-				return l.unzipnative(natives)
+		path = l.path + `/libraries/` + path
+		allow := launcher.Ifallow(v)
+		if allow {
+			natives = append(natives, path)
+		}
+		g.Go(func() error {
+			d := downinfo{
+				url:      url,
+				path:     path,
+				Sha1:     sha1,
+				randurls: l.randurls,
+				print:    l.print,
 			}
-		case err := <-e:
-			return fmt.Errorf("Unzip: %w", err)
-		case <-cxt.Done():
-			return cxt.Err()
-		}
+			return d.down(ctx)
+		})
 	}
+	err := g.Wait()
+	if err != nil {
+		return fmt.Errorf("Downassets: %w", err)
+	}
+	return l.unzipnative(natives)
 }
 
 func (l Libraries) unzipnative(n []string) error {
-	e := make(chan error, len(n))
-	done := make(chan bool, len(n))
-	cxt, cancel := context.WithCancel(l.cxt)
-	defer cancel()
+	if len(n) == 0 {
+		return nil
+	}
 	p := l.path + `/versions/` + l.librarie.ID + `/natives/`
 	err := os.RemoveAll(p)
 	if err != nil {
@@ -99,47 +61,16 @@ func (l Libraries) unzipnative(n []string) error {
 		return fmt.Errorf("unzipnative: %w", err)
 	}
 
-	if len(n) == 0 {
-		return nil
+	g, _ := errgroup.WithContext(l.cxt)
+	g.SetLimit(8)
+
+	for _, v := range n {
+		v := v
+		g.Go(func() error {
+			return deCompress(v, p)
+		})
 	}
-	go func() {
-		for _, v := range n {
-			v := v
-			select {
-			case <-cxt.Done():
-				return
-			default:
-				go func() {
-					err := deCompress(v, p)
-					if err != nil {
-						select {
-						case e <- err:
-						case <-cxt.Done():
-						}
-						return
-					}
-					select {
-					case done <- true:
-					case <-cxt.Done():
-					}
-				}()
-			}
-		}
-	}()
-	i := 0
-	for {
-		select {
-		case <-done:
-			i++
-			if i == len(n) {
-				return nil
-			}
-		case err := <-e:
-			return fmt.Errorf("unzipnative: %w", err)
-		case <-cxt.Done():
-			return cxt.Err()
-		}
-	}
+	return g.Wait()
 }
 
 var needSuffix = map[string]struct{}{
