@@ -55,8 +55,11 @@ func (l Libraries) unzipnative(n []string) error {
 	if len(n) == 0 {
 		return nil
 	}
-	p := l.path + `/versions/` + l.librarie.ID + `/natives/`
-	err := os.RemoveAll(p)
+	p, err := internal.SafePathJoin(l.path, `/versions/`, l.librarie.ID, `/natives/`)
+	if err != nil {
+		return fmt.Errorf("unzipnative: %w", err)
+	}
+	err = os.RemoveAll(p)
 	if err != nil {
 		return fmt.Errorf("unzipnative: %w", err)
 	}

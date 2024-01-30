@@ -104,12 +104,12 @@ type asset struct {
 
 func get(cxt context.Context, u, path string) error {
 	reps, timer, err := Aget(cxt, u)
-	if reps != nil {
-		defer reps.Body.Close()
-	}
 	if err != nil {
 		return fmt.Errorf("get: %w", err)
 	}
+	defer reps.Body.Close()
+	defer timer.Stop()
+
 	if reps.StatusCode != 200 {
 		return fmt.Errorf("get: %w", &ErrHTTPCode{code: reps.StatusCode})
 	}
@@ -129,7 +129,7 @@ func get(cxt context.Context, u, path string) error {
 	bw := bufio.NewWriter(f)
 	for {
 		timer.Reset(5 * time.Second)
-		i, err := io.CopyN(bw, reps.Body, 50000)
+		i, err := io.CopyN(bw, reps.Body, 100000)
 		if err != nil && err != io.EOF {
 			return fmt.Errorf("get: %w", err)
 		}
