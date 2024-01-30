@@ -19,16 +19,16 @@ func (r *randurls) fail(typee string) string {
 		r.typeweightL.Unlock()
 		for {
 			lenmap, t := r.auto()
-			if lenmap <= 1 {
-				break
-			}
 			if t != typee {
 				return t
+			}
+			if lenmap <= 1 {
+				break
 			}
 		}
 	} else {
 		r.typeweightL.Unlock()
-        }
+	}
 	return typee
 }
 
@@ -65,15 +65,19 @@ func (r *randurls) auto() (int, string) {
 	}
 
 	i := 0
+	lenMap := 0
 	for _, v := range r.typeweight {
 		i += v
+		if v > 0 {
+			lenMap++
+		}
 	}
 
 	a := rand.Intn(i) + 1
 	for k, v := range r.typeweight {
 		a = a - v
 		if a <= 0 {
-			return len(r.typeweight), k
+			return lenMap, k
 		}
 	}
 	panic(a)
