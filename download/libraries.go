@@ -39,7 +39,11 @@ func Newlibraries(cxt context.Context, b []byte, typee string, print func(string
 		return Libraries{}, fmt.Errorf("Newlibraries: %w", err)
 	}
 	if mod.InheritsFrom != "" {
-		b, err := os.ReadFile(apath + `/versions/` + mod.InheritsFrom + "/" + mod.InheritsFrom + ".json")
+		npath, err := internal.SafePathJoin(apath, `/versions/`, mod.InheritsFrom, mod.InheritsFrom+".json")
+		if err != nil {
+			return Libraries{}, fmt.Errorf("Newlibraries: %w", err)
+		}
+		b, err := os.ReadFile(npath)
 		if err != nil {
 			return Libraries{}, fmt.Errorf("Newlibraries: %w", err)
 		}
@@ -60,7 +64,10 @@ func Newlibraries(cxt context.Context, b []byte, typee string, print func(string
 	}
 	url = l.AssetIndex.URL
 	id = l.AssetIndex.ID
-	path := apath + "/assets/indexes/" + id + ".json"
+	path, err := internal.SafePathJoin(apath, "/assets/indexes/", id+".json")
+	if err != nil {
+		return Libraries{}, fmt.Errorf("Newlibraries: %w", err)
+	}
 	if !ver(path, l.AssetIndex.Sha1) {
 		err := assetsjson(cxt, r, url, path, typee, l.AssetIndex.Sha1, print)
 		if err != nil {

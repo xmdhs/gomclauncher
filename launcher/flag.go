@@ -6,7 +6,6 @@ import (
 	"errors"
 	"fmt"
 	"io/fs"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -140,6 +139,7 @@ func creatlauncherprofiles(g *Gameinfo) error {
 	return nil
 }
 
+//lint:ignore ST1012 导出字段
 var JsonErr = errors.New("json err")
 
 func (g *Gameinfo) modjson() (*launcher1155, error) {
@@ -153,7 +153,7 @@ func (g *Gameinfo) modjson() (*launcher1155, error) {
 	}
 	g.inheritsFrom = mod.InheritsFrom
 	if mod.InheritsFrom != "" {
-		b, err := ioutil.ReadFile(g.Minecraftpath + `/versions/` + mod.InheritsFrom + "/" + mod.InheritsFrom + ".json")
+		b, err := os.ReadFile(g.Minecraftpath + `/versions/` + mod.InheritsFrom + "/" + mod.InheritsFrom + ".json")
 		if err != nil {
 			return nil, fmt.Errorf("gameinfo.modjson: %w", err)
 		}

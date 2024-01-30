@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/avast/retry-go/v4"
+	"github.com/xmdhs/gomclauncher/internal"
 	"github.com/xmdhs/gomclauncher/lang"
 )
 
@@ -73,12 +74,15 @@ func (v version) Downjson(cxt context.Context, version, apath string, print func
 	for _, vv := range v.Versions {
 		if vv.ID == version {
 			s := strings.Split(vv.URL, "/")
-			path := apath + `/versions/` + vv.ID + `/` + vv.ID + `.json`
+			path, err := internal.SafePathJoin(apath, `/versions/`, vv.ID, vv.ID+".json")
+			if err != nil {
+				return fmt.Errorf("Downjson: %w", err)
+			}
 			if ver(path, s[len(s)-2]) {
 				return nil
 			}
 
-			err := retry.Do(func() error {
+			err = retry.Do(func() error {
 				url := source(vv.URL, f)
 				err := get(cxt, url, path)
 				if err != nil {

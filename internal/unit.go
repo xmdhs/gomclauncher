@@ -2,9 +2,12 @@ package internal
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net/http"
+	"path/filepath"
 	"runtime"
+	"strings"
 	"time"
 )
 
@@ -42,4 +45,18 @@ func HttpGet(cxt context.Context, aurl string, t *http.Transport, header http.He
 		return reps, nil, fmt.Errorf("HttpGet: %w", err)
 	}
 	return reps, timer, nil
+}
+
+var ErrPathNotInBase = errors.New("path not in base")
+
+func SafePathJoin(base string, path ...string) (string, error) {
+	p := filepath.Join(append([]string{base}, path...)...)
+	a, err := filepath.Rel(base, p)
+	if err != nil {
+		return "", fmt.Errorf("SafePathJoin: %w", err)
+	}
+	if strings.HasPrefix(a, ".") {
+		return "", ErrPathNotInBase
+	}
+	return p, nil
 }

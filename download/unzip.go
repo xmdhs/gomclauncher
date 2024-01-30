@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/xmdhs/gomclauncher/internal"
 	"github.com/xmdhs/gomclauncher/launcher"
 	"golang.org/x/sync/errgroup"
 )
@@ -24,7 +25,10 @@ func (l Libraries) Unzip(i int) error {
 		if url == "" {
 			continue
 		}
-		path = l.path + `/libraries/` + path
+		path, err := internal.SafePathJoin(l.path, `/libraries/`, path)
+		if err != nil {
+			return fmt.Errorf("Unzip: %w", err)
+		}
 		allow := launcher.Ifallow(v)
 		if allow {
 			natives = append(natives, path)
@@ -42,7 +46,7 @@ func (l Libraries) Unzip(i int) error {
 	}
 	err := g.Wait()
 	if err != nil {
-		return fmt.Errorf("Downassets: %w", err)
+		return fmt.Errorf("Unzip: %w", err)
 	}
 	return l.unzipnative(natives)
 }

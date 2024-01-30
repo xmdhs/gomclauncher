@@ -14,6 +14,7 @@ import (
 	"sync/atomic"
 
 	"github.com/avast/retry-go/v4"
+	"github.com/xmdhs/gomclauncher/internal"
 	"github.com/xmdhs/gomclauncher/lang"
 	"github.com/xmdhs/gomclauncher/launcher"
 	"golang.org/x/sync/errgroup"
@@ -33,9 +34,13 @@ func (l Libraries) Downassets(i int, c chan int) error {
 		g.Go(func() error {
 			ok := ver(l.path+`/assets/objects/`+v.Hash[:2]+`/`+v.Hash, v.Hash)
 			if !ok {
+				path, err := internal.SafePathJoin(l.path, `/assets/objects/`, v.Hash[:2], v.Hash)
+				if err != nil {
+					return err
+				}
 				d := downinfo{
 					url:      `https://resources.download.minecraft.net/` + v.Hash[:2] + `/` + v.Hash,
-					path:     l.path + `/assets/objects/` + v.Hash[:2] + `/` + v.Hash,
+					path:     path,
 					Sha1:     v.Hash,
 					randurls: l.randurls,
 					print:    l.print,
@@ -94,7 +99,10 @@ func (l Libraries) Downlibrarie(i int, c chan int) error {
 			c <- len(l.librarie.Libraries) - int(n.Add(1))
 			continue
 		}
-		path := l.path + `/libraries/` + v.Downloads.Artifact.Path
+		path, err := internal.SafePathJoin(l.path, `/libraries/`, v.Downloads.Artifact.Path)
+		if err != nil {
+			return fmt.Errorf("Downlibrarie: %w", err)
+		}
 		if v.Downloads.Artifact.URL == "" {
 			c <- len(l.librarie.Libraries) - int(n.Add(1))
 			continue
@@ -128,13 +136,16 @@ func (l Libraries) Downlibrarie(i int, c chan int) error {
 var FileDownLoadFail = errors.New("file download fail")
 
 func (l Libraries) Downjar(version string) error {
-	path := l.path + `/versions/` + version + "/" + version + ".jar"
+	path, err := internal.SafePathJoin(l.path, `/versions/`, version, version+".jar")
+	if err != nil {
+		return fmt.Errorf("Downjar: %w %w", err, FileDownLoadFail)
+	}
 	if ver(path, l.librarie.Downloads.Client.Sha1) {
 		return nil
 	}
 	_, t := l.auto()
 
-	err := retry.Do(func() error {
+	err = retry.Do(func() error {
 		u := source(l.librarie.Downloads.Client.URL, t)
 		err := get(l.cxt, u, path)
 		if err != nil {

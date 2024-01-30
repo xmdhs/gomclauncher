@@ -7,11 +7,13 @@ import (
 	"fmt"
 	"io"
 	"io/fs"
-	"io/ioutil"
 	"os"
+	"path/filepath"
 	"runtime"
 	"strings"
-	"sync"
+
+	"github.com/xmdhs/gomclauncher/internal"
+	"golang.org/x/sync/errgroup"
 )
 
 func (g *Gameinfo) argumentsjvm(l *launcher1155) error {
@@ -33,6 +35,7 @@ func (g *Gameinfo) argumentsjvm(l *launcher1155) error {
 	return nil
 }
 
+//lint:ignore ST1012 导出字段
 var JsonNorTrue = errors.New("json not true")
 
 func (g *Gameinfo) jvmflagadd(v string, l *launcher1155) {
@@ -184,7 +187,7 @@ func archbool(arch string) bool {
 
 func (g *Gameinfo) legacy(l *launcher1155) error {
 	p := g.Minecraftpath + `/assets/virtual/legacy/`
-	b, err := ioutil.ReadFile(g.Minecraftpath + "/assets/indexes/" + l.json.AssetIndex.ID + ".json")
+	b, err := os.ReadFile(g.Minecraftpath + "/assets/indexes/" + l.json.AssetIndex.ID + ".json")
 	if err != nil {
 		if os.IsNotExist(err) {
 			return fmt.Errorf("gameinfo.legacy: %w", ErrLegacyNoExit{rawErr: err})
@@ -201,98 +204,64 @@ func (g *Gameinfo) legacy(l *launcher1155) error {
 			return fmt.Errorf("gameinfo.legacy: %w", err)
 		}
 	}
-	eCh := make(chan error, 10)
-	cxt, c := context.WithCancel(context.TODO())
-	defer c()
 
-	var w sync.WaitGroup
+	group, _ := errgroup.WithContext(context.TODO())
+	group.SetLimit(8)
+
 	for path, v := range a.Objects {
 		path, v := path, v
-		w.Add(1)
-		go func() {
-			s := strings.Split(path, "/")
-			ss := strings.ReplaceAll(path, s[len(s)-1], "")
+		group.Go(func() error {
+			dir := filepath.Dir(path)
 			if a.Virtual {
-				err = os.MkdirAll(p+ss, 0777)
+				err = os.MkdirAll(filepath.Join(p, dir), 0777)
 			} else {
-				err = os.MkdirAll(g.Gamedir+"/resources/"+ss, 0777)
+				err = os.MkdirAll(filepath.Join(g.Gamedir, "/resources/", dir), 0777)
 			}
 			if err != nil {
 				if errors.Is(err, fs.ErrNotExist) {
-					select {
-					case eCh <- fmt.Errorf("gameinfo.legacy: %w", ErrLegacyNoExit{rawErr: err}):
-					case <-cxt.Done():
-					}
-				} else {
-					select {
-					case eCh <- fmt.Errorf("gameinfo.legacy: %w", err):
-					case <-cxt.Done():
-					}
+					return ErrLegacyNoExit{rawErr: err}
 				}
+				return err
 			}
-			f, err := os.Open(g.Minecraftpath + "/assets/objects/" + v.Hash[0:2] + "/" + v.Hash)
+			f, err := os.Open(filepath.Join(g.Minecraftpath, "/assets/objects/", v.Hash[0:2], v.Hash))
 			if err != nil {
 				if errors.Is(err, fs.ErrNotExist) {
-					select {
-					case eCh <- fmt.Errorf("gameinfo.legacy: %w", ErrLegacyNoExit{rawErr: err}):
-					case <-cxt.Done():
-					}
-				} else {
-					select {
-					case eCh <- fmt.Errorf("gameinfo.legacy: %w", err):
-					case <-cxt.Done():
-					}
+					return ErrLegacyNoExit{rawErr: err}
 				}
+				return err
 			}
 			defer f.Close()
+			copyPath := ""
 			if a.Virtual {
-				ff, err := os.Create(p + path)
+				copyPath, err = internal.SafePathJoin(p, path)
 				if err != nil {
-					select {
-					case eCh <- fmt.Errorf("gameinfo.legacy: %w", err):
-					case <-cxt.Done():
-					}
-				}
-				defer ff.Close()
-				_, err = io.Copy(ff, f)
-				if err != nil {
-					select {
-					case eCh <- fmt.Errorf("gameinfo.legacy: %w", err):
-					case <-cxt.Done():
-					}
+					return err
 				}
 			} else {
-				fff, err := os.Create(g.Gamedir + "/resources/" + path)
+				copyPath, err = internal.SafePathJoin(g.Gamedir, "/resources/", path)
 				if err != nil {
-					select {
-					case eCh <- fmt.Errorf("gameinfo.legacy: %w", err):
-					case <-cxt.Done():
-					}
-				}
-				defer fff.Close()
-				_, err = io.Copy(fff, f)
-				if err != nil {
-					select {
-					case eCh <- fmt.Errorf("gameinfo.legacy: %w", err):
-					case <-cxt.Done():
-					}
+					return err
 				}
 			}
-			w.Done()
-		}()
+			ff, err := os.Create(copyPath)
+			if err != nil {
+				return err
+			}
+			defer ff.Close()
+			_, err = io.Copy(ff, f)
+			if err != nil {
+				return err
+			}
+			return nil
+		})
+
 	}
 
-	go func() {
-		w.Wait()
-		c()
-	}()
-
-	select {
-	case <-cxt.Done():
-		return nil
-	case err := <-eCh:
-		return err
+	err = group.Wait()
+	if err != nil {
+		return fmt.Errorf("legacy: %w", err)
 	}
+	return nil
 }
 
 type ErrLegacyNoExit struct {
