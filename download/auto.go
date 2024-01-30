@@ -26,8 +26,9 @@ func (r *randurls) fail(typee string) string {
 				return t
 			}
 		}
-	}
-	r.typeweightL.Unlock()
+	} else {
+		r.typeweightL.Unlock()
+        }
 	return typee
 }
 
