@@ -47,7 +47,7 @@ func HttpGet(cxt context.Context, aurl string, t *http.Transport, header http.He
 	return reps, timer, nil
 }
 
-var ErrPathNotInBase = errors.New("path not in base")
+var ErrPathInvalid = errors.New("path invalid")
 
 func SafePathJoin(base string, path ...string) (string, error) {
 	p := filepath.Join(append([]string{base}, path...)...)
@@ -56,7 +56,7 @@ func SafePathJoin(base string, path ...string) (string, error) {
 		return "", fmt.Errorf("SafePathJoin: %w", err)
 	}
 	if strings.HasPrefix(a, ".") {
-		return "", ErrPathNotInBase
+		return "", ErrPathInvalid
 	}
 	return p, nil
 }
