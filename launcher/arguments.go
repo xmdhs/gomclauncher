@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io"
 	"io/fs"
 	"os"
 	"path/filepath"
@@ -211,26 +210,6 @@ func (g *Gameinfo) legacy(l *launcher1155) error {
 	for path, v := range a.Objects {
 		path, v := path, v
 		group.Go(func() error {
-			dir := filepath.Dir(path)
-			if a.Virtual {
-				err = os.MkdirAll(filepath.Join(p, dir), 0777)
-			} else {
-				err = os.MkdirAll(filepath.Join(g.Gamedir, "/resources/", dir), 0777)
-			}
-			if err != nil {
-				if errors.Is(err, fs.ErrNotExist) {
-					return ErrLegacyNoExit{rawErr: err}
-				}
-				return err
-			}
-			f, err := os.Open(filepath.Join(g.Minecraftpath, "/assets/objects/", v.Hash[0:2], v.Hash))
-			if err != nil {
-				if errors.Is(err, fs.ErrNotExist) {
-					return ErrLegacyNoExit{rawErr: err}
-				}
-				return err
-			}
-			defer f.Close()
 			copyPath := ""
 			if a.Virtual {
 				copyPath, err = internal.SafePathJoin(p, path)
@@ -238,17 +217,30 @@ func (g *Gameinfo) legacy(l *launcher1155) error {
 					return err
 				}
 			} else {
-				copyPath, err = internal.SafePathJoin(g.Gamedir, "/resources/", path)
+				copyPath, err = internal.SafePathJoin(filepath.Join(g.Gamedir, "/resources/"), path)
 				if err != nil {
 					return err
 				}
 			}
-			ff, err := os.Create(copyPath)
+			dir := filepath.Dir(copyPath)
+			err = os.RemoveAll(dir)
 			if err != nil {
 				return err
 			}
-			defer ff.Close()
-			_, err = io.Copy(ff, f)
+			err = os.MkdirAll(dir, 0777)
+			if err != nil {
+				return err
+			}
+
+			from := filepath.Join(g.Minecraftpath, "/assets/objects/", v.Hash[0:2], v.Hash)
+			_, err := os.Stat(from)
+			if err != nil {
+				if errors.Is(err, fs.ErrNotExist) {
+					return ErrLegacyNoExit{rawErr: err}
+				}
+				return err
+			}
+			err = os.Link(from, copyPath)
 			if err != nil {
 				return err
 			}
