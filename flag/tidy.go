@@ -9,7 +9,7 @@ import (
 	"github.com/xmdhs/gomclauncher/launcher"
 )
 
-func (f Flag) Tidy() {
+func (f *Flag) Tidy() {
 	l := []string{}
 	s := Find(launcher.Minecraft + `/versions`)
 	for _, v := range s {

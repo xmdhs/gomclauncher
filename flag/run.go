@@ -11,7 +11,7 @@ import (
 	"github.com/xmdhs/gomclauncher/launcher"
 )
 
-func (f Flag) Arun() {
+func (f *Flag) Arun() {
 	f.Version = f.Run
 	if f.Independent {
 		f.Gamedir = f.Minecraftpath + "/versions/" + f.Version

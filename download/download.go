@@ -43,10 +43,8 @@ func (l Libraries) Downassets(i int, c chan int) error {
 				if err := d.down(ectx); err != nil {
 					return err
 				}
-				c <- len(l.assetIndex.Objects) - int(n.Add(1))
-			} else {
-				c <- len(l.assetIndex.Objects) - int(n.Add(1))
 			}
+			c <- len(l.assetIndex.Objects) - int(n.Add(1))
 			return nil
 		})
 	}
@@ -113,10 +111,8 @@ func (l Libraries) Downlibrarie(i int, c chan int) error {
 				if err := d.down(ctx); err != nil {
 					return err
 				}
-				c <- len(l.librarie.Libraries) - int(n.Add(1))
-			} else {
-				c <- len(l.librarie.Libraries) - int(n.Add(1))
 			}
+			c <- len(l.librarie.Libraries) - int(n.Add(1))
 			return nil
 		})
 	}
@@ -128,6 +124,7 @@ func (l Libraries) Downlibrarie(i int, c chan int) error {
 	return nil
 }
 
+//lint:ignore ST1012 导出字段
 var FileDownLoadFail = errors.New("file download fail")
 
 func (l Libraries) Downjar(version string) error {

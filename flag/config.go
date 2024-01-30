@@ -31,6 +31,7 @@ func saveconfig(gmlconfig Gmlconfig) {
 	aerr(err)
 }
 
+//lint:ignore ST1012 导出字段
 var HaveProfiles = errors.New("have")
 
 func (c Config) setonline(gmlconfig *Gmlconfig, f *Flag) error {

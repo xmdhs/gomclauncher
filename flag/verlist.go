@@ -8,7 +8,7 @@ import (
 	"github.com/xmdhs/gomclauncher/lang"
 )
 
-func (f Flag) Arunlist() {
+func (f *Flag) Arunlist() {
 	l, err := download.Getversionlist(context.Background(), f.Atype, func(s string) { fmt.Println(s) })
 	errr(err)
 	m := make(map[string]struct{})

@@ -103,6 +103,7 @@ func (v version) Downjson(cxt context.Context, version, apath string, print func
 }
 
 var (
+	//lint:ignore ST1012 导出字段
 	NoSuch         = errors.New("no such")
 	ErrFileChecker = errors.New("file checker")
 )

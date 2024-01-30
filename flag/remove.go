@@ -6,7 +6,7 @@ import (
 	"github.com/xmdhs/gomclauncher/lang"
 )
 
-func (f Flag) Remove(ms bool) {
+func (f *Flag) Remove(ms bool) {
 	ApiAddress := f.ApiAddress
 	if ms {
 		ApiAddress = "ms"
