@@ -207,6 +207,17 @@ func (g *Gameinfo) legacy(l *launcher1155) error {
 	group, _ := errgroup.WithContext(context.TODO())
 	group.SetLimit(8)
 
+	deldir := ""
+	if a.Virtual {
+		deldir = p
+	} else {
+		deldir = filepath.Join(g.Gamedir, "/resources/")
+	}
+	err = os.RemoveAll(deldir)
+	if err != nil {
+		return err
+	}
+
 	for path, v := range a.Objects {
 		path, v := path, v
 		group.Go(func() error {
@@ -223,10 +234,6 @@ func (g *Gameinfo) legacy(l *launcher1155) error {
 				}
 			}
 			dir := filepath.Dir(copyPath)
-			err = os.RemoveAll(dir)
-			if err != nil {
-				return err
-			}
 			err = os.MkdirAll(dir, 0777)
 			if err != nil {
 				return err
