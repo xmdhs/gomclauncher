@@ -23,7 +23,6 @@ var (
 	ms        bool
 	v         bool
 	tidy      bool
-	gitHash   string
 	buildDate string
 	buildOn   string
 	uselang   string

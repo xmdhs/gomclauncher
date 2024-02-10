@@ -14,6 +14,7 @@ import (
 	"github.com/Masterminds/semver/v3"
 	"github.com/xmdhs/gomclauncher/auth"
 	aflag "github.com/xmdhs/gomclauncher/flag"
+	"github.com/xmdhs/gomclauncher/internal"
 	"github.com/xmdhs/gomclauncher/lang"
 	"github.com/xmdhs/gomclauncher/launcher"
 )
@@ -141,7 +142,7 @@ func checkByDns() (string, error) {
 }
 
 func version() {
-	fmt.Println("gomclauncher-" + launcher.Launcherversion + "-" + gitHash)
+	fmt.Println("gomclauncher-" + internal.Launcherversion + "-" + internal.GitHash)
 	fmt.Println("Build date: " + buildDate)
 	fmt.Println("Build on: " + buildOn)
 	fmt.Println("Repository: https://github.com/xmdhs/gomclauncher")

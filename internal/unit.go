@@ -35,6 +35,7 @@ func init() {
 		}
 	}
 	ua = fmt.Sprintf("gomclauncher/%s (%v)", Launcherversion, hash)
+	GitHash = hash
 }
 
 func HttpGet(cxt context.Context, aurl string, t *http.Transport, header http.Header) (*http.Response, *time.Timer, error) {
