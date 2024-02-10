@@ -1,8 +1,10 @@
 package launcher
 
+import "github.com/xmdhs/gomclauncher/internal"
+
 const (
-	Launcherbrand   string = "GML"
-	Launcherversion string = "1.4.15"
+	Launcherbrand   string = internal.Launcherbrand
+	Launcherversion string = internal.Launcherversion
 )
 
 const Minecraft string = ".minecraft"

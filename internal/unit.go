@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"path/filepath"
 	"runtime"
+	"runtime/debug"
 	"strings"
 	"time"
 )
@@ -23,6 +24,19 @@ func Getarch() string {
 	}
 }
 
+var ua string
+
+func init() {
+	b, _ := debug.ReadBuildInfo()
+	var hash string
+	for _, v := range b.Settings {
+		if v.Key == "vcs.revision" {
+			hash = v.Value
+		}
+	}
+	ua = fmt.Sprintf("gomclauncher/%s (%v)", Launcherversion, hash)
+}
+
 func HttpGet(cxt context.Context, aurl string, t *http.Transport, header http.Header) (*http.Response, *time.Timer, error) {
 	ctx, cancel := context.WithCancel(cxt)
 	rep, err := http.NewRequestWithContext(ctx, "GET", aurl, nil)
@@ -36,7 +50,7 @@ func HttpGet(cxt context.Context, aurl string, t *http.Transport, header http.He
 		rep.Header = header
 	}
 	rep.Header.Set("Accept", "*/*")
-	rep.Header.Set("User-Agent", "Mozilla/5.0（Windows NT 10.0；Win64；x64；rv:115.0） Gecko/20100101 Firefox/115.0")
+	rep.Header.Set("User-Agent", ua)
 	c := http.Client{
 		Transport: t,
 	}
