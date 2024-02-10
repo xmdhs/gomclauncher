@@ -9,7 +9,9 @@ import (
 	"fmt"
 	"hash"
 	"io"
+	"math/rand/v2"
 	"os"
+	"slices"
 	"strings"
 	"sync/atomic"
 
@@ -29,7 +31,15 @@ func (l Libraries) Downassets(i int, c chan int) error {
 
 	n := atomic.Uint64{}
 
+	assetList := make([]asset, 0, len(l.librarie.Assets))
 	for _, v := range l.assetIndex.Objects {
+		assetList = append(assetList, v)
+	}
+	rand.Shuffle(len(assetList), func(i, j int) {
+		assetList[i], assetList[j] = assetList[j], assetList[i]
+	})
+
+	for _, v := range assetList {
 		v := v
 		g.Go(func() error {
 			ok := ver(l.path+`/assets/objects/`+v.Hash[:2]+`/`+v.Hash, v.Hash)
@@ -93,10 +103,15 @@ func (l Libraries) Downlibrarie(i int, c chan int) error {
 	g.SetLimit(i)
 	n := atomic.Uint64{}
 
-	for _, v := range l.librarie.Libraries {
+	librarieL := slices.Clone(l.librarie.Libraries)
+	rand.Shuffle(len(librarieL), func(i, j int) {
+		librarieL[i], librarieL[j] = librarieL[j], librarieL[i]
+	})
+
+	for _, v := range librarieL {
 		v := v
 		if !launcher.Ifallow(v) {
-			c <- len(l.librarie.Libraries) - int(n.Add(1))
+			c <- len(librarieL) - int(n.Add(1))
 			continue
 		}
 		path, err := internal.SafePathJoin(l.path, `/libraries/`, v.Downloads.Artifact.Path)
@@ -104,7 +119,7 @@ func (l Libraries) Downlibrarie(i int, c chan int) error {
 			return fmt.Errorf("Downlibrarie: %w", err)
 		}
 		if v.Downloads.Artifact.URL == "" {
-			c <- len(l.librarie.Libraries) - int(n.Add(1))
+			c <- len(librarieL) - int(n.Add(1))
 			continue
 		}
 		g.Go(func() error {
@@ -120,7 +135,7 @@ func (l Libraries) Downlibrarie(i int, c chan int) error {
 					return err
 				}
 			}
-			c <- len(l.librarie.Libraries) - int(n.Add(1))
+			c <- len(librarieL) - int(n.Add(1))
 			return nil
 		})
 	}
