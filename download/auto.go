@@ -12,7 +12,7 @@ func (r *randurls) fail(typee string) string {
 	if i, ok := r.typeweight[typee]; ok {
 		i--
 		if i <= 0 {
-			r.typeweight[typee] = 0
+			r.typeweight[typee] = 1
 		} else {
 			r.typeweight[typee] = i
 		}
@@ -42,8 +42,8 @@ func newrandurls(typee string) *randurls {
 	r := &randurls{}
 	r.typeweight = make(map[string]int)
 	if typee == "" {
-		r.typeweight["vanilla"] = 10
-		r.typeweight["bmclapi"] = 20
+		r.typeweight["vanilla"] = 50
+		r.typeweight["bmclapi"] = 50
 		r.typeweight["mcbbs"] = 20
 	} else {
 		s := strings.Split(typee, "|")
