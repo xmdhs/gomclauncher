@@ -42,9 +42,8 @@ func newrandurls(typee string) *randurls {
 	r := &randurls{}
 	r.typeweight = make(map[string]int)
 	if typee == "" {
-		r.typeweight["vanilla"] = 50
+		r.typeweight["vanilla"] = 40
 		r.typeweight["bmclapi"] = 50
-		r.typeweight["mcbbs"] = 20
 	} else {
 		s := strings.Split(typee, "|")
 		for _, v := range s {

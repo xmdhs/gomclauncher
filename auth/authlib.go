@@ -20,7 +20,6 @@ const (
 
 // Deprecated: move to package download
 var Authliburls = []string{
-	"https://download.mcbbs.net/mirrors/authlib-injector/artifact/41/authlib-injector-1.1.41.jar",
 	"https://authlib-injector.yushi.moe/artifact/41/authlib-injector-1.1.41.jar",
 	"https://bmclapi2.bangbang93.com/mirrors/authlib-injector/artifact/41/authlib-injector-1.1.41.jar",
 }

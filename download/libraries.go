@@ -170,16 +170,6 @@ var mirror = map[string]map[string]string{
 		`files.minecraftforge.net/maven`:   `bmclapi2.bangbang93.com/maven`,
 		`maven.minecraftforge.net`:         `bmclapi2.bangbang93.com/maven`,
 	},
-	"mcbbs": {
-		`launchermeta.mojang.com`:          `download.mcbbs.net`,
-		`piston-meta.mojang.com`:           `download.mcbbs.net`,
-		`piston-data.mojang.com`:           `download.mcbbs.net`,
-		`launcher.mojang.com`:              `download.mcbbs.net`,
-		`resources.download.minecraft.net`: `download.mcbbs.net/assets`,
-		`libraries.minecraft.net`:          `download.mcbbs.net/maven`,
-		`files.minecraftforge.net/maven`:   `download.mcbbs.net/maven`,
-		`maven.minecraftforge.net`:         `download.mcbbs.net/maven`,
-	},
 }
 
 func source(url, types string) string {

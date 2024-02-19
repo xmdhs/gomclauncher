@@ -7,9 +7,9 @@ import (
 )
 
 func Test_randurls_auto(t *testing.T) {
-	r := newrandurls("mcbbs")
+	r := newrandurls("bmclapi")
 	_, m := r.auto()
-	if m != "mcbbs" {
+	if m != "bmclapi" {
 		t.Fail()
 	}
 	r = newrandurls("")
@@ -20,9 +20,8 @@ func Test_randurls_auto(t *testing.T) {
 
 func TestFail(t *testing.T) {
 	r := newrandurls("")
-	for i := 0; i < 20; i++ {
-		r.fail("mcbbs")
+	for i := 0; i < 50; i++ {
 		r.fail("bmclapi")
 	}
-	require.Equal(t, "vanilla", r.fail("mcbbs"))
+	require.Equal(t, "vanilla", r.fail("bmclapi"))
 }

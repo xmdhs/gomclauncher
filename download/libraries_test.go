@@ -73,9 +73,9 @@ func Test_source(t *testing.T) {
 			name: "1",
 			args: args{
 				url:   "https://piston-meta.mojang.com/mc/game/version_manifest.json",
-				types: "mcbbs",
+				types: "bmclapi",
 			},
-			want: "https://download.mcbbs.net/mc/game/version_manifest.json",
+			want: "https://bmclapi2.bangbang93.com/mc/game/version_manifest.json",
 		},
 		{
 			name: "2",
@@ -89,9 +89,9 @@ func Test_source(t *testing.T) {
 			name: "3",
 			args: args{
 				url:   "https://piston-meta.mojang.com/mc/game/version_manifest.json/piston-meta.mojang.com",
-				types: "mcbbs",
+				types: "bmclapi",
 			},
-			want: "https://download.mcbbs.net/mc/game/version_manifest.json/piston-meta.mojang.com",
+			want: "https://bmclapi2.bangbang93.com/mc/game/version_manifest.json/piston-meta.mojang.com",
 		},
 	}
 	for _, tt := range tests {

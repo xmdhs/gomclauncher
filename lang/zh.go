@@ -13,7 +13,7 @@ var zh = map[string]string{
 	"ramusage":                   "分配启动游戏的内存大小(mb)",
 	"flagusage":                  "自定的 jvm 参数，比如 -XX:+AggressiveOpts -XX:+UseCompressedOops",
 	"proxyusage":                 "设置下载用的代理(http)",
-	"typeusage":                  `设置下载源。可选 vanilla bmclapi 和 mcbbs，不设置此项则使用将自动的为每一个文件选择下载源。可以使用 "bmclapi|vanilla" 的形式来负载均衡的使用多个下载源。`,
+	"typeusage":                  `设置下载源。可选 vanilla bmclapi，不设置此项则使用将自动的为每一个文件选择下载源。可以使用 "bmclapi|vanilla" 的形式来负载均衡的使用多个下载源。`,
 	"Independentusage":           "是否开启版本隔离",
 	"testusage":                  "启动游戏前是否效验文件的完整和正确性",
 	"creditsusage":               "使用的一些项目",

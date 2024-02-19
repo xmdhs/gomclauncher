@@ -32,9 +32,9 @@
 
 自定义启动 jvm 参数 `./gml-linux -run 1.16.1 -username xmdhs -flag "-XX:+AggressiveOpts -XX:+UseCompressedOops"`
 
-下载游戏并指定镜像下载源并设置使用的协程数为 32 `./gml-linux -downver 1.16.1 -type=mcbbs -int 32`
+下载游戏并指定镜像下载源并设置使用的协程数为 32 `./gml-linux -downver 1.16.1 -type=bmclapi -int 32`
 
-下载游戏并混合的使用两个下载源 `./gml-linux -downver 1.16.1 -type "mcbbs|vanilla"`
+下载游戏并混合的使用两个下载源 `./gml-linux -downver 1.16.1 -type "bmclapi|vanilla"`
 
 查看所有可以下载的正式版本 `./gml-linux -verlist release`， `release` 为版本类型，可通过下面的命令获取。
 

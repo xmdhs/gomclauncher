@@ -48,7 +48,6 @@ func Downauthlib(cxt context.Context, print func(string)) (err error) {
 var authlibUrls = []string{
 	"https://authlib-injector.yushi.moe/artifact/latest.json",
 	"https://bmclapi2.bangbang93.com/mirrors/authlib-injector/artifact/latest.json",
-	"https://download.mcbbs.net/mirrors/authlib-injector/artifact/latest.json",
 }
 
 func randAuthlibUrls(url string) string {
