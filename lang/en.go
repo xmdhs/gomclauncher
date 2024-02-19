@@ -13,7 +13,7 @@ var en = map[string]string{
 	"ramusage":                   "Allocate memory size (MB) for launching the game",
 	"flagusage":                  "Custom launch parameters, such as -XX:+AggressiveOpts -XX:+UseCompressedOops",
 	"proxyusage":                 "Set the proxy (http) for downloads",
-	"typeusage":                  `Set the download source. Options are vanilla, bmclapi, and mcbbs. If not set, it will automatically choose a download source for each file. You can use "bmclapi|vanilla" to load balance and use multiple download sources.`,
+	"typeusage":                  `Set the download source. Options are vanilla, bmclapi. If not set, it will automatically choose a download source for each file. You can use "bmclapi|vanilla" to load balance and use multiple download sources.`,
 	"Independentusage":           "Enable version isolation",
 	"testusage":                  "Check file integrity and correctness before launching the game",
 	"creditsusage":               "Credits to the projects used",
