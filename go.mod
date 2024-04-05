@@ -9,7 +9,7 @@ require (
 	github.com/cli/browser v1.3.0
 	github.com/cli/oauth v1.0.1
 	github.com/stretchr/testify v1.8.4
-	golang.org/x/sync v0.6.0
+	golang.org/x/sync v0.7.0
 	golang.org/x/text v0.14.0
 )
 
