@@ -10,7 +10,7 @@ require (
 	github.com/cli/oauth v1.0.1
 	github.com/stretchr/testify v1.8.4
 	golang.org/x/sync v0.6.0
-	golang.org/x/text v0.14.0
+	golang.org/x/text v0.15.0
 )
 
 require (
