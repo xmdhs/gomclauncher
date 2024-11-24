@@ -111,7 +111,7 @@ b:
 				break b
 			}
 			if !f.Outmsg {
-				fmt.Println(i)
+				fmt.Printf("\r%v", i)
 			}
 		case err := <-e:
 			errr(err)
