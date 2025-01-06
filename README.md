@@ -1,4 +1,5 @@
 translation
+
 [EN](/README_EN.md), CN
 
 # gomclauncher
