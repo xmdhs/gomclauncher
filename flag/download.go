@@ -119,7 +119,7 @@ b:
 					max = i
 					bar.ChangeMax(max)
 				}
-				bar.Add(i)
+				bar.Add(1)
 			}
 		case err := <-e:
 			errr(err)
