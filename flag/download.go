@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"os"
 
+	"github.com/schollz/progressbar/v3"
 	"github.com/xmdhs/gomclauncher/download"
 	"github.com/xmdhs/gomclauncher/lang"
 	"github.com/xmdhs/gomclauncher/launcher"
@@ -103,6 +104,9 @@ func (f *Flag) dd(down func(i int, c chan int) error) {
 			e <- err
 		}
 	}()
+	bar := progressbar.Default(1)
+	defer bar.Close()
+	max := 0
 b:
 	for {
 		select {
@@ -111,7 +115,11 @@ b:
 				break b
 			}
 			if !f.Outmsg {
-				fmt.Printf("\r%v", i)
+				if max == 0 {
+					max = i
+					bar.ChangeMax(max)
+				}
+				bar.Add(i)
 			}
 		case err := <-e:
 			errr(err)
